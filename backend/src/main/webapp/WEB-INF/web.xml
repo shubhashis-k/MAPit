@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+
     <servlet>
         <servlet-name>SystemServiceServlet</servlet-name>
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>com.mapit.backend.MyEndpoint</param-value>
+            <param-value>com.mapit.backend.Userinfo_Endpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
