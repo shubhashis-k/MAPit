@@ -3,7 +3,7 @@ package com.mapit.backend;
 /**
  * Created by shubhashis on 1/3/2015.
  */
-public class Response_Messages {
+public class ResponseMessages {
     public String response_message;
 
     public final String Userinfo_creation_OK = "OK";

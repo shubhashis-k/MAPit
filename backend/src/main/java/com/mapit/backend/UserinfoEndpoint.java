@@ -19,18 +19,17 @@ import java.util.ArrayList;
 @Api(
         name = "userinfoModelApi",
         version = "v1",
-        resource = "userinfo_Model",
         namespace = @ApiNamespace(
                 ownerDomain = "backend.mapit.com",
                 ownerName = "backend.mapit.com",
                 packagePath = ""
         )
 )
-public class Userinfo_Endpoint {
-    public Response_Messages response_messages;
+public class UserinfoEndpoint {
+    public ResponseMessages response_messages;
 
     @ApiMethod(name = "setUserInfo", path = "setUserInfoPath")
-    public Response_Messages setUserInfo(Userinfo_Model userinformation) {
+    public ResponseMessages setUserInfo(UserinfoModel userinformation) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Entity Userinfo_Kind = new Entity("Userinfo");
@@ -57,17 +56,17 @@ public class Userinfo_Endpoint {
             Userinfo_Kind.setUnindexedProperty("Profilepic", "");
         }
 
-        ArrayList <Userinfo_Model> checkMail = getUserInfo(userinformation);
+        ArrayList <UserinfoModel> checkMail = getUserInfo(userinformation);
 
         if(checkMail.size() > 0)
         {
-            response_messages = new Response_Messages();
+            response_messages = new ResponseMessages();
             response_messages.setMessage(response_messages.Userinfo_creation_duplicate);
         }
         else
         {
             datastore.put(Userinfo_Kind);
-            response_messages = new Response_Messages();
+            response_messages = new ResponseMessages();
             response_messages.setMessage(response_messages.Userinfo_creation_OK);
         }
         return response_messages;
@@ -76,9 +75,9 @@ public class Userinfo_Endpoint {
 
     /* Incomplete method, */
     @ApiMethod(name = "getUserInfo", path = "getUserInfoPath")
-    public ArrayList<Userinfo_Model> getUserInfo(Userinfo_Model userinformation) {
+    public ArrayList<UserinfoModel> getUserInfo(UserinfoModel userinformation) {
 
-        ArrayList <Userinfo_Model> Userinfo_Result = new ArrayList<>();
+        ArrayList <UserinfoModel> Userinfo_Result = new ArrayList<>();
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -91,7 +90,7 @@ public class Userinfo_Endpoint {
 
         for (Entity result : queryResult.asIterable())
         {
-            Userinfo_Model um = new Userinfo_Model();
+            UserinfoModel um = new UserinfoModel();
 
             um.setName((String)result.getProperty("Username"));
             um.setMail((String)result.getProperty("Mail"));

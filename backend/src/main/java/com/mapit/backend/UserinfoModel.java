@@ -3,7 +3,7 @@ package com.mapit.backend;
 /**
  * Created by shubhashis on 1/3/2015.
  */
-public class Userinfo_Model {
+public class UserinfoModel {
     private String name, mail, password;
     private String mobilephone;
     private String imagedata;
