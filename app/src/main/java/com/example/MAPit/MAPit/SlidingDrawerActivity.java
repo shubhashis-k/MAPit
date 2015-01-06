@@ -1,7 +1,10 @@
 package com.example.MAPit.MAPit;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -12,13 +15,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 // added a comment
@@ -28,9 +36,11 @@ public class SlidingDrawerActivity extends ActionBarActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mDrawerLinear;
-
+    private TextView profile_name;
     // nav drawer title
     private CharSequence mDrawerTitle;
+
+    Fragment fragment = null;
 
     // used to store app title
     private CharSequence mTitle;
@@ -47,6 +57,8 @@ public class SlidingDrawerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_drawer);
 
+        //initializing profile_name
+        profile_name = (TextView) findViewById(R.id.profile_name);
         mTitle = mDrawerTitle = getTitle();
 
         // load slide menu items
@@ -113,6 +125,18 @@ public class SlidingDrawerActivity extends ActionBarActivity {
         }
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
+        // For editing Profile
+        profile_name.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                fragment = new Edit_Profile();
+                startFragment(fragment, -1);
+                return false;
+
+
+            }
+        });
     }
 
     /**
@@ -133,7 +157,7 @@ public class SlidingDrawerActivity extends ActionBarActivity {
      */
     private void displayView(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = null;
+        // Fragment fragment = null;
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
@@ -161,8 +185,8 @@ public class SlidingDrawerActivity extends ActionBarActivity {
             default:
                 break;
         }
-
-        if (fragment != null) {
+        startFragment(fragment, position);
+       /* if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
@@ -175,8 +199,28 @@ public class SlidingDrawerActivity extends ActionBarActivity {
         } else {
             // error in creating fragment
             Log.e("MainActivity", "Error in creating fragment");
+        }*/
+    }
+
+    private void startFragment(Fragment fragment, int position) {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
+
+            // update selected item and title, then close the drawer
+            if (position != -1) {
+                mDrawerList.setItemChecked(position, true);
+                mDrawerList.setSelection(position);
+            }
+            //setTitle(navMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerLinear);
+        } else {
+            // error in creating fragment
+            Log.e("MainActivity", "Error in creating fragment");
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

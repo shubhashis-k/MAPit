@@ -1,10 +1,12 @@
 package com.example.MAPit.MAPit;
 
 //some test comment
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -23,8 +25,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,8 +37,12 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     // ...
-    static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-    static final LatLng KIEL = new LatLng(53.551, 9.993);
+    String[] latitude = {
+            "53.558", "22.8427707", "53.551"
+    };
+    String[] longitude = {
+            "9.927", "89.5980763", "9.993"
+    };
     private GoogleMap map;
     EditText et;
 
@@ -73,7 +82,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
             });
         }
-        Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG)
+        /*Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG)
                 .title("Hamburg"));
         Marker kiel = map.addMarker(new MarkerOptions()
                 .position(KIEL)
@@ -81,13 +90,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .snippet("Kiel is cool")
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.ic_launcher)));
-        //
+
+        //*/
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (int i = 0; i < 3; i++) {
+            String a= latitude[i];
+            String b=longitude[i];
+            double lati = Double.parseDouble(a);
+            double longLat = Double.parseDouble(b);
+            builder.include(new LatLng(lati,longLat));
+            map.addMarker(new MarkerOptions().position(new LatLng(lati, longLat)).title(a).snippet(b));
+        }
+        LatLngBounds bounds = builder.build();
+        drawLine();
+
+
+
         // Move the camera instantly to hamburg with a zoom of 15.
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
+       // map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
 
         // Zoom in, animating the camera.
-        map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        LatLng ll = new LatLng (53.558,9.927);
 
+         map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+         //map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         et = (EditText) v.findViewById(R.id.editText1);
         //added the go button listener
         Button go = (Button) v.findViewById(R.id.go);
@@ -155,6 +181,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
         return v;
+    }
+
+    private void drawLine() {
+
+        PolygonOptions options = new PolygonOptions()
+                .fillColor(0x330000FF)
+                .strokeColor(Color.BLUE)
+                .strokeWidth(3);
+        for (int i = 0; i < 3; i++) {
+            String a= latitude[i];
+            String b=longitude[i];
+            double lati = Double.parseDouble(a);
+            double longLat = Double.parseDouble(b);
+            LatLng ll = new LatLng(lati,longLat);
+            options.add(ll);
+        }
+        map.addPolygon(options);
     }
 
 
