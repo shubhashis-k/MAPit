@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 
+import com.example.MAPit.Commands_and_Properties.Commands;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -12,7 +13,6 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import com.mapit.backend.userinfoModelApi.UserinfoModelApi;
-
 
 import java.io.IOException;
 
@@ -51,7 +51,7 @@ public class SignUp_Endpoint_Communicator extends AsyncTask <Pair<Context, Useri
 
         try {
             ResponseMessages response = new ResponseMessages();
-            response = userinfo_api.setUserInfo(userdata).execute();
+            response = userinfo_api.setUserInfo(Commands.Userinfo_create.getCommand(), userdata).execute();
             return response;
         }
         catch (IOException e)
