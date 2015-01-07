@@ -1,34 +1,35 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 import com.mapit.backend.userinfoModelApi.UserinfoModelApi;
-import com.mapit.backend.userinfoModelApi.model.UserinfoModelCollection;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by shubhashis on 1/8/2015.
  */
 
 
-public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, UserinfoModel>, Void, UserinfoModelCollection> {
+public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context, UserinfoModel>, Void, ResponseMessages> {
     private Context maincontext;
     private UserinfoModelApi userinfo_api;
     private UserinfoModel userdata;
-    private manipulate_Signin manipulator;
+    private manipulate_Edit_Profile manipulator;
     @Override
-    protected UserinfoModelCollection doInBackground(Pair<Context, UserinfoModel>... params) {
+    protected ResponseMessages doInBackground(Pair<Context, UserinfoModel>... params) {
         if(userinfo_api == null) {  // Only do this once
             UserinfoModelApi.Builder builder = new UserinfoModelApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -51,9 +52,9 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
         userdata = params[0].second;
 
         try {
-            UserinfoModelCollection UserinfoResult = userinfo_api.getUserinfo(Commands.Userinfo_getpass.getCommand(), userdata).execute();
-
-            return UserinfoResult;
+            ResponseMessages response = new ResponseMessages();
+            response = userinfo_api.setUserInfo(Commands.Userinfo_update.getCommand(), userdata).execute();
+            return response;
         }
         catch (IOException e)
         {
@@ -62,18 +63,19 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
         }
     }
 
-    protected void onPostExecute(UserinfoModelCollection result){
-        manipulator = (manipulate_Signin) ((Activity) maincontext);
+    protected void onPostExecute(ResponseMessages response){
+        Log.v("response", response.getMessage());
 
-        ArrayList <UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();
-        UserinfoModel logininfo = result_list.get(0);
-
-
-        manipulator.setResponseMessage(logininfo);
+        //modification needed here
+        //modification needed here
+        manipulator = (manipulate_Edit_Profile) (maincontext);
+        manipulator.setResponseMessage(response);
+        //modification needed here
+        //modification needed here
     }
 
-    public interface manipulate_Signin{
-        public void setResponseMessage(UserinfoModel logininfo);
+    public interface manipulate_Edit_Profile {
+        public void setResponseMessage(ResponseMessages response);
     }
 
 }

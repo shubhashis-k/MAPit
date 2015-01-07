@@ -94,6 +94,17 @@ public class UserinfoEndpoint {
             {
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), "");
             }
+
+            if(userinformation.getMobilephone() != null)
+            {
+                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), userinformation.getMobilephone());
+            }
+            else
+            {
+                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), "");
+            }
+
+
             response_messages.setMessage(response_messages.Userinfo_update_OK);
             datastore.delete(k);
             datastore.put(updatedinfo);
@@ -141,6 +152,19 @@ public class UserinfoEndpoint {
 
                 um.setMail((String) result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
                 um.setPassword((String) result.getProperty(DatastorePropertyNames.Userinfo_Password.getProperty()));
+
+                Userinfo_Result.add(um);
+            }
+        }
+        else if(Query_type.equals(Commands.Userinfo_getinfo.getCommand()))
+        {
+            for (Entity result : queryResult.asIterable()) {
+                UserinfoModel um = new UserinfoModel();
+
+                um.setName((String) result.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()));
+                um.setMail((String) result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
+                um.setImagedata((String) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty()));
+                um.setMobilephone((String) result.getProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty()));
 
                 Userinfo_Result.add(um);
             }
