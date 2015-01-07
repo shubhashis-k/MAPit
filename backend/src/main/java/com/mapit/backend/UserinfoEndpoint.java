@@ -32,28 +32,28 @@ public class UserinfoEndpoint {
     public ResponseMessages setUserInfo(UserinfoModel userinformation) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Entity Userinfo_Kind = new Entity("Userinfo");
-        Userinfo_Kind.setProperty("Username", userinformation.getName());
-        Userinfo_Kind.setProperty("Mail", userinformation.getMail());
-        Userinfo_Kind.setUnindexedProperty("Password", userinformation.getPassword());
+        Entity Userinfo_Kind = new Entity(DatastoreKindNames.Userinfo.getKind());
+        Userinfo_Kind.setProperty(DatastorePropertyNames.Userinfo_Username.getProperty(), userinformation.getName());
+        Userinfo_Kind.setProperty(DatastorePropertyNames.Userinfo_Mail.getProperty(), userinformation.getMail());
+        Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
 
         if(userinformation.getMobilephone() != null)
         {
-            Userinfo_Kind.setUnindexedProperty("Mobile", userinformation.getMobilephone());
+            Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), userinformation.getMobilephone());
         }
         else
         {
-            Userinfo_Kind.setUnindexedProperty("Mobile", "");
+            Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), "");
         }
 
         if(userinformation.getImagedata() != null)
         {
-            Text image_Data = new Text(userinformation.getMobilephone());
-            Userinfo_Kind.setUnindexedProperty("Profilepic", image_Data);
+            Text image_Data = new Text(userinformation.getImagedata());
+            Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), image_Data);
         }
         else
         {
-            Userinfo_Kind.setUnindexedProperty("Profilepic", "");
+            Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), "");
         }
 
         ArrayList <UserinfoModel> checkMail = getUserInfo(userinformation);
@@ -82,8 +82,8 @@ public class UserinfoEndpoint {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 
-        Filter Mail_Filter = new Query.FilterPredicate("Mail", Query.FilterOperator.EQUAL, userinformation.getMail());
-        Query Mail_Query = new Query("Userinfo").setFilter(Mail_Filter);
+        Filter Mail_Filter = new Query.FilterPredicate(DatastorePropertyNames.Userinfo_Mail.getProperty(), Query.FilterOperator.EQUAL, userinformation.getMail());
+        Query Mail_Query = new Query(DatastoreKindNames.Userinfo.getKind()).setFilter(Mail_Filter);
 
         PreparedQuery queryResult = datastore.prepare(Mail_Query);
 
@@ -92,8 +92,8 @@ public class UserinfoEndpoint {
         {
             UserinfoModel um = new UserinfoModel();
 
-            um.setName((String)result.getProperty("Username"));
-            um.setMail((String)result.getProperty("Mail"));
+            um.setName((String)result.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()));
+            um.setMail((String)result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
 
             Userinfo_Result.add(um);
         }
