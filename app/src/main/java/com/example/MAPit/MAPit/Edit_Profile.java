@@ -43,6 +43,7 @@ public class Edit_Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "It worked", Toast.LENGTH_SHORT).show();
+
             }
         });
         profile_image.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +70,8 @@ public class Edit_Profile extends Fragment {
                     final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     profile_image.setImageBitmap(selectedImage);
+
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
