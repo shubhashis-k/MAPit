@@ -207,6 +207,7 @@ public class SlidingDrawerActivity extends ActionBarActivity {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
+            fragmentManager.beginTransaction().addToBackStack(null);
 
             // update selected item and title, then close the drawer
             if (position != -1) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -63,6 +64,7 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
     }
 
     protected void onPostExecute(UserinfoModelCollection result){
+        Log.v("Sign:response", String.valueOf(maincontext));
         manipulator = (manipulate_Signin) ((Activity) maincontext);
 
         ArrayList <UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();

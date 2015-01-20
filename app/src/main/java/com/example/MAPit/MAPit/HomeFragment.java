@@ -4,6 +4,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -45,13 +46,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     };
     private GoogleMap map;
     EditText et;
+    MapFragment mapFrag;
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.home_map_activity, null, false);
 
-        MapFragment mapFrag = (MapFragment) getFragmentManager()
+        mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         map = mapFrag.getMap();
         //added the custom info adapter
@@ -129,7 +131,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //making my custom infoadapter
 
 
-        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+       /* map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             public void onInfoWindowClick(Marker marker) {
                 String[] items = {"onefunction", "twofunction"};
                 final AlertDialog.Builder itemDilog = new AlertDialog.Builder(getActivity());
@@ -153,8 +155,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 itemDilog.show();
 
             }
-        });
-        /*map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        });*/
+       /* map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
                 return null;
@@ -178,7 +180,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 return v1;
             }
         });*/
+       //onclick listener on marker of friends location
 
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                FragmentManager fragmentManager = getFragmentManager();
+                Fragment fragment = new FriendsStatusFragment();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+            }
+        });
 
         return v;
     }

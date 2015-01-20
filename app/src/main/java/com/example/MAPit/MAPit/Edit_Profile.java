@@ -94,7 +94,7 @@ public class Edit_Profile extends Fragment implements Edit_Profile_Endpoint_Comm
         updateProfile.setName(Update_name.getText().toString());
         updateProfile.setPassword(Update_password.getText().toString());
         updateProfile.setMobilephone(Update_phone.getText().toString());
-        updateProfile.setMail("batman");
+        updateProfile.setMail("setu1421@yahoo.com");
 
     }
     public void updateData()

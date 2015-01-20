@@ -1,10 +1,14 @@
 package com.example.MAPit.MAPit;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
@@ -28,6 +32,7 @@ public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context,
     private UserinfoModelApi userinfo_api;
     private UserinfoModel userdata;
     private manipulate_Edit_Profile manipulator;
+
     @Override
     protected ResponseMessages doInBackground(Pair<Context, UserinfoModel>... params) {
         if(userinfo_api == null) {  // Only do this once
@@ -64,11 +69,11 @@ public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context,
     }
 
     protected void onPostExecute(ResponseMessages response){
-        Log.v("response", response.getMessage());
+        Log.v("response", String.valueOf(maincontext));
 
         //modification needed here
         //modification needed here
-        manipulator = (manipulate_Edit_Profile) (maincontext);
+         manipulator = (manipulate_Edit_Profile) maincontext;
         manipulator.setResponseMessage(response);
         //modification needed here
         //modification needed here
