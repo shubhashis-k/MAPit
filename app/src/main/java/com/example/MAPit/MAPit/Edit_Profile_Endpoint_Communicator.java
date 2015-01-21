@@ -62,7 +62,7 @@ public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context,
 
         //modification needed here
         //modification needed here
-         manipulator = (manipulate_Edit_Profile) maincontext;
+        manipulator = (manipulate_Edit_Profile) maincontext;
         manipulator.setResponseMessage(response);
         //modification needed here
         //modification needed here

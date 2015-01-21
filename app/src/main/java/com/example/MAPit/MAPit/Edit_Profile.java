@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 
@@ -94,9 +95,18 @@ public class Edit_Profile extends Fragment{
         updateProfile.setName(Update_name.getText().toString());
         updateProfile.setPassword(Update_password.getText().toString());
         updateProfile.setMobilephone(Update_phone.getText().toString());
-        updateProfile.setMail("batman");
+        updateProfile.setMail(getMail());
 
     }
+
+
+    public String getMail()
+    {
+        Bundle mailBundle = getArguments();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
+    }
+
     public void updateData()
     {
         new Edit_Profile_Endpoint_Communicator().execute(new Pair<Context, UserinfoModel>(getActivity(), updateProfile));

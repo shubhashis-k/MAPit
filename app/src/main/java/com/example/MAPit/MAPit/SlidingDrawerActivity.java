@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
@@ -132,12 +133,19 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 fragment = new Edit_Profile();
+                fragment.setArguments(getEmail());
                 startFragment(fragment, -1);
                 return false;
 
 
             }
         });
+    }
+
+    public Bundle getEmail()
+    {
+        Bundle mailInfo = getIntent().getExtras();
+        return mailInfo;
     }
 
     @Override
@@ -176,6 +184,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
+
                 //Intent intent = new Intent(this
                 //, HomeMapActivity.class);
                 //startActivity(intent);

@@ -104,7 +104,7 @@ public class UserinfoEndpoint {
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), "");
             }
 
-
+            response_messages = new ResponseMessages();
             response_messages.setMessage(response_messages.Userinfo_update_OK);
             datastore.delete(k);
             datastore.put(updatedinfo);

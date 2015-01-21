@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 
 /**
@@ -59,6 +60,7 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
         if(retrieved_pass.equals(input_pass))
         {
             Intent signin_intent = new Intent(SignIn.this,SlidingDrawerActivity.class);
+            signin_intent.putExtra(PropertyNames.Userinfo_Mail.getProperty(), input_mail);
             startActivity(signin_intent);
         }
         else
