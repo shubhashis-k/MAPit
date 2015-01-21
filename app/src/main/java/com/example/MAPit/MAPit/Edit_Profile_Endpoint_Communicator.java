@@ -36,22 +36,11 @@ public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context,
     @Override
     protected ResponseMessages doInBackground(Pair<Context, UserinfoModel>... params) {
         if(userinfo_api == null) {  // Only do this once
-            UserinfoModelApi.Builder builder = new UserinfoModelApi.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression when running against local devappserver
-                    //.setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                    .setRootUrl("http://10.0.3.2:8080/_ah/api/")
-                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                        @Override
-                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                            abstractGoogleClientRequest.setDisableGZipContent(true);
-                        }
-                    });
-            // end options for devappserver
 
+            OfflineInitializer intializer = new OfflineInitializer();
+            UserinfoModelApi.Builder builder = intializer.Initialize();
             userinfo_api = builder.build();
+
         }
         maincontext = params[0].first;
         userdata = params[0].second;

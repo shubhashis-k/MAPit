@@ -26,7 +26,7 @@ import java.io.InputStream;
 /**
  * Created by SETU on 1/6/2015.
  */
-public class Edit_Profile extends Fragment implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{
+public class Edit_Profile extends Fragment{
     private UserinfoModel updateProfile;
     private final int SELECT_PHOTO = 1;
     private ImageView profile_image;
@@ -94,7 +94,7 @@ public class Edit_Profile extends Fragment implements Edit_Profile_Endpoint_Comm
         updateProfile.setName(Update_name.getText().toString());
         updateProfile.setPassword(Update_password.getText().toString());
         updateProfile.setMobilephone(Update_phone.getText().toString());
-        updateProfile.setMail("setu1421@yahoo.com");
+        updateProfile.setMail("batman");
 
     }
     public void updateData()
@@ -102,17 +102,4 @@ public class Edit_Profile extends Fragment implements Edit_Profile_Endpoint_Comm
         new Edit_Profile_Endpoint_Communicator().execute(new Pair<Context, UserinfoModel>(getActivity(), updateProfile));
     }
 
-    @Override
-    public void setResponseMessage(ResponseMessages response) {
-        String res = response.getMessage();
-
-        if(res.equals("Update OK"))
-        {
-            Toast.makeText(getActivity(), "update Successful!", Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-            Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_LONG).show();
-        }
-    }
 }

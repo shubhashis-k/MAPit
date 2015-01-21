@@ -25,13 +25,14 @@ import android.widget.Toast;
 
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
+import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 // added a comment
 
-public class SlidingDrawerActivity extends ActionBarActivity {
+public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -137,6 +138,20 @@ public class SlidingDrawerActivity extends ActionBarActivity {
 
             }
         });
+    }
+
+    @Override
+    public void setResponseMessage(ResponseMessages response) {
+        String res = response.getMessage();
+
+        if(res.equals("Update OK"))
+        {
+            Toast.makeText(this, "update Successful!", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
