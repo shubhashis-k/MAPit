@@ -1,4 +1,4 @@
-package com.mapit.backend;
+package com.mapit.backend.Properties_and_Values;
 
 /**
  * Created by shubhashis on 1/7/2015.

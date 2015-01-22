@@ -10,6 +10,10 @@ public class ResponseMessages {
     public final String Userinfo_creation_duplicate = "DUPLICATE";
     public final String Userinfo_update_OK = "Update OK";
 
+    public final String Friend_Request_Pending = "Friend Request Sent!";
+    public final String Friend_Request_Accepted = "Friend Request Accepted!";
+    public final String Friend_Request_Deleted = "Friend Request Deleted!";
+
     public void setMessage(String message)
     {
         response_message = message;

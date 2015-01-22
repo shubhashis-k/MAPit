@@ -1,4 +1,4 @@
-package com.mapit.backend;
+package com.mapit.backend.Properties_and_Values;
 
 /**
  * Created by shubhashis on 1/7/2015.
@@ -10,8 +10,11 @@ public enum DatastorePropertyNames {
     Userinfo_Mail ("Mail"),
     Userinfo_Password ("Password"),
     Userinfo_Mobile ("Mobile"),
-    Userinfo_Profilepic ("Profilepic")
+    Userinfo_Profilepic ("Profilepic"),
 
+    Friends_mail1 ("Mail1"),
+    Friends_mail2 ("Mail2"),
+    Friends_status ("Status")
     ;
 
     private String Property;

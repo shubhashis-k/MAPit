@@ -6,7 +6,7 @@
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>com.mapit.backend.UserinfoEndpoint</param-value>
+            <param-value>com.mapit.backend.UserinfoEndpoint, com.mapit.backend.FriendsEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

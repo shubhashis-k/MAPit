@@ -9,7 +9,7 @@ import com.mapit.backend.userinfoModelApi.UserinfoModelApi;
 import java.io.IOException;
 
 /**
- * Created by Debashis7 on 1/17/2015.
+ * Created by shubhashis on 1/17/2015.
  */
 public class OfflineInitializer {
     public UserinfoModelApi.Builder Initialize() {

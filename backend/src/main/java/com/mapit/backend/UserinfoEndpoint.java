@@ -12,6 +12,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Text;
+import com.mapit.backend.Properties_and_Values.Commands;
+import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
+import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 
 import java.util.ArrayList;
 
