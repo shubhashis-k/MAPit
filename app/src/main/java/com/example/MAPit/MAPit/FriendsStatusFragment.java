@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,9 @@ public class FriendsStatusFragment extends Fragment{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+              Fragment fragment = new Friends_Status_Comment_Fragment();
+              FragmentManager fragmentManager = getFragmentManager();
+              fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
             }
         });
         // We first check for cached request

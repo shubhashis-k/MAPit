@@ -1,19 +1,17 @@
 package com.example.MAPit.MAPit;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,16 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-// added a comment
+
 
 public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{
     private DrawerLayout mDrawerLayout;
@@ -210,20 +203,6 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 break;
         }
         startFragment(fragment, position);
-       /* if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
-
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            //setTitle(navMenuTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerLinear);
-        } else {
-            // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
-        }*/
     }
 
     private void startFragment(Fragment fragment, int position) {
@@ -252,6 +231,8 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -304,4 +285,5 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
 }
