@@ -135,8 +135,10 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //must clear menu here to get fragment own menu option
+        menu.clear();
         inflater.inflate(R.menu.menu_add_comment,menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        //super.onCreateOptionsMenu(menu, inflater);
 
     }
 
