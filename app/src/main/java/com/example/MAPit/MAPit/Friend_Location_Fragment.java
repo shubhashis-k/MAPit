@@ -47,10 +47,11 @@ public class Friend_Location_Fragment extends Fragment {
         directionMap.getUiSettings().setMyLocationButtonEnabled(true);
         directionMap.getUiSettings().setAllGesturesEnabled(true);
         directionMap.setTrafficEnabled(true);
-        directionMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        //directionMap.animateCamera(CameraUpdateFactory.zoomTo(10));
         markerOptions = new MarkerOptions();
         fromPosition = new LatLng(11.663837, 78.147297);
         toPosition = new LatLng(11.723512, 78.466287);
+        directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
         //calling the getroutetask for knowing the route
         GetRouteTask getRouteTask = new GetRouteTask();
         getRouteTask.execute();
@@ -91,6 +92,7 @@ public class Friend_Location_Fragment extends Fragment {
                 // Adding route on the map
                 directionMap.addPolyline(rectLine);
                 markerOptions.position(toPosition);
+                markerOptions.position(fromPosition);
                 markerOptions.draggable(true);
                 directionMap.addMarker(markerOptions);
             }
