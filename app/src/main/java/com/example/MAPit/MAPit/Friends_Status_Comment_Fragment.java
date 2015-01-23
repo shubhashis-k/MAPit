@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -147,6 +148,12 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         switch (item.getItemId()){
             case R.id.add_comment_single_status:
                 addcommentdialog();
+                return true;
+            case R.id.go_to_frnd_location:
+                FragmentManager fragmentManager = getFragmentManager();
+                Fragment fragment = new Friend_Location_Fragment();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

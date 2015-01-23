@@ -3,4 +3,7 @@
     <item
         android:id="@+id/add_comment_single_status"
         android:title="Add Comment"/>
+    <item
+        android:id="@+id/go_to_frnd_location"
+        android:title="Know Driving Route"/>
 </menu>

@@ -121,34 +121,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         Button go = (Button) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
-        //making my custom infoadapter
-
-
-       /* map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            public void onInfoWindowClick(Marker marker) {
-                String[] items = {"onefunction", "twofunction"};
-                final AlertDialog.Builder itemDilog = new AlertDialog.Builder(getActivity());
-                itemDilog.setTitle("");
-                itemDilog.setCancelable(true);
-                itemDilog.setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: {
-
-                            }
-                            break;
-                            case 1: {
-                                //twofunction();
-                            }
-                            break;
-                        }
-
-                    }
-                });
-                itemDilog.show();
-
-            }
-        });*/
 
        //onclick listener on marker of friends location
 
