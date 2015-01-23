@@ -14,23 +14,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
-import com.example.MAPit.Volley.adapter.FeedListAdapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
-import com.example.MAPit.Volley.data.FeedItem;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;

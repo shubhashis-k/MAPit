@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<EditText
+    android:id="@+id/frnd_search_et"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="10dp"
+    android:hint="  Search People"
+    android:background="@drawable/rounded_edittext"
+    android:textSize="25dp"
+    />
+    <ListView
+        android:id="@+id/frnd_search_lv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"></ListView>
+</LinearLayout>

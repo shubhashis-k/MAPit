@@ -177,14 +177,9 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
-
-                //Intent intent = new Intent(this
-                //, HomeMapActivity.class);
-                //startActivity(intent);
-
                 break;
             case 1:
-                //fragment = new FindPeopleFragment();
+                fragment = new Friend_Search_Fragment();
                 break;
             case 2:
                 //fragment = new PhotosFragment();
