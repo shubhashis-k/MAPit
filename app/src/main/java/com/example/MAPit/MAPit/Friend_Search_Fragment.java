@@ -20,9 +20,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
 import com.example.MAPit.Volley.adapter.Friend_SearchList_Adapter;
+import com.example.MAPit.Volley.adapter.MyFriendListAdapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
+import com.example.MAPit.Volley.data.FeedItem;
 import com.example.MAPit.Volley.data.Friend_Search_ListItem;
+import com.example.MAPit.Volley.data.MyFriendsItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,9 +39,11 @@ import java.util.Locale;
 public class Friend_Search_Fragment extends Fragment {
     String data;
     private EditText search_frnd;
-    private ListView listView;
+    private ListView listView, myfrndlistView;
     private Friend_SearchList_Adapter listAdapter;
+    private MyFriendListAdapter myFriendListAdapter;
     private List<Friend_Search_ListItem> frndlistItems;
+    private List<MyFriendsItem> myfrndlistItems;
     private String URL_FEED = "http://api.androidhive.info/feed/feed.json";
 
     //added this for adding fragment menu
@@ -52,9 +57,14 @@ public class Friend_Search_Fragment extends Fragment {
 
         search_frnd = (EditText) v.findViewById(R.id.frnd_search_et);
         listView = (ListView) v.findViewById(R.id.frnd_search_lv);
+        myfrndlistView = (ListView) v.findViewById(R.id.my_frnd_lv);
         frndlistItems = new ArrayList<Friend_Search_ListItem>();
+        myfrndlistItems = new ArrayList<MyFriendsItem>();
         listAdapter = new Friend_SearchList_Adapter(getActivity(), frndlistItems);
+        myFriendListAdapter = new MyFriendListAdapter(getActivity(), myfrndlistItems);
         listView.setAdapter(listAdapter);
+        myfrndlistView.setAdapter(myFriendListAdapter);
+
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,6 +72,8 @@ public class Friend_Search_Fragment extends Fragment {
 
             }
         });
+
+        checkForCacheForMyFriend();
 
         search_frnd.addTextChangedListener(new TextWatcher() {
             @Override
@@ -77,15 +89,76 @@ public class Friend_Search_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = search_frnd.getText().toString().toLowerCase(Locale.getDefault());
-                if(text.equalsIgnoreCase("")){
-                    frndlistItems.clear();
-                    listAdapter.notifyDataSetChanged();
-                }
                 checkForCache(text);
             }
         });
         return v;
     }
+
+    private void checkForCacheForMyFriend() {
+        Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        Cache.Entry entry = cache.get(URL_FEED);
+        if (entry != null) {
+            // fetch the data from cache
+            try {
+                String data = new String(entry.data, "UTF-8");
+                try {
+                    parseJsonFeedForMyFriend(new JSONObject(data));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            // making fresh volley request and getting json
+            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
+                    URL_FEED, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    //VolleyLog.d(TAG, "Response: " + response.toString());
+                    if (response != null) {
+                        parseJsonFeedForMyFriend(response);
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            });
+
+            // Adding request to volley request queue
+            AppController.getInstance().addToRequestQueue(jsonReq);
+        }
+    }
+
+    private void parseJsonFeedForMyFriend(JSONObject response) {
+
+        try {
+            JSONArray feedArray = response.getJSONArray("feed");
+
+            for (int i = 0; i < feedArray.length(); i++) {
+                JSONObject feedObj = (JSONObject) feedArray.get(i);
+
+                MyFriendsItem item = new MyFriendsItem();
+                item.setUser_Name(feedObj.getString("name"));
+                item.setUser_location("Khulna");
+                item.setUser_Imge(feedObj.getString("profilePic"));
+
+                myfrndlistItems.add(item);
+            }
+
+            // notify data changes to list adapater
+            listAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void checkForCache(final String filter) {
 
@@ -146,28 +219,33 @@ public class Friend_Search_Fragment extends Fragment {
                 }
             } else {
                 //this checks whether a i go back to empty edittext
-                  if(filter.equalsIgnoreCase("")){
-                      frndlistItems.clear();
-                      listAdapter.notifyDataSetChanged();
-                  }
-                else {
-                      frndlistItems.clear();
-                      for (int i = 0; i < feedArray.length(); i++) {
-                          JSONObject feedObj = (JSONObject) feedArray.get(i);
-                          filter = filter.toLowerCase(Locale.getDefault());
-                          String checkname = feedObj.get("name").toString();
-                          if (checkname.toLowerCase(Locale.getDefault()).contains(filter)) {
-                              Friend_Search_ListItem item = new Friend_Search_ListItem();
-                              item.setUser_Name(feedObj.getString("name"));
-                              item.setUser_location("Khulna");
-                              item.setUser_Imge(feedObj.getString("profilePic"));
-                              frndlistItems.add(item);
-                          }
-                      }
-                  }
+                if (filter.equalsIgnoreCase("")) {
+                    frndlistItems.clear();
+                    listAdapter.notifyDataSetChanged();
+                    //again reappearing myfrnd list
+                    myfrndlistView.setVisibility(View.VISIBLE);
+
+                } else {
+                    frndlistItems.clear();
+                    //hiding myfrnd list
+                    myfrndlistView.setVisibility(View.GONE);
+                    for (int i = 0; i < feedArray.length(); i++) {
+                        JSONObject feedObj = (JSONObject) feedArray.get(i);
+                        filter = filter.toLowerCase(Locale.getDefault());
+                        String checkname = feedObj.get("name").toString();
+                        if (checkname.toLowerCase(Locale.getDefault()).contains(filter)) {
+                            Friend_Search_ListItem item = new Friend_Search_ListItem();
+                            item.setUser_Name(feedObj.getString("name"));
+                            item.setUser_location("Khulna");
+                            item.setUser_Imge(feedObj.getString("profilePic"));
+                            frndlistItems.add(item);
+                        }
+                    }
+                }
 
             }
             // notify data changes to list adapater
+
             listAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();

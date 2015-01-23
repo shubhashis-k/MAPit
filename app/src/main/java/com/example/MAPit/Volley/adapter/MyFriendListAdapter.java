@@ -1,5 +1,9 @@
 package com.example.MAPit.Volley.adapter;
 
+/**
+ * Created by SETU on 1/24/2015.
+ */
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,37 +13,34 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Friend_Search_ListItem;
+import com.example.MAPit.Volley.data.MyFriendsItem;
 
 import java.util.List;
 
-/**
- * Created by SETU on 1/23/2015.
- */
-public class Friend_SearchList_Adapter extends BaseAdapter {
+public class MyFriendListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Friend_Search_ListItem> frndlistItems;
+    private List<MyFriendsItem> myfrndlistItems;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public Friend_SearchList_Adapter(Activity activity, List<Friend_Search_ListItem> frndlistItems) {
+    public MyFriendListAdapter(Activity activity, List<MyFriendsItem> myfrndlistItems) {
         this.activity = activity;
-        this.frndlistItems = frndlistItems;
+        this.myfrndlistItems = myfrndlistItems;
     }
 
     @Override
     public int getCount() {
-        return frndlistItems.size();
+        return myfrndlistItems.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return frndlistItems.get(location);
+        return myfrndlistItems.get(location);
     }
 
     @Override
@@ -48,34 +49,35 @@ public class Friend_SearchList_Adapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (inflater == null)
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.frnd_search_list_item, null);
+            convertView = inflater.inflate(R.layout.myfriend_list_item, null);
 
         if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
 
-        TextView name = (TextView) convertView.findViewById(R.id.frnd_name);
-        TextView location = (TextView) convertView.findViewById(R.id.frnd_location);
-        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
-        final Button addfrnd = (Button) convertView.findViewById(R.id.bt_add_frnd);
+        TextView name = (TextView) convertView.findViewById(R.id.my_frnd_name);
+        TextView location = (TextView) convertView.findViewById(R.id.my_frnd_location);
+        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.myfrnd_profilePic);
+        Button deletefrnd = (Button) convertView.findViewById(R.id.bt_delete_frnd);
 
-        Friend_Search_ListItem item = frndlistItems.get(position);
+        MyFriendsItem item = myfrndlistItems.get(position);
 
         name.setText(item.getUser_Name());
         profilePic.setImageUrl(item.getUser_Imge(), imageLoader);
         location.setText(item.getUser_location());
 
         //button add listener is needed to fill
-        addfrnd.setOnClickListener(new View.OnClickListener() {
+        deletefrnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addfrnd.setText("Request Sent");
-                addfrnd.setEnabled(false);
+                //Integer index = (Integer) v.getTag();
+                myfrndlistItems.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -83,4 +85,5 @@ public class Friend_SearchList_Adapter extends BaseAdapter {
     }
 
 }
+
 
