@@ -182,7 +182,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 fragment = new Friend_Search_Fragment();
                 break;
             case 2:
-                //fragment = new PhotosFragment();
+                fragment = new Groups_Fragment();
                 break;
             case 3:
                 // fragment = new CommunityFragment();
