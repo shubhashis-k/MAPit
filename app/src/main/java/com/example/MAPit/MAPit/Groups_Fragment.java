@@ -166,13 +166,17 @@ public class Groups_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentManager fragmentManager;
+        Fragment fragment;
         switch (item.getItemId()){
             case R.id.create_group:
-
+                fragmentManager = getFragmentManager();
+                fragment = new Create_New_Group_Fragment();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 return true;
             case R.id.my_groups:
-                FragmentManager fragmentManager = getFragmentManager();
-                Fragment fragment = new MyOwnGroupsFragment();
+                 fragmentManager = getFragmentManager();
+                 fragment = new MyOwnGroupsFragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 return true;
         }

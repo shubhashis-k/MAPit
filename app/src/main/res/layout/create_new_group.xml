@@ -8,61 +8,65 @@
      >
 
     <TextView
-        android:id="@+id/group_single_status_post"
+        android:id="@+id/tv_new_group_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#000000"
-        android:text="Type Post : "
+        android:text="Enter Group Name : "
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#E8E8E8"
         android:textStyle="bold"
         android:typeface="sans" />
 
     <EditText
-        android:id="@+id/et_group_statuspost"
+        android:id="@+id/et_new_group_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+     >
+    </EditText>
+
+    <TextView
+        android:id="@+id/textViewSMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#000000"
+        android:text="Enter Description : "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#E8E8E8"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <EditText
+        android:id="@+id/et_new_group_desc"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:lines="6"
+        android:lines="5"
         android:gravity="top" />
 
-    <TextView
-        android:id="@+id/textViewPhoneNo"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/choosenewgrppic"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#000000"
-        android:text="Type Url : "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#E8E8E8"
         android:textStyle="bold"
-        android:typeface="sans" />
-
-    <EditText
-        android:id="@+id/et_grouppost_url"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:lines="1">
-    </EditText>
-
-    <Button
-        android:id="@+id/choosepostpic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Add Photo"/>
-    <ImageView
-        android:id="@+id/add_post_pic"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/slide_profile"
-        android:scaleType="fitXY" />
-    <Button
-        android:id="@+id/group_post_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:text="Choose Group Pic" />
+     <ImageView
+        android:id="@+id/add_new_group_pic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:text="Post"/>
+        android:src="@drawable/slide_profile"
+        android:scaleType="fitCenter" />
+
+    <Button
+        android:id="@+id/bt_create_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        android:textStyle="bold"
+        android:text="Create" />
+
 </LinearLayout>
