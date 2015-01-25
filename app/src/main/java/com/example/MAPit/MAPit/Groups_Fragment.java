@@ -59,7 +59,7 @@ public class Groups_Fragment extends Fragment {
         groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(),"working",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"working",Toast.LENGTH_LONG).show();
             }
         });
 

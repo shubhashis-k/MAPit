@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,7 +59,9 @@ public class MyOwnGroupsFragment extends Fragment {
         groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(),"working",Toast.LENGTH_SHORT).show();
+                FragmentManager fragmentManager = getFragmentManager();
+                Fragment fragment = new Single_Group_Status_Fragment();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
             }
         });
 
@@ -137,12 +140,12 @@ public class MyOwnGroupsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        /*switch (item.getItemId()){
             case R.id.create_group:
                 return true;
             case R.id.my_groups:
                 return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 }

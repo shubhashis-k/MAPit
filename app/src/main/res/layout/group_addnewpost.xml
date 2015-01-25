@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+     >
+
+    <TextView
+        android:id="@+id/group_single_status_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#000000"
+        android:text="Type Post : "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#E8E8E8"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <EditText
+        android:id="@+id/et_group_statuspost"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:lines="6"
+        android:gravity="top" />
+
+    <TextView
+        android:id="@+id/textViewPhoneNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#000000"
+        android:text="Type Url : "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#E8E8E8"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <EditText
+        android:id="@+id/et_grouppost_url"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:lines="1">
+    </EditText>
+
+    <Button
+        android:id="@+id/choosepostpic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Add Photo"/>
+    <ImageView
+        android:id="@+id/add_post_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/slide_profile"
+        android:scaleType="fitXY" />
+    <Button
+        android:id="@+id/group_post_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Post"/>
+</LinearLayout>
