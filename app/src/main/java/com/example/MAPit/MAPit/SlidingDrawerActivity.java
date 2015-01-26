@@ -188,7 +188,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 // fragment = new CommunityFragment();
                 break;
             case 4:
-                //fragment = new PagesFragment();
+                fragment = new MyWallFragment();
                 break;
             case 5:
                 // fragment = new WhatsHotFragment();
