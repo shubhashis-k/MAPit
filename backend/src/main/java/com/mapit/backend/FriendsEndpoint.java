@@ -105,6 +105,7 @@ public class FriendsEndpoint {
             requestKey = result.getKey();
         }
 
+
         return requestKey;
     }
 }
