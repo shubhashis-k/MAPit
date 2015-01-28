@@ -14,7 +14,12 @@ public enum DatastorePropertyNames {
 
     Friends_mail1 ("Mail1"),
     Friends_mail2 ("Mail2"),
-    Friends_status ("Status")
+    Friends_status ("Status"),
+
+    Groups_groupname ("Groupname"),
+    Groups_creatormail ("CreatorMail"),
+    Groups_latitude ("latitude"),
+    Groups_longitude ("longitude")
     ;
 
     private String Property;

@@ -3,7 +3,7 @@ package com.mapit.backend;
 import java.util.ArrayList;
 
 /**
- * Created by Debashis7 on 1/27/2015.
+ * Created by shubhashis on 1/27/2015.
  */
 public class KMP {
         public int[] prekmp(String pattern) {

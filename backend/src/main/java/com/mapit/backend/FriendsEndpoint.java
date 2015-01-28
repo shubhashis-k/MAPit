@@ -36,7 +36,7 @@ public class FriendsEndpoint {
     @ApiMethod(name = "requestFriends", path = "requestFriendsPath", httpMethod = ApiMethod.HttpMethod.POST)
     public ResponseMessages requestFriends(Friends data) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
+        //need to check if duplicate request exists
         Entity friends_kind = new Entity(DatastoreKindNames.FriendsData.getKind());
         friends_kind.setProperty(DatastorePropertyNames.Friends_mail1.getProperty(), data.getMail1());
         friends_kind.setProperty(DatastorePropertyNames.Friends_mail2.getProperty(), data.getMail2());

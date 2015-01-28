@@ -13,6 +13,12 @@ public class ResponseMessages {
     public final String Friend_Request_Pending = "Friend Request Sent!";
     public final String Friend_Request_Accepted = "Friend Request Accepted!";
     public final String Friend_Request_Deleted = "Friend Request Deleted!";
+    public final String Friend_Request_Exists = "Friend Request Already Sent!";
+
+    public final String Duplicate_Group = "Group Exists!";
+    public final String Group_Created = "Group Created!";
+    public final String Group_Available = "Group Available!";
+    public final String Group_Deleted = "Group Deleted!";
 
     public void setMessage(String message)
     {
