@@ -5,7 +5,10 @@ package com.mapit.backend.Properties_and_Values;
  */
 public enum Values {
     Friends_Accepted ("1"),
-    Friends_Pending ("0")
+    Friends_Pending ("0"),
+
+    Group_Request_Pending ("0"),
+    Group_Request_Accepted ("1")
     ;
     private String value;
 

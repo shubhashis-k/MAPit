@@ -1,13 +1,14 @@
 package com.mapit.backend;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 /**
  * Created by Debashis7 on 1/23/2015.
  */
 public class Search {
     private String data;
-    private Key key;
+    private String key;
     public String getData() {
         return data;
     }
@@ -16,11 +17,13 @@ public class Search {
         this.data = data;
     }
 
-    public Key getKey() {
+    public String getKey() {
         return key;
     }
 
     public void setKey(Key key) {
-        this.key = key;
+
+        String keyToString = KeyFactory.keyToString(key);
+        this.key = keyToString;
     }
 }

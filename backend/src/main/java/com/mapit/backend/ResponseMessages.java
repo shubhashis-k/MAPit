@@ -20,6 +20,13 @@ public class ResponseMessages {
     public final String Group_Available = "Group Available!";
     public final String Group_Deleted = "Group Deleted!";
 
+    public final String Person_not_in_group = "Person is not in the Group!";
+    public final String Person_in_group = "Person is in the Group!";
+    public final String Person_added_Pending = "Reuquest Sent! Status Pending";
+    public final String Person_added_Accepted = "Person added!";
+    public final String Person_removed = "Person removed!";
+
+
     public void setMessage(String message)
     {
         response_message = message;

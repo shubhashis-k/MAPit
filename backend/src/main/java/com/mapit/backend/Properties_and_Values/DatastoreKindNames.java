@@ -6,7 +6,8 @@ package com.mapit.backend.Properties_and_Values;
 public enum DatastoreKindNames {
     Userinfo ("Userinfo"),
     FriendsData ("FriendsData"),
-    Groups ("Groups")
+    Groups ("Groups"),
+    PersonsInGroup ("PersonsInGroup")
     ;
 
     private String kind;

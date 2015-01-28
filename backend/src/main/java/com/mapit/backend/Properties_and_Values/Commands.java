@@ -10,8 +10,10 @@ public enum Commands {
     Userinfo_getpass ("Get_Pass"),
     Userinfo_getinfo ("Get_Info"),
     Userinfo_update ("Update"),
-    Userinfo_create ("Create")
+    Userinfo_create ("Create"),
 
+    Request_Group ("Request"),
+    Accept_Group ("Accept")
     ;
 
     private String command;
