@@ -23,7 +23,14 @@ public enum DatastorePropertyNames {
 
     PersonsInGroup_personMail ("PersonMail"),
     PersonsInGroup_groupKey ("GroupKey"),
-    PersonsInGroup_status ("Status")
+    PersonsInGroup_status ("Status"),
+
+    Status_groupKey ("groupKey"),
+    Status_personMail ("personMail"),
+    Status_latitude ("latitude"),
+    Status_longitude ("longitude"),
+    Status_text ("text"),
+    Status_time ("time")
     ;
 
     private String Property;

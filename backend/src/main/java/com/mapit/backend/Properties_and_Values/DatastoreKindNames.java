@@ -7,7 +7,9 @@ public enum DatastoreKindNames {
     Userinfo ("Userinfo"),
     FriendsData ("FriendsData"),
     Groups ("Groups"),
-    PersonsInGroup ("PersonsInGroup")
+    PersonsInGroup ("PersonsInGroup"),
+    StatusInGroup ("GroupStatus"),
+    StatusbyIndividual ("IndividualStatus")
     ;
 
     private String kind;
