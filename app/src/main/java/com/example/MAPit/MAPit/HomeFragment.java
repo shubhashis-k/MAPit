@@ -68,18 +68,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 @Override
                 public View getInfoContents(Marker marker) {
-                    // TODO Auto-generated method stub
+                    // creating my own info for latest frnd status
+                    String status="Hi how are you everyone? Have a nice day ahead";
                     View v = getActivity().getLayoutInflater().inflate(R.layout.map_info_listview, null);
-                    TextView tvLocality = (TextView) v.findViewById(R.id.tv_locality);
-                    TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
-                    TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
-                    TextView tvSnippet = (TextView) v.findViewById(R.id.tv_snippet);
-
-                    LatLng ll = marker.getPosition();
-                    tvLocality.setText(marker.getTitle());
-                    tvLat.setText("Latitude: " + ll.latitude);
-                    tvLng.setText("Longitude: " + ll.longitude);
-                    tvSnippet.setText(marker.getSnippet());
+                    TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
+                    TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
+                    tvFrndname.setText("Neerob Basak"); // Later it will be name of friend
+                    //checking for length of status
+                    if(status.length()>10){
+                        String substatus = status.substring(0,20);
+                        substatus +="...";
+                        tvFrndStatus.setText(substatus);
+                    }
                     return v;
                 }
             });
@@ -120,66 +120,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //added the go button listener
         Button go = (Button) v.findViewById(R.id.go);
         go.setOnClickListener(this);
-        //added mapclicklistener for testing
-        /*map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Toast.makeText(getActivity(),"it worked",Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
-        //making my custom infoadapter
 
 
-       /* map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            public void onInfoWindowClick(Marker marker) {
-                String[] items = {"onefunction", "twofunction"};
-                final AlertDialog.Builder itemDilog = new AlertDialog.Builder(getActivity());
-                itemDilog.setTitle("");
-                itemDilog.setCancelable(true);
-                itemDilog.setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: {
-
-                            }
-                            break;
-                            case 1: {
-                                //twofunction();
-                            }
-                            break;
-                        }
-
-                    }
-                });
-                itemDilog.show();
-
-            }
-        });*/
-       /* map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                //View v1=inflater.inflate(R.layout.map_info_listview,null,false);
-                View v1=getActivity().getLayoutInflater().inflate(R.layout.map_info_listview,null);
-                ListView ls = (ListView) v1.findViewById(R.id.list);
-                String[] item = new String[]{"one","two"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,item);
-                ls.setAdapter(adapter);
-                ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //String item = (String) view.getItem(position);
-                        Toast.makeText(getActivity(), "it worked", Toast.LENGTH_LONG).show();
-                    }
-                });
-                return v1;
-            }
-        });*/
        //onclick listener on marker of friends location
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {

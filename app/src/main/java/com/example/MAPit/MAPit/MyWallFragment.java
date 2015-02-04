@@ -4,30 +4,39 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.example.MAPit.Volley.adapter.FeedListAdapter;
-import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.FeedItem;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.UnsupportedEncodingException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import com.android.volley.Cache;
-import com.android.volley.Cache.Entry;
-import com.android.volley.Request.Method;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.MAPit.Volley.adapter.FeedListAdapter;
+import com.example.MAPit.Volley.app.AppController;
+import com.example.MAPit.Volley.data.FeedItem;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by SETU on 1/20/2015.
+ * Created by SETU on 1/26/2015.
  */
-public class FriendsStatusFragment extends Fragment{
+public class MyWallFragment extends Fragment{
+
+    public MyWallFragment(){
+        setHasOptionsMenu(true);
+    }
 
     private ListView listView;
     private FeedListAdapter listAdapter;
@@ -45,14 +54,14 @@ public class FriendsStatusFragment extends Fragment{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              Fragment fragment = new Friends_Status_Comment_Fragment();
-              FragmentManager fragmentManager = getFragmentManager();
-              fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                Fragment fragment = new Friends_Status_Comment_Fragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
             }
         });
         // We first check for cached request
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Entry entry = cache.get(URL_FEED);
+        Cache.Entry entry = cache.get(URL_FEED);
         if (entry != null) {
             // fetch the data from cache
             try {
@@ -68,7 +77,7 @@ public class FriendsStatusFragment extends Fragment{
 
         } else {
             // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Method.GET,
+            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
                     URL_FEED, null, new Response.Listener<JSONObject>() {
 
                 @Override
@@ -125,5 +134,23 @@ public class FriendsStatusFragment extends Fragment{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_addnew_status,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_new_status:
+                FragmentManager fragmentManager = getFragmentManager();
+                Fragment fragment = new Add_GroupStatus_Fragment();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
