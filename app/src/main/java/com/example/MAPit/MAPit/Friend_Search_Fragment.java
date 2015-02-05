@@ -50,7 +50,7 @@ public class Friend_Search_Fragment extends Fragment {
     private MyFriendListAdapter myFriendListAdapter;
     private List<Friend_Search_ListItem> frndlistItems;
     private List<MyFriendsItem> myfrndlistItems;
-    private String URL_FEED = "http://api.androidhive.info/feed/feed.json";
+
 
     //added this for adding fragment menu
     public Friend_Search_Fragment() {
@@ -62,24 +62,14 @@ public class Friend_Search_Fragment extends Fragment {
         View v = inflater.inflate(R.layout.friend_search, null, false);
 
         search_frnd = (EditText) v.findViewById(R.id.frnd_search_et);
-        listView = (ListView) v.findViewById(R.id.frnd_search_lv);
+
         myfrndlistView = (ListView) v.findViewById(R.id.my_frnd_lv);
-        frndlistItems = new ArrayList<Friend_Search_ListItem>();
+
         myfrndlistItems = new ArrayList<MyFriendsItem>();
-        listAdapter = new Friend_SearchList_Adapter(getActivity(), frndlistItems);
+
         myFriendListAdapter = new MyFriendListAdapter(getActivity(), myfrndlistItems);
-        listView.setAdapter(listAdapter);
+
         myfrndlistView.setAdapter(myFriendListAdapter);
-
-        //listener for each listitem of friend status
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-
-        checkForCacheForMyFriend();
 
         search_frnd.addTextChangedListener(new TextWatcher() {
             @Override
@@ -97,7 +87,7 @@ public class Friend_Search_Fragment extends Fragment {
                 String text = search_frnd.getText().toString().toLowerCase(Locale.getDefault());
 
                 searchUser(text);
-                checkForCache(text);
+                //checkForCache(text);
 
 
             }
@@ -121,166 +111,30 @@ public class Friend_Search_Fragment extends Fragment {
                 super.onPostExecute(result);
 
                 ArrayList <Search> res = result;
+                Populate(res);
 
             }
         }.execute(new Pair<Data, Search>(info, searchProperty));
     }
 
-    private void checkForCacheForMyFriend() {
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeedForMyFriend(new JSONObject(data));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
 
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
+    public void Populate(ArrayList <Search> a){
+        myfrndlistItems.clear();
+        myFriendListAdapter.notifyDataSetChanged();
 
-                @Override
-                public void onResponse(JSONObject response) {
-                    //VolleyLog.d(TAG, "Response: " + response.toString());
-                    if (response != null) {
-                        parseJsonFeedForMyFriend(response);
-                    }
-                }
-            }, new Response.ErrorListener() {
+        for (int i = 0; i < a.size(); i++) {
+            Search s = a.get(i);
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            });
+            MyFriendsItem item = new MyFriendsItem();
+            item.setUser_Name(s.getData());
+            item.setUser_location("Khulna");
 
-            // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
+            myfrndlistItems.add(item);
         }
-    }
 
-    private void parseJsonFeedForMyFriend(JSONObject response) {
+        // notify data changes to list adapter
+        myFriendListAdapter.notifyDataSetChanged();
 
-        try {
-            JSONArray feedArray = response.getJSONArray("feed");
-
-            for (int i = 0; i < feedArray.length(); i++) {
-                JSONObject feedObj = (JSONObject) feedArray.get(i);
-
-                MyFriendsItem item = new MyFriendsItem();
-                item.setUser_Name(feedObj.getString("name"));
-                item.setUser_location("Khulna");
-                item.setUser_Imge(feedObj.getString("profilePic"));
-
-                myfrndlistItems.add(item);
-            }
-
-            // notify data changes to list adapater
-            listAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void checkForCache(final String filter) {
-
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeed(new JSONObject(data), filter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-                    //VolleyLog.d(TAG, "Response: " + response.toString());
-                    if (response != null) {
-                        parseJsonFeed(response, filter);
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            });
-
-            // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
-        }
-    }
-
-    private void parseJsonFeed(JSONObject response, String filter) {
-        try {
-            JSONArray feedArray = response.getJSONArray("feed");
-
-            if (filter.equalsIgnoreCase("empty")) {
-                for (int i = 0; i < feedArray.length(); i++) {
-                    JSONObject feedObj = (JSONObject) feedArray.get(i);
-
-                    Friend_Search_ListItem item = new Friend_Search_ListItem();
-                    item.setUser_Name(feedObj.getString("name"));
-                    item.setUser_location("Khulna");
-                    item.setUser_Imge(feedObj.getString("profilePic"));
-
-                    frndlistItems.add(item);
-                }
-            } else {
-                //this checks whether a i go back to empty edittext
-                if (filter.equalsIgnoreCase("")) {
-                    frndlistItems.clear();
-                    listAdapter.notifyDataSetChanged();
-                    //again reappearing myfrnd list
-                    myfrndlistView.setVisibility(View.VISIBLE);
-
-                } else {
-                    frndlistItems.clear();
-                    //hiding myfrnd list
-                    myfrndlistView.setVisibility(View.GONE);
-                    for (int i = 0; i < feedArray.length(); i++) {
-                        JSONObject feedObj = (JSONObject) feedArray.get(i);
-                        filter = filter.toLowerCase(Locale.getDefault());
-                        String checkname = feedObj.get("name").toString();
-                        if (checkname.toLowerCase(Locale.getDefault()).contains(filter)) {
-                            Friend_Search_ListItem item = new Friend_Search_ListItem();
-                            item.setUser_Name(feedObj.getString("name"));
-                            item.setUser_location("Khulna");
-                            item.setUser_Imge(feedObj.getString("profilePic"));
-                            frndlistItems.add(item);
-                        }
-                    }
-                }
-
-            }
-            // notify data changes to list adapater
-
-            listAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
 }
