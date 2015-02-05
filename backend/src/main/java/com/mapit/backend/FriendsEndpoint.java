@@ -14,6 +14,7 @@ import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 import com.mapit.backend.Properties_and_Values.Values;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -107,5 +108,45 @@ public class FriendsEndpoint {
 
 
         return requestKey;
+    }
+
+    @ApiMethod(name = "fetchFriendList", path = "fetchFriendListPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Friends> fetchFriendList(@Named("usermail") String Mail, @Named("type") String type) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query Reuqest_Query = new Query();
+        Query.Filter Mail1_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail1.getProperty(), Query.FilterOperator.EQUAL, Mail);
+        Query.Filter Mail2_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, Mail);
+        Query.Filter request_Filter = Query.CompositeFilterOperator.or(Mail1_Filter, Mail2_Filter);
+
+        Reuqest_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(request_Filter);
+
+        PreparedQuery queryResult = datastore.prepare(Reuqest_Query);
+
+        ArrayList <Friends> friendList = new ArrayList<>();
+
+
+        for (Entity result : queryResult.asIterable()) {
+            if (result.getProperty(DatastorePropertyNames.Friends_status.getProperty()).toString().equals(type)) {
+                String fmail1 = result.getProperty(DatastorePropertyNames.Friends_mail1.getProperty()).toString();
+
+                if (!fmail1.equals(Mail)) {
+                    Friends f = new Friends();
+                    f.setMail1(fmail1);
+                    friendList.add(f);
+                }
+
+                String fmail2 = result.getProperty(DatastorePropertyNames.Friends_mail2.getProperty()).toString();
+
+                if (!fmail2.equals(Mail)) {
+                    Friends f = new Friends();
+                    f.setMail1(fmail2);
+                    friendList.add(f);
+                }
+
+
+            }
+        }
+        return friendList;
     }
 }

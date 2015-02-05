@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
+import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mDrawerLinear;
     private TextView profile_name;
+    public ArrayList <Search> searchData;
     // nav drawer title
     private CharSequence mDrawerTitle;
 
@@ -154,6 +156,8 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
             Toast.makeText(this, "Something went wrong!", Toast.LENGTH_LONG).show();
         }
     }
+
+
 
     /**
      * Slide menu item click listener

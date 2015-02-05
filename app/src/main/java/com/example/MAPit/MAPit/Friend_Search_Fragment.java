@@ -1,7 +1,9 @@
 package com.example.MAPit.MAPit;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +19,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
 import com.example.MAPit.Volley.adapter.Friend_SearchList_Adapter;
@@ -26,6 +31,7 @@ import com.example.MAPit.Volley.data.Comment_Item;
 import com.example.MAPit.Volley.data.FeedItem;
 import com.example.MAPit.Volley.data.Friend_Search_ListItem;
 import com.example.MAPit.Volley.data.MyFriendsItem;
+import com.mapit.backend.searchQueriesApi.model.Search;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,10 +95,35 @@ public class Friend_Search_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = search_frnd.getText().toString().toLowerCase(Locale.getDefault());
+
+                searchUser(text);
                 checkForCache(text);
+
+
             }
         });
         return v;
+    }
+    public void searchUser(String pattern){
+        Search searchProperty = new Search();
+        searchProperty.setData(pattern);
+
+        Data info = new Data();
+        info.setContext(getActivity());
+        //info.setCommand();
+        //info.setUsermail();
+        info.setCommand(Commands.Search_users.getCommand());
+
+        new SearchEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(ArrayList <Search> result){
+
+                super.onPostExecute(result);
+
+                ArrayList <Search> res = result;
+
+            }
+        }.execute(new Pair<Data, Search>(info, searchProperty));
     }
 
     private void checkForCacheForMyFriend() {

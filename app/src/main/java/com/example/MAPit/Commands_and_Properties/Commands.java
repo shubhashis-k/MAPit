@@ -8,8 +8,15 @@ public enum Commands {
     Userinfo_getpass ("Get_Pass"),
     Userinfo_getinfo ("Get_Info"),
     Userinfo_update ("Update"),
-    Userinfo_create ("Create")
+    Userinfo_create ("Create"),
 
+    Friends_Request ("Request"),
+    Friends_Make ("Make"),
+    Friends_fetch ("Fetch Accepted"),
+    Friends_fetch_Pending ("Fetch Pending"),
+
+    Search_users ("Users"),
+    Search_Groups ("Groups")
     ;
 
     private String command;
