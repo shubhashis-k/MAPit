@@ -4,7 +4,7 @@ package com.example.MAPit.Volley.data;
  * Created by SETU on 1/24/2015.
  */
 public class SearchListItem {
-    private String name, image, location, timestamp, status, button;
+    private String name, image, location, button;
 
     public String getButton() {
         return button;
@@ -38,19 +38,4 @@ public class SearchListItem {
         this.location = location;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

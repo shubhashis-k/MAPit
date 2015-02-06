@@ -1,6 +1,5 @@
 package com.example.MAPit.MAPit;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -10,46 +9,29 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Data_and_Return_Data.Data;
-import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
-import com.example.MAPit.MAPit.R;
-import com.example.MAPit.Volley.adapter.CommentListAdapter;
-import com.example.MAPit.Volley.adapter.Friend_SearchList_Adapter;
-import com.example.MAPit.Volley.adapter.MyFriendListAdapter;
-import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.Comment_Item;
-import com.example.MAPit.Volley.data.FeedItem;
-import com.example.MAPit.Volley.data.Friend_Search_ListItem;
-import com.example.MAPit.Volley.data.MyFriendsItem;
+
+import com.example.MAPit.Volley.adapter.SearchListAdapter;
+
+import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.searchQueriesApi.model.Search;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Friend_Search_Fragment extends Fragment {
     String data;
-    private EditText search_frnd;
-    private ListView listView, myfrndlistView;
-    private Friend_SearchList_Adapter listAdapter;
-    private MyFriendListAdapter myFriendListAdapter;
-    private List<Friend_Search_ListItem> frndlistItems;
-    private List<MyFriendsItem> myfrndlistItems;
+    private EditText searchBox;
+    private ListView listview;
+
+    private SearchListAdapter searchListAdapter;
+    private List<SearchListItem> listItems;
 
 
     //added this for adding fragment menu
@@ -59,19 +41,15 @@ public class Friend_Search_Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.friend_search, null, false);
+        View v = inflater.inflate(R.layout.search_list_adapter_layout, null, false);
 
-        search_frnd = (EditText) v.findViewById(R.id.frnd_search_et);
+        searchBox = (EditText) v.findViewById(R.id.searchBox);
+        listview = (ListView) v.findViewById(R.id.listview);
+        listItems = new ArrayList<SearchListItem>();
+        searchListAdapter = new SearchListAdapter(getActivity(), listItems);
+        listview.setAdapter(searchListAdapter);
 
-        myfrndlistView = (ListView) v.findViewById(R.id.my_frnd_lv);
-
-        myfrndlistItems = new ArrayList<MyFriendsItem>();
-
-        myFriendListAdapter = new MyFriendListAdapter(getActivity(), myfrndlistItems);
-
-        myfrndlistView.setAdapter(myFriendListAdapter);
-
-        search_frnd.addTextChangedListener(new TextWatcher() {
+        searchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -84,11 +62,9 @@ public class Friend_Search_Fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = search_frnd.getText().toString().toLowerCase(Locale.getDefault());
+                String text = searchBox.getText().toString().toLowerCase(Locale.getDefault());
 
                 searchUser(text);
-                //checkForCache(text);
-
 
             }
         });
@@ -119,21 +95,21 @@ public class Friend_Search_Fragment extends Fragment {
 
 
     public void Populate(ArrayList <Search> a){
-        myfrndlistItems.clear();
-        myFriendListAdapter.notifyDataSetChanged();
+        listItems.clear();
+        searchListAdapter.notifyDataSetChanged();
 
         for (int i = 0; i < a.size(); i++) {
             Search s = a.get(i);
 
-            MyFriendsItem item = new MyFriendsItem();
-            item.setUser_Name(s.getData());
-            item.setUser_location("Khulna");
+            SearchListItem item = new SearchListItem();
+            item.setName(s.getData());
+            item.setLocation("Khulna");
 
-            myfrndlistItems.add(item);
+            listItems.add(item);
         }
 
         // notify data changes to list adapter
-        myFriendListAdapter.notifyDataSetChanged();
+        searchListAdapter.notifyDataSetChanged();
 
     }
 

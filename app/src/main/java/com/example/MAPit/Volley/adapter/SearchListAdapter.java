@@ -14,28 +14,28 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.MAPit.MAPit.R;
-import com.example.MAPit.Volley.data.Item;
+import com.example.MAPit.Volley.data.SearchListItem;
 
 import java.util.List;
 
 public class SearchListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Item> myfrndlistItems;
+    private List<SearchListItem> listItems;
 
-    public SearchListAdapter(Activity activity, List<Item> myfrndlistItems) {
+    public SearchListAdapter(Activity activity, List<SearchListItem> listItems) {
         this.activity = activity;
-        this.myfrndlistItems = myfrndlistItems;
+        this.listItems = listItems;
     }
 
     @Override
     public int getCount() {
-        return myfrndlistItems.size();
+        return listItems.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return myfrndlistItems.get(location);
+        return listItems.get(location);
     }
 
     @Override
@@ -50,23 +50,24 @@ public class SearchListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.myfriend_list_item, null);
+            convertView = inflater.inflate(R.layout.search_list_items, null);
 
 
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView location = (TextView) convertView.findViewById(R.id.location);
-        Button deletefrnd = (Button) convertView.findViewById(R.id.command_button);
+        Button button = (Button) convertView.findViewById(R.id.command_button);
 
-        Item item = myfrndlistItems.get(position);
+
+        SearchListItem item = listItems.get(position);
         name.setText(item.getName());
         location.setText(item.getLocation());
 
         //button add listener is needed to fill
-        deletefrnd.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Integer index = (Integer) v.getTag();
-                myfrndlistItems.remove(position);
+                listItems.remove(position);
                 notifyDataSetChanged();
             }
         });
