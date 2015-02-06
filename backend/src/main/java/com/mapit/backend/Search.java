@@ -26,4 +26,22 @@ public class Search {
         String keyToString = KeyFactory.keyToString(key);
         this.key = keyToString;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof Search){
+            Search compare = (Search) object;
+
+            if(compare.getData().equals(this.getData()) && compare.getKey().equals(this.getKey()))
+                return true;
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return 1107001;
+    }
 }

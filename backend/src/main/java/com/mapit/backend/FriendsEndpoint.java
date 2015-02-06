@@ -7,7 +7,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
@@ -15,7 +15,7 @@ import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 import com.mapit.backend.Properties_and_Values.Values;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
+
 
 import javax.inject.Named;
 
@@ -89,16 +89,14 @@ public class FriendsEndpoint {
     public Key getRequestKey(Friends data) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query Reuqest_Query = new Query();
+        Query Request_Query = new Query();
         Query.Filter Mail1_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail1.getProperty(), Query.FilterOperator.EQUAL, data.getMail1());
-
         Query.Filter Mail2_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, data.getMail2());
-
         Query.Filter request_Filter = Query.CompositeFilterOperator.and(Mail1_Filter, Mail2_Filter);
 
-        Reuqest_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(request_Filter);
+        Request_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(request_Filter);
 
-        PreparedQuery queryResult = datastore.prepare(Reuqest_Query);
+        PreparedQuery queryResult = datastore.prepare(Request_Query);
 
         Key requestKey = null;
 
@@ -111,7 +109,7 @@ public class FriendsEndpoint {
     }
 
     @ApiMethod(name = "fetchFriendList", path = "fetchFriendListPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList<Friends> fetchFriendList(@Named("usermail") String Mail, @Named("type") String type) {
+    public ArrayList<Search> fetchFriendList(@Named("usermail") String Mail, @Named("type") String type) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query Reuqest_Query = new Query();
@@ -123,30 +121,61 @@ public class FriendsEndpoint {
 
         PreparedQuery queryResult = datastore.prepare(Reuqest_Query);
 
-        ArrayList <Friends> friendList = new ArrayList<>();
-
+        ArrayList <Search> friendList = new ArrayList<>();
 
         for (Entity result : queryResult.asIterable()) {
             if (result.getProperty(DatastorePropertyNames.Friends_status.getProperty()).toString().equals(type)) {
                 String fmail1 = result.getProperty(DatastorePropertyNames.Friends_mail1.getProperty()).toString();
 
                 if (!fmail1.equals(Mail)) {
-                    Friends f = new Friends();
-                    f.setMail1(fmail1);
-                    friendList.add(f);
+                    Search s = getName(fmail1);
+                    friendList.add(s);
                 }
 
                 String fmail2 = result.getProperty(DatastorePropertyNames.Friends_mail2.getProperty()).toString();
 
                 if (!fmail2.equals(Mail)) {
-                    Friends f = new Friends();
-                    f.setMail1(fmail2);
-                    friendList.add(f);
+                    Search s = getName(fmail2);
+                    friendList.add(s);
                 }
-
 
             }
         }
         return friendList;
+    }
+
+    @ApiMethod(name = "fetchListNotFriends", path = "fetchListNotFriends", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> fetchListNotFriends(@Named("usermail") String Mail, @Named("queryString") String queryString) throws EntityNotFoundException{
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        SearchEndpoint searchEndpoint = new SearchEndpoint();
+
+        ArrayList <Search> friendList = fetchFriendList(Mail, "1");
+        ArrayList <Search> searchedList = searchEndpoint.getResult(DatastoreKindNames.Userinfo.getKind(), queryString);//returns data with user name
+
+        ArrayList <Search> result = new ArrayList<>();
+
+        Search person = getName(Mail);
+
+        for(int i = 0 ; i < searchedList.size(); i++){
+            if(!friendList.contains(searchedList.get(i)) && !person.getKey().equals(searchedList.get(i).getKey()))
+                result.add(searchedList.get(i));
+        }
+        return result;
+    }
+
+    @ApiMethod(name = "getName", path = "getName", httpMethod = ApiMethod.HttpMethod.POST)
+    public Search getName(@Named("usermail") String Mail) throws EntityNotFoundException {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        UserinfoEndpoint userMailKeyfetcher = new UserinfoEndpoint();
+        Key key = userMailKeyfetcher.getKeyfromMail(Mail);
+
+        Entity userinfo = datastore.get(key);
+        Search info = new Search();
+        info.setData(userinfo.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString());
+        info.setKey(key);
+
+        return info;
     }
 }
