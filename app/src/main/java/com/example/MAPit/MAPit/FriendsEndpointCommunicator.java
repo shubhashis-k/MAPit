@@ -15,7 +15,8 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.mapit.backend.friendsApi.FriendsApi;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.ResponseMessages;
-import com.mapit.backend.friendsApi.model.FriendsCollection;
+import com.mapit.backend.friendsApi.model.Search;
+import com.mapit.backend.friendsApi.model.SearchCollection;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
     private FriendsApi friendsApi;
     private Context context;
     private String usermail, command;
-    private publishResponse_Friends publishClass;
+
     @Override
     protected FriendsEndpointReturnData doInBackground(Pair<Data, Friends>... params) {
         if(friendsApi == null){
@@ -84,8 +85,8 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
         }
     else if(command.equals(Commands.Friends_fetch.getCommand())){
         try {
-            FriendsCollection friendsCollection = friendsApi.fetchFriendList("1", usermail).execute();
-            ArrayList <Friends> friendList = (ArrayList <Friends>) friendsCollection.getItems();
+            SearchCollection friendsCollection = friendsApi.fetchFriendList("1", usermail).execute();
+            ArrayList <Search> friendList = (ArrayList <Search>) friendsCollection.getItems();
 
             FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
             returnData.setFriendList(friendList);
@@ -101,8 +102,8 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
 
     else if(command.equals(Commands.Friends_fetch_Pending.getCommand())){
         try {
-            FriendsCollection friendsCollection = friendsApi.fetchFriendList("0", usermail).execute();
-            ArrayList <Friends> friendList = (ArrayList <Friends>) friendsCollection.getItems();
+            SearchCollection friendsCollection = friendsApi.fetchFriendList("0", usermail).execute();
+            ArrayList <Search> friendList = (ArrayList <Search>) friendsCollection.getItems();
 
             FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
             returnData.setFriendList(friendList);
@@ -116,24 +117,6 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
         }
     }
     return null;
-    }
-    protected void onPostExecute(FriendsEndpointReturnData returnData){
-        if(command.equals(Commands.Friends_Request.getCommand()) || command.equals(Commands.Friends_Make.getCommand())){
-            publishClass = (publishResponse_Friends) ((Activity) context);
-
-            publishClass.setResponse(returnData.getResponseMessages());
-        }
-        else if(command.equals(Commands.Friends_fetch.getCommand()) || command.equals(Commands.Friends_fetch_Pending.getCommand())){
-            publishClass = (publishResponse_Friends) ((Activity) context);
-
-            publishClass.publishList(returnData.getFriendList());
-        }
-    }
-
-    public interface publishResponse_Friends{
-        public void setResponse(String response);
-
-        public void publishList(ArrayList<Friends> friendsList);
     }
 
 }

@@ -104,6 +104,21 @@ public class FriendsEndpoint {
             requestKey = result.getKey();
         }
 
+        if(requestKey == null) {
+
+            Query.Filter AnotherMail1_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail1.getProperty(), Query.FilterOperator.EQUAL, data.getMail2());
+            Query.Filter AnotherMail2_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, data.getMail1());
+            Query.Filter Anotherrequest_Filter = Query.CompositeFilterOperator.and(AnotherMail1_Filter, AnotherMail2_Filter);
+
+            Query Another_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(Anotherrequest_Filter);
+
+            PreparedQuery AnotherqueryResult = datastore.prepare(Another_Query);
+
+            for (Entity result : AnotherqueryResult.asIterable()) {
+                requestKey = result.getKey();
+            }
+        }
+
 
         return requestKey;
     }

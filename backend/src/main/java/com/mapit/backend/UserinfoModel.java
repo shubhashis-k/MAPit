@@ -7,6 +7,7 @@ public class UserinfoModel {
     private String name, mail, password;
     private String mobilephone;
     private String imagedata;
+    private String latitude, longitude;
 
     public String getName() {
         return name;
@@ -46,5 +47,21 @@ public class UserinfoModel {
 
     public void setImagedata(String imagedata) {
         this.imagedata = imagedata;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

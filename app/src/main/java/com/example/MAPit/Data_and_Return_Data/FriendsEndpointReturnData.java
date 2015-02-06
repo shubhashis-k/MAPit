@@ -1,6 +1,8 @@
 package com.example.MAPit.Data_and_Return_Data;
 
 import com.mapit.backend.friendsApi.model.Friends;
+import com.mapit.backend.friendsApi.model.Search;
+import com.mapit.backend.friendsApi.model.SearchCollection;
 
 import java.util.ArrayList;
 
@@ -9,7 +11,7 @@ import java.util.ArrayList;
  */
 public class FriendsEndpointReturnData {
     private String responseMessages;
-    private ArrayList <Friends> friendList;
+    private ArrayList <Search> friendList;
 
     public String getResponseMessages() {
         return responseMessages;
@@ -19,11 +21,11 @@ public class FriendsEndpointReturnData {
         this.responseMessages = responseMessages;
     }
 
-    public ArrayList<Friends> getFriendList() {
+    public ArrayList<Search> getFriendList() {
         return friendList;
     }
 
-    public void setFriendList(ArrayList<Friends> friendList) {
+    public void setFriendList(ArrayList<Search> friendList) {
         this.friendList = friendList;
     }
 }

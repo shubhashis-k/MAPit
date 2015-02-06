@@ -11,6 +11,8 @@ public enum DatastorePropertyNames {
     Userinfo_Password ("Password"),
     Userinfo_Mobile ("Mobile"),
     Userinfo_Profilepic ("Profilepic"),
+    Userinfo_latitude ("Latitude"),
+    Userinfo_longitude ("Longitude"),
 
     Friends_mail1 ("Mail1"),
     Friends_mail2 ("Mail2"),

@@ -43,6 +43,8 @@ public class UserinfoEndpoint {
         Userinfo_Kind.setProperty(DatastorePropertyNames.Userinfo_Username.getProperty(), userinformation.getName());
         Userinfo_Kind.setProperty(DatastorePropertyNames.Userinfo_Mail.getProperty(), userinformation.getMail());
         Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
+        Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_latitude.getProperty(), userinformation.getLatitude());
+        Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_longitude.getProperty(), userinformation.getLongitude());
 
         if(userinformation.getMobilephone() != null)
         {
@@ -86,7 +88,9 @@ public class UserinfoEndpoint {
 
             Entity updatedinfo = datastore.get(k);
             updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Username.getProperty(), userinformation.getName());
-            updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
+            updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
+            updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_latitude.getProperty(), userinformation.getLatitude());
+            updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_longitude.getProperty(), userinformation.getLongitude());
 
             if(userinformation.getImagedata() != null)
             {
@@ -168,6 +172,8 @@ public class UserinfoEndpoint {
                 um.setMail((String) result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
                 um.setImagedata((String) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty()));
                 um.setMobilephone((String) result.getProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty()));
+                um.setLatitude((String) result.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()));
+                um.setLongitude((String) result.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()));
 
                 Userinfo_Result.add(um);
             }
