@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +25,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.MAPit.Volley.adapter.Group_Search_List_Adapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Group_Item;
+import com.google.android.gms.maps.GoogleMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +45,7 @@ public class Groups_Fragment extends Fragment {
     private Group_Search_List_Adapter groupListAdapter;
     private List<Group_Item> grouplistItems;
     private String URL_FEED = "http://api.androidhive.info/feed/feed.json";
-
+    GoogleMap map;
     public Groups_Fragment() {
         setHasOptionsMenu(true);
     }
@@ -173,13 +176,31 @@ public class Groups_Fragment extends Fragment {
                 fragmentManager = getFragmentManager();
                 fragment = new Create_New_Group_Fragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
                 return true;
             case R.id.my_groups:
                  fragmentManager = getFragmentManager();
                  fragment = new MyOwnGroupsFragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Fragment fragment = (Fragment) getFragmentManager().findFragmentById(R.id.group_map);
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if(map!=null)
+            map=null;
     }
 }

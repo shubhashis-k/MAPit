@@ -2,7 +2,9 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +48,13 @@ public class FriendsStatusFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Fragment fragment = new Friends_Status_Comment_Fragment();
-              FragmentManager fragmentManager = getFragmentManager();
+              /*FragmentManager fragmentManager = getFragmentManager();
               fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+              fragmentManager.beginTransaction().addToBackStack(null);*/
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
         // We first check for cached request
@@ -126,4 +133,25 @@ public class FriendsStatusFragment extends Fragment{
             e.printStackTrace();
         }
     }
+
+    /*@Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction()==KeyEvent.ACTION_DOWN && event.getAction()==KeyEvent.ACTION_UP){
+                    getActivity().getFragmentManager().popBackStackImmediate();
+                    return  true;
+                }
+                return false;
+            }
+        });
+    }*/
+
+
+
+
 }

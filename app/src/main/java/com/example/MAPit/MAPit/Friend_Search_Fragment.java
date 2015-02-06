@@ -89,6 +89,7 @@ public class Friend_Search_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = search_frnd.getText().toString().toLowerCase(Locale.getDefault());
+                String res =((SlidingDrawerActivity)getActivity()).getResponseMessage();
                 checkForCache(text);
             }
         });

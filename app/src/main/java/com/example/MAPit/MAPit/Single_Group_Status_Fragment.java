@@ -4,7 +4,6 @@ package com.example.MAPit.MAPit;
  * Created by SETU on 1/25/2015.
  */
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
+
 
 import com.android.volley.Request;
 import com.example.MAPit.Volley.adapter.FeedListAdapter;
@@ -62,6 +61,7 @@ public class Single_Group_Status_Fragment extends Fragment {
                 Fragment fragment = new Friends_Status_Comment_Fragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
             }
         });
 
@@ -172,6 +172,7 @@ public class Single_Group_Status_Fragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new Add_GroupStatus_Fragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
                 return true;
         }
         return super.onOptionsItemSelected(item);

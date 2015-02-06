@@ -5,12 +5,14 @@ package com.example.MAPit.MAPit;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,9 +129,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                FragmentManager fragmentManager = getFragmentManager();
+                /*FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new FriendsStatusFragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);*/
+                Fragment fragment = new FriendsStatusFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
@@ -199,4 +207,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Fragment fragment = (Fragment) getFragmentManager().findFragmentById(R.id.map);
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if(map!=null)
+            map=null;
+    }
+
+   /* @Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction()==KeyEvent.ACTION_DOWN && event.getAction()==KeyEvent.ACTION_UP){
+                    getActivity().getFragmentManager().popBackStackImmediate();
+                    return  true;
+
+                }
+                return false;
+            }
+        });
+    }*/
 }

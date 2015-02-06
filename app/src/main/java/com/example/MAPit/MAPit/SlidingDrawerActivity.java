@@ -3,6 +3,7 @@ package com.example.MAPit.MAPit;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
     // used to store app title
     private CharSequence mTitle;
-
+    String res;
     // slide menu items
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
@@ -143,7 +144,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
     @Override
     public void setResponseMessage(ResponseMessages response) {
-        String res = response.getMessage();
+        res = response.getMessage();
 
         if(res.equals("Update OK"))
         {
@@ -153,6 +154,9 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         {
             Toast.makeText(this, "Something went wrong!", Toast.LENGTH_LONG).show();
         }
+    }
+    public String getResponseMessage(){
+        return res;
     }
 
     /**
@@ -202,10 +206,14 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
     private void startFragment(Fragment fragment, int position) {
         if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
+            /*FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
-            fragmentManager.beginTransaction().addToBackStack(null);
+            fragmentManager.beginTransaction().addToBackStack(null); */
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container,fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
             // update selected item and title, then close the drawer
             if (position != -1) {
@@ -279,6 +287,15 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }
