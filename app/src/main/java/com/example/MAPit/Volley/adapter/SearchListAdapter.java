@@ -12,24 +12,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.example.MAPit.MAPit.R;
-import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.Friend_Search_ListItem;
-import com.example.MAPit.Volley.data.MyFriendsItem;
+import com.example.MAPit.Volley.data.Item;
 
 import java.util.List;
 
-public class MyFriendListAdapter extends BaseAdapter {
+public class SearchListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<MyFriendsItem> myfrndlistItems;
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    private List<Item> myfrndlistItems;
 
-    public MyFriendListAdapter(Activity activity, List<MyFriendsItem> myfrndlistItems) {
+    public SearchListAdapter(Activity activity, List<Item> myfrndlistItems) {
         this.activity = activity;
         this.myfrndlistItems = myfrndlistItems;
     }
@@ -58,19 +52,14 @@ public class MyFriendListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.myfriend_list_item, null);
 
-        if (imageLoader == null)
-            imageLoader = AppController.getInstance().getImageLoader();
 
-        TextView name = (TextView) convertView.findViewById(R.id.my_frnd_name);
-        TextView location = (TextView) convertView.findViewById(R.id.my_frnd_location);
-        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.myfrnd_profilePic);
-        Button deletefrnd = (Button) convertView.findViewById(R.id.bt_delete_frnd);
+        TextView name = (TextView) convertView.findViewById(R.id.name);
+        TextView location = (TextView) convertView.findViewById(R.id.location);
+        Button deletefrnd = (Button) convertView.findViewById(R.id.command_button);
 
-        MyFriendsItem item = myfrndlistItems.get(position);
-
-        name.setText(item.getUser_Name());
-        profilePic.setImageUrl(item.getUser_Imge(), imageLoader);
-        location.setText(item.getUser_location());
+        Item item = myfrndlistItems.get(position);
+        name.setText(item.getName());
+        location.setText(item.getLocation());
 
         //button add listener is needed to fill
         deletefrnd.setOnClickListener(new View.OnClickListener() {
