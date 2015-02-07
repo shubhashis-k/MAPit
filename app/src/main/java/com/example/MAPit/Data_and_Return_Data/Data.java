@@ -9,6 +9,7 @@ public class Data {
     private Context context;
     private String usermail;
     private String Command;
+    private String extra;
 
     public Context getContext() {
         return context;
@@ -32,5 +33,13 @@ public class Data {
 
     public void setCommand(String command) {
         Command = command;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 }

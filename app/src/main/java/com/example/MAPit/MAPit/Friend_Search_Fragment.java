@@ -14,19 +14,22 @@ import android.widget.ListView;
 
 
 import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
 
+import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.example.MAPit.Volley.adapter.SearchListAdapter;
 
 import com.example.MAPit.Volley.data.SearchListItem;
-import com.mapit.backend.searchQueriesApi.model.Search;
+import com.mapit.backend.friendsApi.model.Friends;
+import com.mapit.backend.friendsApi.model.Search;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Friend_Search_Fragment extends Fragment {
-    String data;
+    String usermail;
     private EditText searchBox;
     private ListView listview;
 
@@ -49,6 +52,7 @@ public class Friend_Search_Fragment extends Fragment {
         searchListAdapter = new SearchListAdapter(getActivity(), listItems);
         listview.setAdapter(searchListAdapter);
 
+        showFriends();
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -62,39 +66,45 @@ public class Friend_Search_Fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = searchBox.getText().toString().toLowerCase(Locale.getDefault());
-
-                searchUser(text);
-
+                String pattern = searchBox.getText().toString().toLowerCase(Locale.getDefault());
+                if(pattern.length() != 0)
+                    searchUser(pattern);
+                else
+                    showFriends();
             }
         });
+
         return v;
     }
-    public void searchUser(String pattern){
-        Search searchProperty = new Search();
-        searchProperty.setData(pattern);
 
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
+    }
+
+    public void showFriends(){
         Data info = new Data();
         info.setContext(getActivity());
-        //info.setCommand();
-        //info.setUsermail();
-        info.setCommand(Commands.Search_users.getCommand());
+        info.setCommand(Commands.Friends_fetch.getCommand());
+        info.setUsermail(getmail());
 
-        new SearchEndpointCommunicator(){
+        Friends f = new Friends();
+
+        new FriendsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(ArrayList <Search> result){
+            protected void onPostExecute(FriendsEndpointReturnData result){
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result;
-                Populate(res);
+                ArrayList <Search> res = result.getFriendList();
+                PopulateFriends(res);
 
             }
-        }.execute(new Pair<Data, Search>(info, searchProperty));
+        }.execute(new Pair<Data, Friends>(info, f));
     }
 
-
-    public void Populate(ArrayList <Search> a){
+    public void PopulateFriends(ArrayList<Search> a){
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
 
@@ -104,7 +114,56 @@ public class Friend_Search_Fragment extends Fragment {
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
             item.setLocation("Khulna");
+            item.setKey(s.getKey());
+            item.setButton(Commands.Button_removeFriend.getCommand());
+            item.setExtra(getmail());
+            listItems.add(item);
+        }
 
+        // notify data changes to list adapter
+        searchListAdapter.notifyDataSetChanged();
+
+    }
+
+
+    public void searchUser(String pattern){
+        Search searchProperty = new Search();
+        searchProperty.setData(pattern);
+
+        Data info = new Data();
+        info.setContext(getActivity());
+        info.setCommand(Commands.Friends_fetch_notfriends.getCommand());
+        info.setUsermail(getmail());
+        info.setExtra(pattern);
+
+        Friends f = new Friends();
+
+        new FriendsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(FriendsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                ArrayList <Search> res = result.getFriendList();
+                PopulateNotFriends(res);
+
+            }
+        }.execute(new Pair<Data, Friends>(info, f));
+    }
+
+    public void PopulateNotFriends(ArrayList<Search> a){
+        listItems.clear();
+        searchListAdapter.notifyDataSetChanged();
+
+        for (int i = 0; i < a.size(); i++) {
+            Search s = a.get(i);
+
+            SearchListItem item = new SearchListItem();
+            item.setName(s.getData());
+            item.setLocation("Khulna");
+            item.setButton(Commands.Button_addFriend.getCommand());
+            item.setKey(s.getKey());
+            item.setExtra(getmail());
             listItems.add(item);
         }
 

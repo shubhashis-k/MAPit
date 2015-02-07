@@ -6,6 +6,8 @@ package com.example.MAPit.Volley.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +15,22 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
+import com.example.MAPit.MAPit.FriendsEndpointCommunicator;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.data.SearchListItem;
-
+import com.mapit.backend.friendsApi.model.Friends;
+import com.mapit.backend.infoCollectorApi.model.InfoCollector;
+import com.mapit.backend.infoCollectorApi.model.UserinfoModel;
+import com.example.MAPit.MAPit.infoCollectorEndpointCommunicator;
 import java.util.List;
 
 public class SearchListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<SearchListItem> listItems;
-
     public SearchListAdapter(Activity activity, List<SearchListItem> listItems) {
         this.activity = activity;
         this.listItems = listItems;
@@ -59,20 +67,70 @@ public class SearchListAdapter extends BaseAdapter {
 
 
         SearchListItem item = listItems.get(position);
+
+
         name.setText(item.getName());
         location.setText(item.getLocation());
+
+        final String buttonText = item.getButton();
+        final String usermail = item.getExtra();
+        final String stringKey = item.getKey();
+        button.setText(buttonText);
+
 
         //button add listener is needed to fill
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Integer index = (Integer) v.getTag();
+
+                if(buttonText.equals(Commands.Button_addFriend.getCommand()))
+                    requestORremoveFriend(stringKey, usermail, Commands.Friends_Request.getCommand());
+                else if(buttonText.equals(Commands.Button_removeFriend.getCommand()))
+                    requestORremoveFriend(stringKey, usermail, Commands.Friends_Remove.getCommand());
+
                 listItems.remove(position);
                 notifyDataSetChanged();
             }
         });
 
         return convertView;
+    }
+
+    public void requestORremoveFriend(String stringKey, final String requestMail, final String command){
+
+        new infoCollectorEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(InfoCollector result){
+
+                super.onPostExecute(result);
+
+                UserinfoModel userdata = result.getUserdata();
+                String mail = userdata.getMail();
+
+                Friends friendData = new Friends();
+                friendData.setMail1(requestMail);
+                friendData.setMail2(mail);
+
+                Data d = new Data();
+                d.setCommand(command);
+
+                finalizeRequest(d, friendData);
+            }
+        }.execute(new String(stringKey));
+
+    }
+
+    public void finalizeRequest(Data d, Friends f){
+        new FriendsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(FriendsEndpointReturnData returnData){
+
+                super.onPostExecute(returnData);
+
+
+            }
+        }.execute(new Pair<Data, Friends>(d, f));
+
     }
 
 }

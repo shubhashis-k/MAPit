@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>, Void, FriendsEndpointReturnData>{
     private FriendsApi friendsApi;
     private Context context;
-    private String usermail, command;
+    private String usermail, command, pattern;
 
     @Override
     protected FriendsEndpointReturnData doInBackground(Pair<Data, Friends>... params) {
@@ -44,11 +44,13 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
+            friendsApi = builder.build();
         }
 
     context = params[0].first.getContext();
     usermail = params[0].first.getUsermail();
     command = params[0].first.getCommand();
+    pattern = params[0].first.getExtra();
 
     Friends friendsData = params[0].second;
 
@@ -83,6 +85,21 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
                 return null;
             }
         }
+    else if(command.equals(Commands.Friends_Remove.getCommand())){
+        try {
+            ResponseMessages rm = friendsApi.deleteFriends(friendsData).execute();
+            String response = rm.getResponseMessage();
+            FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
+            returnData.setResponseMessages(response);
+
+            return returnData;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
     else if(command.equals(Commands.Friends_fetch.getCommand())){
         try {
             SearchCollection friendsCollection = friendsApi.fetchFriendList("1", usermail).execute();
@@ -116,7 +133,26 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
             return null;
         }
     }
+    else if(command.equals(Commands.Friends_fetch_notfriends.getCommand())){
+        try {
+            SearchCollection friendsCollection = friendsApi.fetchListNotFriends(pattern, usermail).execute();
+            ArrayList <Search> friendList = (ArrayList <Search>) friendsCollection.getItems();
+
+            FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
+            returnData.setFriendList(friendList);
+
+            return returnData;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     return null;
     }
+
+
 
 }

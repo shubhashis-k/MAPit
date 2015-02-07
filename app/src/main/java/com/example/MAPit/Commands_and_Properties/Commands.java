@@ -12,11 +12,17 @@ public enum Commands {
 
     Friends_Request ("Request"),
     Friends_Make ("Make"),
+    Friends_Remove ("Remove"),
     Friends_fetch ("Fetch Accepted"),
     Friends_fetch_Pending ("Fetch Pending"),
+    Friends_fetch_notfriends ("Fetch Not Friends"),
 
     Search_users ("Users"),
-    Search_Groups ("Groups")
+    Search_Groups ("Groups"),
+
+    Button_addFriend ("Add Friend"),
+    Button_removeFriend ("Remove Friend"),
+
     ;
 
     private String command;
