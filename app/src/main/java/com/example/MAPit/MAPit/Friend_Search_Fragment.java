@@ -97,7 +97,7 @@ public class Friend_Search_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getFriendList();
+                ArrayList <Search> res = result.getDataList();
                 PopulateFriends(res);
 
             }
@@ -144,7 +144,7 @@ public class Friend_Search_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getFriendList();
+                ArrayList <Search> res = result.getDataList();
                 PopulateNotFriends(res);
 
             }

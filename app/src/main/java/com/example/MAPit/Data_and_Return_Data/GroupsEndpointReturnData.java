@@ -1,15 +1,13 @@
 package com.example.MAPit.Data_and_Return_Data;
 
-import com.mapit.backend.friendsApi.model.Search;
-
 import java.util.ArrayList;
-
+import com.mapit.backend.groupApi.model.Search;
 /**
- * Created by shubhashis on 2/5/2015.
+ * Created by shubhashis on 2/9/2015.
  */
-public class FriendsEndpointReturnData {
+public class GroupsEndpointReturnData {
     private String responseMessages;
-    private ArrayList <Search> dataList;
+    private ArrayList<Search> dataList;
 
     public String getResponseMessages() {
         return responseMessages;

@@ -7,11 +7,16 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.*;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
+
+import java.util.ArrayList;
+
+import javax.inject.Named;
 
 /**
  * An endpoint class we are exposing
@@ -91,19 +96,63 @@ public class GroupsEndpoint {
         return rm;
     }
 
+    @ApiMethod(name = "getMyGroups", path = "getMyGroupsPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> getMyGroups(@Named("usermail") String mail) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query.Filter Creator_Filter = new Query.FilterPredicate(DatastorePropertyNames.Groups_creatormail.getProperty(), Query.FilterOperator.EQUAL, mail);
+
+        Query Request_Query = new Query(DatastoreKindNames.Groups.getKind()).setFilter(Creator_Filter);
+
+        PreparedQuery queryResult = datastore.prepare(Request_Query);
+
+        Key GroupKey = null;
+
+        ArrayList <Search> searchResult = new ArrayList<>();
+        for (Entity result : queryResult.asIterable()) {
+
+            GroupKey = result.getKey();
+
+            String groupName = result.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString();
+
+            Search s = new Search();
+            s.setKey(GroupKey);
+            s.setData(groupName);
+            searchResult.add(s);
+        }
+
+        return searchResult;
+    }
+
+    @ApiMethod(name = "getGroupsNotMine", path = "getGroupsNotMinePath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> getGroupsNotMine(@Named("usermail") String mail, @Named("searchQuery") String searchQuery) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        SearchEndpoint getQueryResult = new SearchEndpoint();
+        ArrayList <Search> QueryList = getQueryResult.getResult(DatastoreKindNames.Groups.getKind(), searchQuery);
+        ArrayList <Search> myGroupList = getMyGroups(mail);
+
+        ArrayList <Search> FilteredList = new ArrayList<>();
+        for(int i = 0 ; i < QueryList.size(); i++){
+            if(!myGroupList.contains(QueryList.get(i)))
+                FilteredList.add(QueryList.get(i));
+        }
+
+        return FilteredList;
+    }
 
     @ApiMethod(name = "getGroupKey", path = "getGroupKeyPath", httpMethod = ApiMethod.HttpMethod.POST)
     public Key getGroupKey(Groups group) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query Reuqest_Query = new Query();
+        Query Request_Query = new Query();
         Query.Filter Creator_Filter = new Query.FilterPredicate(DatastorePropertyNames.Groups_creatormail.getProperty(), Query.FilterOperator.EQUAL, group.getCreatorMail());
         Query.Filter GroupName_Filter = new Query.FilterPredicate(DatastorePropertyNames.Groups_groupname.getProperty(), Query.FilterOperator.EQUAL, group.getGroupName());
         Query.Filter Group_Filter = Query.CompositeFilterOperator.and(Creator_Filter, GroupName_Filter);
 
-        Reuqest_Query = new Query(DatastoreKindNames.Groups.getKind()).setFilter(Group_Filter);
+        Request_Query = new Query(DatastoreKindNames.Groups.getKind()).setFilter(Group_Filter);
 
-        PreparedQuery queryResult = datastore.prepare(Reuqest_Query);
+        PreparedQuery queryResult = datastore.prepare(Request_Query);
 
         Key requestKey = null;
 

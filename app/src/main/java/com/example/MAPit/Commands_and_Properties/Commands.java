@@ -23,6 +23,11 @@ public enum Commands {
     Button_addFriend ("Add Friend"),
     Button_removeFriend ("Remove Friend"),
 
+    Group_Create ("Create"),
+    Group_Remove ("Remove"),
+    Group_fetch_myGroups ("myGroups"),
+    Group_fetch_GroupsnotMine ("notmyGroups")
+
     ;
 
     private String command;

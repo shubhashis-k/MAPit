@@ -1,6 +1,5 @@
 package com.example.MAPit.MAPit;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
@@ -8,12 +7,10 @@ import android.support.v4.util.Pair;
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.DatastoreKindNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
-import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.mapit.backend.friendsApi.FriendsApi;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.searchQueriesApi.SearchQueriesApi;
 import com.mapit.backend.searchQueriesApi.model.SearchCollection;

@@ -1,6 +1,5 @@
 package com.example.MAPit.MAPit;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
@@ -106,7 +105,7 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
             ArrayList <Search> friendList = (ArrayList <Search>) friendsCollection.getItems();
 
             FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
-            returnData.setFriendList(friendList);
+            returnData.setDataList(friendList);
 
             return returnData;
         }
@@ -123,7 +122,7 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
             ArrayList <Search> friendList = (ArrayList <Search>) friendsCollection.getItems();
 
             FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
-            returnData.setFriendList(friendList);
+            returnData.setDataList(friendList);
 
             return returnData;
         }
@@ -139,7 +138,7 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
             ArrayList <Search> friendList = (ArrayList <Search>) friendsCollection.getItems();
 
             FriendsEndpointReturnData returnData = new FriendsEndpointReturnData();
-            returnData.setFriendList(friendList);
+            returnData.setDataList(friendList);
 
             return returnData;
         }
