@@ -6,6 +6,7 @@ package com.mapit.backend;
 public class Groups {
     private String CreatorMail;
     private String GroupName;
+    private String GroupDescription;
     private String latitude;
     private String longitude;
 
@@ -39,5 +40,13 @@ public class Groups {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getGroupDescription() {
+        return GroupDescription;
+    }
+
+    public void setGroupDescription(String groupDescription) {
+        GroupDescription = groupDescription;
     }
 }

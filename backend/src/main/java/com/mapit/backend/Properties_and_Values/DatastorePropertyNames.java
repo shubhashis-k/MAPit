@@ -22,6 +22,7 @@ public enum DatastorePropertyNames {
     Groups_creatormail ("CreatorMail"),
     Groups_latitude ("latitude"),
     Groups_longitude ("longitude"),
+    Groups_Description ("description"),
 
     PersonsInGroup_personMail ("PersonMail"),
     PersonsInGroup_groupKey ("GroupKey"),

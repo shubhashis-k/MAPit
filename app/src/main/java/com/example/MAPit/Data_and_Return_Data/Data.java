@@ -10,6 +10,7 @@ public class Data {
     private String usermail;
     private String Command;
     private String extra;
+    private String StringKey;
 
     public Context getContext() {
         return context;
@@ -41,5 +42,13 @@ public class Data {
 
     public void setExtra(String extra) {
         this.extra = extra;
+    }
+
+    public String getStringKey() {
+        return StringKey;
+    }
+
+    public void setStringKey(String stringKey) {
+        StringKey = stringKey;
     }
 }

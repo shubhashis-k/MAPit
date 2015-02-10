@@ -46,7 +46,7 @@ public class GroupsEndpoint {
             groupKind.setProperty(DatastorePropertyNames.Groups_creatormail.getProperty(), group.getCreatorMail());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_latitude.getProperty(), group.getLatitude());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_longitude.getProperty(), group.getLongitude());
-
+            groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Description.getProperty(), group.getGroupDescription());
             datastore.put(groupKind);
 
             rm.setMessage(rm.Group_Created);
@@ -61,11 +61,11 @@ public class GroupsEndpoint {
 
 
     @ApiMethod(name = "RemoveGroup", path = "RemoveGroupPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ResponseMessages RemoveGroup(Groups group) {
+    public ResponseMessages RemoveGroup(@Named("GroupKey") String groupKey) {
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Key groupKey = getGroupKey(group);
-        datastore.delete(groupKey);
+        Key key = KeyFactory.stringToKey(groupKey);
+        datastore.delete(key);
 
         ResponseMessages rm = new ResponseMessages();
         rm.setMessage(rm.Group_Deleted);
@@ -163,4 +163,5 @@ public class GroupsEndpoint {
 
         return requestKey;
     }
+
 }

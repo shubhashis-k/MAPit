@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, Void, GroupsEndpointReturnData>{
     GroupApi groupApi;
-    private String usermail, command, pattern;
+    private String usermail, command, pattern, StringKey;
     @Override
     protected GroupsEndpointReturnData doInBackground(Pair<Data, Groups>... params) {
         if(groupApi == null){
@@ -47,6 +47,7 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
         usermail = params[0].first.getUsermail();
         command = params[0].first.getCommand();
         pattern = params[0].first.getExtra();
+        StringKey = params[0].first.getStringKey();
 
         Groups groupinfo = params[0].second;
 
@@ -67,7 +68,7 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
         }
         else if(command.equals(Commands.Group_Remove.getCommand())){
             try {
-                ResponseMessages rm = groupApi.removeGroup(groupinfo).execute();
+                ResponseMessages rm = groupApi.removeGroup(StringKey).execute();
                 String response = rm.getResponseMessage();
                 GroupsEndpointReturnData returnData = new GroupsEndpointReturnData();
                 returnData.setResponseMessages(response);
@@ -99,7 +100,7 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
         }
         else if(command.equals(Commands.Group_fetch_GroupsnotMine.getCommand())){
             try {
-                SearchCollection myGroupCollection = groupApi.getGroupsNotMine(usermail, pattern).execute();
+                SearchCollection myGroupCollection = groupApi.getGroupsNotMine(pattern, usermail).execute();
                 ArrayList<Search> myGroupList = (ArrayList <Search>) myGroupCollection.getItems();
 
 

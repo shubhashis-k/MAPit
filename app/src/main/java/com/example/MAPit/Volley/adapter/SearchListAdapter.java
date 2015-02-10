@@ -17,13 +17,16 @@ import android.widget.TextView;
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
+import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.MAPit.FriendsEndpointCommunicator;
+import com.example.MAPit.MAPit.GroupsEndpointCommunicator;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.infoCollectorApi.model.InfoCollector;
 import com.mapit.backend.infoCollectorApi.model.UserinfoModel;
 import com.example.MAPit.MAPit.infoCollectorEndpointCommunicator;
+import com.mapit.backend.groupApi.model.Groups;
 import java.util.List;
 
 public class SearchListAdapter extends BaseAdapter {
@@ -86,6 +89,9 @@ public class SearchListAdapter extends BaseAdapter {
                     requestORremoveFriend(stringKey, usermail, Commands.Friends_Request.getCommand());
                 else if(buttonText.equals(Commands.Button_removeFriend.getCommand()))
                     requestORremoveFriend(stringKey, usermail, Commands.Friends_Remove.getCommand());
+                else if(buttonText.equals(Commands.Group_Remove.getCommand()))
+                    removeGroup(stringKey);
+
 
                 listItems.remove(position);
                 notifyDataSetChanged();
@@ -93,6 +99,22 @@ public class SearchListAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    public void removeGroup(String stringKey){
+        Groups g = new Groups();
+        Data d = new Data();
+        d.setCommand(Commands.Group_Remove.getCommand());
+        d.setStringKey(stringKey);
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                String response = result.getResponseMessages();
+            }
+        }.execute(new Pair<Data, Groups>(d, g));
     }
 
     public void requestORremoveFriend(String stringKey, final String requestMail, final String command){

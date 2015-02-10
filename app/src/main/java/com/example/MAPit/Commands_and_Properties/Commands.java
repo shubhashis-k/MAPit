@@ -26,8 +26,8 @@ public enum Commands {
     Group_Create ("Create"),
     Group_Remove ("Remove"),
     Group_fetch_myGroups ("myGroups"),
-    Group_fetch_GroupsnotMine ("notmyGroups")
-
+    Group_fetch_GroupsnotMine ("notmyGroups"),
+    Group_Join_Group ("Join")
     ;
 
     private String command;

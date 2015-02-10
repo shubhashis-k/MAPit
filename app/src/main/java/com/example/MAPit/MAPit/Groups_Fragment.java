@@ -3,6 +3,7 @@ package com.example.MAPit.MAPit;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,24 +12,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.MAPit.Volley.adapter.Group_Search_List_Adapter;
-import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.Group_Item;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
+import com.example.MAPit.Volley.adapter.SearchListAdapter;
+import com.example.MAPit.Volley.data.SearchListItem;
+import com.mapit.backend.groupApi.model.Groups;
+import com.mapit.backend.groupApi.model.Search;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,11 +32,12 @@ import java.util.Locale;
  * Created by SETU on 1/24/2015.
  */
 public class Groups_Fragment extends Fragment {
-    private EditText search_group;
-    private ListView groupListView;
-    private Group_Search_List_Adapter groupListAdapter;
-    private List<Group_Item> grouplistItems;
-    private String URL_FEED = "http://api.androidhive.info/feed/feed.json";
+    String usermail;
+    private EditText searchBox;
+    private ListView listview;
+
+    private SearchListAdapter searchListAdapter;
+    private List<SearchListItem> listItems;
 
     public Groups_Fragment() {
         setHasOptionsMenu(true);
@@ -49,23 +45,16 @@ public class Groups_Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.groups_search_layout, null, false);
-        search_group = (EditText) v.findViewById(R.id.group_search_et);
-        groupListView = (ListView) v.findViewById(R.id.grouplist_lv);
-        grouplistItems = new ArrayList<Group_Item>();
-        groupListAdapter = new Group_Search_List_Adapter(getActivity(), grouplistItems);
-        groupListView.setAdapter(groupListAdapter);
+        View v = inflater.inflate(R.layout.search_list_adapter_layout, null, false);
 
-        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getActivity(),"working",Toast.LENGTH_LONG).show();
-            }
-        });
+        searchBox = (EditText) v.findViewById(R.id.searchBox);
+        listview = (ListView) v.findViewById(R.id.listview);
+        listItems = new ArrayList<SearchListItem>();
+        searchListAdapter = new SearchListAdapter(getActivity(), listItems);
+        listview.setAdapter(searchListAdapter);
 
-        //checkForCache();
-
-        search_group.addTextChangedListener(new TextWatcher() {
+        showMyGroups();
+        searchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -78,85 +67,114 @@ public class Groups_Fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = search_group.getText().toString().toLowerCase(Locale.getDefault());
-                checkForCache(text);
+                String pattern = searchBox.getText().toString().toLowerCase(Locale.getDefault());
+
+                if(pattern.length() != 0)
+                    searchGroups(pattern);
+                else
+                    showMyGroups();
+
             }
         });
+
         return v;
     }
 
-    private void checkForCache(final String filter) {
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeed(new JSONObject(data), filter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-                    //VolleyLog.d(TAG, "Response: " + response.toString());
-                    if (response != null) {
-                        parseJsonFeed(response, filter);
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            });
-
-            // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
-        }
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
     }
 
-    private void parseJsonFeed(JSONObject response, String filter) {
-        try {
-            JSONArray feedArray = response.getJSONArray("feed");
-            if (filter.equalsIgnoreCase("")) {
-                grouplistItems.clear();
 
-                groupListAdapter.notifyDataSetChanged();
+    public void showMyGroups(){
+        Data info = new Data();
+        info.setContext(getActivity());
+        info.setCommand(Commands.Group_fetch_myGroups.getCommand());
+        info.setUsermail(getmail());
 
-            } else {
-                grouplistItems.clear();
-                for (int i = 0; i < feedArray.length(); i++) {
-                    JSONObject feedObj = (JSONObject) feedArray.get(i);
-                    filter = filter.toLowerCase(Locale.getDefault());
-                    String checkname = feedObj.get("name").toString();
-                    if (checkname.toLowerCase(Locale.getDefault()).contains(filter)) {
-                        Group_Item item = new Group_Item();
-                        item.setGroup_Name(feedObj.getString("name"));
-                        item.setGroup_location("Khulna");
-                        item.setGroup_Image(feedObj.getString("profilePic"));
-                        grouplistItems.add(item);
-                    }
-                }
+        Groups g = new Groups();
+
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                ArrayList <Search> res = result.getDataList();
+                PopulateMyGroups(res);
+
             }
-
-            // notify data changes to list adapater
-
-            groupListAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        }.execute(new Pair<Data, Groups>(info, g));
     }
+
+    public void PopulateMyGroups(ArrayList<Search> a){
+        listItems.clear();
+        searchListAdapter.notifyDataSetChanged();
+
+        for (int i = 0; i < a.size(); i++) {
+            Search s = a.get(i);
+
+            SearchListItem item = new SearchListItem();
+            item.setName(s.getData());
+            item.setLocation("Khulna");
+            item.setKey(s.getKey());
+            item.setButton(Commands.Group_Remove.getCommand());
+            item.setExtra(getmail());
+            listItems.add(item);
+        }
+
+        // notify data changes to list adapter
+        searchListAdapter.notifyDataSetChanged();
+
+    }
+
+    public void searchGroups(String pattern){
+        Search searchProperty = new Search();
+        searchProperty.setData(pattern);
+
+        Data info = new Data();
+        info.setContext(getActivity());
+        info.setCommand(Commands.Group_fetch_GroupsnotMine.getCommand());
+        info.setUsermail(getmail());
+        info.setExtra(pattern);
+
+        Groups g = new Groups();
+
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                ArrayList <Search> res = result.getDataList();
+                PopulateSearchGroup(res);
+
+            }
+        }.execute(new Pair<Data, Groups>(info, g));
+    }
+
+    public void PopulateSearchGroup(ArrayList<Search> a){
+        listItems.clear();
+        searchListAdapter.notifyDataSetChanged();
+
+        for (int i = 0; i < a.size(); i++) {
+            Search s = a.get(i);
+
+            SearchListItem item = new SearchListItem();
+            item.setName(s.getData());
+            item.setLocation("Khulna");
+            item.setButton(Commands.Group_Join_Group.getCommand());
+            item.setKey(s.getKey());
+            item.setExtra(getmail());
+            listItems.add(item);
+        }
+
+        // notify data changes to list adapter
+        searchListAdapter.notifyDataSetChanged();
+
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

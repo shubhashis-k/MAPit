@@ -47,6 +47,16 @@ public class infoCollectorEndpoint {
             info.setUserdata(userdata);
         }
 
+        else if(kind.equals(DatastoreKindNames.Groups.getKind())){
+            Groups groupdata = new Groups();
+            groupdata.setCreatorMail(data.getProperty(DatastorePropertyNames.Groups_creatormail.getProperty()).toString());
+            groupdata.setGroupName(data.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString());
+            groupdata.setGroupDescription(data.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());
+            groupdata.setLatitude(data.getProperty(DatastorePropertyNames.Groups_latitude.getProperty()).toString());
+            groupdata.setLongitude(data.getProperty(DatastorePropertyNames.Groups_longitude.getProperty()).toString());
+
+            info.setGroupdata(groupdata);
+        }
         return info;
     }
 

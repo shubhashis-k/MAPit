@@ -6,12 +6,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
+import com.mapit.backend.groupApi.model.Groups;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -48,10 +55,36 @@ public class Create_New_Group_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Groups g = new Groups();
+                g.setCreatorMail(getmail());
+                g.setGroupName(groupName.getText().toString());
+                g.setLongitude("12");
+                g.setLongitude("18");
+                g.setGroupDescription(groupDescription.getText().toString());
+
+                Data d = new Data();
+                d.setCommand(Commands.Group_Create.getCommand());
+
+                new GroupsEndpointCommunicator(){
+                    @Override
+                    protected void onPostExecute(GroupsEndpointReturnData result){
+
+                        super.onPostExecute(result);
+
+                        String response = result.getResponseMessages();
+
+                    }
+                }.execute(new Pair<Data, Groups>(d , g));
             }
         });
 
         return v;
+    }
+
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
     }
 
     @Override
