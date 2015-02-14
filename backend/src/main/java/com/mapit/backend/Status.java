@@ -10,7 +10,16 @@ import java.util.Date;
  */
 public class Status {
     private String groupKey, status, personMail, latitude, longitude, kind, statusKey;
+    private String statusPhoto;
     private Date publishDate;
+
+    public String getStatusPhoto() {
+        return statusPhoto;
+    }
+
+    public void setStatusPhoto(String statusPhoto) {
+        this.statusPhoto = statusPhoto;
+    }
 
     public String getKind() {
         return kind;

@@ -6,11 +6,13 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.*;
+import com.mapit.backend.Properties_and_Values.Commands;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 
@@ -141,6 +143,29 @@ public class GroupsEndpoint {
         return FilteredList;
     }
 
+    @ApiMethod(name = "JoinOrLeaveGroup", path = "JoinOrLeaveGroupPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ResponseMessages JoinOrLeaveGroup(@Named("usermail") String usermail, @Named("groupKey") String groupKey, @Named("requestType") String requestType) throws EntityNotFoundException {
+        ResponseMessages rm = new ResponseMessages();
+        PersonsInGroup personsInGroup = new PersonsInGroup();
+        PersonsInGroupEndpoint personsInGroupEndpoint = new PersonsInGroupEndpoint();
+
+        personsInGroup.setPersonMail(usermail);
+        personsInGroup.setGroupKey(groupKey);
+
+        if(requestType.equals(Commands.Request_Group.getCommand()) || requestType.equals(Commands.Accept_Group.getCommand()))
+            rm = personsInGroupEndpoint.requestPersonsInGroup(personsInGroup, requestType);
+        else if(requestType.equals(Commands.Leave_Group.getCommand()))
+            rm = personsInGroupEndpoint.removePersonsInGroup(personsInGroup);
+        return rm;
+    }
+
+    @ApiMethod(name = "getJoinedGroups", path = "getJoinedGroupsPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> getJoinedGroups(@Named("usermail") String usermail) throws EntityNotFoundException{
+        PersonsInGroupEndpoint personsInGroupEndpoint = new PersonsInGroupEndpoint();
+        ArrayList <Search> result = personsInGroupEndpoint.showJoinedGroups(usermail);
+
+        return result;
+    }
     @ApiMethod(name = "getGroupKey", path = "getGroupKeyPath", httpMethod = ApiMethod.HttpMethod.POST)
     public Key getGroupKey(Groups group) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

@@ -13,7 +13,8 @@ public enum Commands {
     Userinfo_create ("Create"),
 
     Request_Group ("Request"),
-    Accept_Group ("Accept")
+    Accept_Group ("Accept"),
+    Leave_Group ("Leave")
     ;
 
     private String command;

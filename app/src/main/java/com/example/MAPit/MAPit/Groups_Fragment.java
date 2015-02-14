@@ -195,8 +195,14 @@ public class Groups_Fragment extends Fragment {
             case R.id.my_groups:
                  fragmentManager = getFragmentManager();
                  fragment = new MyOwnGroupsFragment();
+                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                 return true;
+            case R.id.joined_group:
+                fragmentManager = getFragmentManager();
+                fragment = new MyOwnGroupsFragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class Search {
     private String data;
     private String key;
+    private String latitude, longitude;
     public String getData() {
         return data;
     }
@@ -25,6 +26,22 @@ public class Search {
 
         String keyToString = KeyFactory.keyToString(key);
         this.key = keyToString;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     @Override

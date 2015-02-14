@@ -6,4 +6,7 @@
     <item
         android:id="@+id/create_group"
         android:title="Create Group"/>
+    <item
+        android:id="@+id/joined_group"
+        android:title="Joined Groups"/>
 </menu>

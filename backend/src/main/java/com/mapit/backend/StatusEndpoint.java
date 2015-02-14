@@ -6,16 +6,21 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.*;
+import com.google.appengine.api.datastore.Text;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -49,8 +54,18 @@ public class StatusEndpoint {
         e.setProperty(DatastorePropertyNames.Status_latitude.getProperty(), status.getLatitude());
         e.setProperty(DatastorePropertyNames.Status_longitude.getProperty(), status.getLongitude());
         e.setProperty(DatastorePropertyNames.Status_text.getProperty(), status.getStatus());
-        e.setProperty(DatastorePropertyNames.Status_time.getProperty(), status.getPublishDate());
-        datastore.put(e);
+
+        Date now = new Date();
+        e.setProperty(DatastorePropertyNames.Status_time.getProperty(), now);
+
+        if(status.getStatusPhoto()!=null) {
+            Text statusPhoto = new Text(status.getStatusPhoto());
+            e.setUnindexedProperty(DatastorePropertyNames.Status_image.getProperty(), statusPhoto);
+        }
+        else
+            e.setUnindexedProperty(DatastorePropertyNames.Status_image.getProperty(), "");
+
+            datastore.put(e);
 
     }
 
@@ -68,14 +83,13 @@ public class StatusEndpoint {
     public ArrayList <Status> showStatus(Status status) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query statusQuery = new Query(status.getKind());
+        Query statusQuery = new Query(status.getKind()).addSort(DatastorePropertyNames.Status_time.getProperty(), SortDirection.DESCENDING);
 
         if(status.getKind().equals(DatastoreKindNames.StatusInGroup.getKind())) {
-            statusQuery.addProjection(new PropertyProjection(DatastorePropertyNames.Status_personMail.getProperty(), String.class));
-            statusQuery.addProjection(new PropertyProjection(DatastorePropertyNames.Status_text.getProperty(), String.class));
+            Filter groupKeyFilter = new FilterPredicate(DatastorePropertyNames.Status_groupKey.getProperty(), FilterOperator.EQUAL, status.getGroupKey());
+            statusQuery.setFilter(groupKeyFilter);
         }
         else if(status.getKind().equals(DatastoreKindNames.StatusbyIndividual.getKind())){
-            statusQuery.addProjection(new PropertyProjection(DatastorePropertyNames.Status_text.getProperty(), String.class));
             Filter personMailFilter = new FilterPredicate(DatastorePropertyNames.Status_personMail.getProperty(), FilterOperator.EQUAL, status.getPersonMail());
             statusQuery.setFilter(personMailFilter);
         }
@@ -96,7 +110,22 @@ public class StatusEndpoint {
                 String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
                 s.setStatus(personStatus);
 
+                String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
+                s.setLatitude(latitude);
+
+                String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
+                s.setLongitude(longitude);
+
+                Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
+                s.setPublishDate(publishDate);
+
+                String statusImage = result.getProperty(DatastorePropertyNames.Status_image.getProperty()).toString();
+                if(statusImage!=null)
+                    s.setStatusPhoto(statusImage);
+
                 statusList.add(s);
+
+
             }
         }
         else if(status.getKind().equals(DatastoreKindNames.StatusbyIndividual.getKind())){
@@ -105,8 +134,27 @@ public class StatusEndpoint {
                 Key k = result.getKey();
                 s.setStatusKey(k);
 
-                s.setStatus(result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString());
+                String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
+                s.setPersonMail(personMail);
+
+                String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
+                s.setStatus(personStatus);
+
+                String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
+                s.setLatitude(latitude);
+
+                String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
+                s.setLongitude(longitude);
+
+                String statusImage = result.getProperty(DatastorePropertyNames.Status_image.getProperty()).toString();
+                if(statusImage!=null)
+                    s.setStatusPhoto(statusImage);
+
+                Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
+                s.setPublishDate(publishDate);
+
                 statusList.add(s);
+
             }
         }
 
@@ -115,4 +163,61 @@ public class StatusEndpoint {
 
     }
 
+    @ApiMethod(name = "showLatestStatus", path = "showLatestStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public Status showLatestStatus(@Named("personMail") String personMail){
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query statusQuery = new Query(DatastoreKindNames.StatusbyIndividual.getKind()).addSort(DatastorePropertyNames.Status_time.getProperty(), SortDirection.DESCENDING);
+
+        Filter personMailFilter = new FilterPredicate(DatastorePropertyNames.Status_personMail.getProperty(), FilterOperator.EQUAL, personMail);
+        statusQuery.setFilter(personMailFilter);
+
+
+        PreparedQuery queryResult = datastore.prepare(statusQuery);
+
+        Status latestStatus = new Status();
+        for (Entity result : queryResult.asList(FetchOptions.Builder.withLimit(1))) {
+
+                Key k = result.getKey();
+                latestStatus.setStatusKey(k);
+
+                String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
+                latestStatus.setStatus(personStatus);
+
+                String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
+                latestStatus.setLatitude(latitude);
+
+                String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
+                latestStatus.setLongitude(longitude);
+
+                String statusImage = result.getProperty(DatastorePropertyNames.Status_image.getProperty()).toString();
+                if(statusImage!=null)
+                    latestStatus.setStatusPhoto(statusImage);
+
+                Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
+                latestStatus.setPublishDate(publishDate);
+
+
+            }
+        return latestStatus;
+        }
+
+    @ApiMethod(name = "fetchFriendStatus", path = "fetchFriendStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList <Status> fetchFriendStatus(@Named("personMail") String personMail) throws EntityNotFoundException{
+        FriendsEndpoint friendsEndpoint = new FriendsEndpoint();
+
+        ArrayList <Search> friendList = friendsEndpoint.fetchFriendList(personMail, "1");
+
+        ArrayList <Status> statusList = new ArrayList<>();
+        for(int i = 0 ;i < friendList.size() ; i++){
+
+            String friendMail = friendList.get(i).getData();
+            Status s = showLatestStatus(friendMail);
+
+            statusList.add(s);
+        }
+
+        return statusList;
+    }
 }
+

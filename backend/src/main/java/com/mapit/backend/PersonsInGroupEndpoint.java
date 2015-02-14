@@ -103,30 +103,39 @@ public class PersonsInGroupEndpoint {
     }
 
 
-    @ApiMethod(name = "showPersonsInGroup", path = "showPersonsInGroupPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList<PersonsInGroup> showPersonsInGroup(PersonsInGroup personsInGroup) {
+    @ApiMethod(name = "showJoinedGroups", path = "showJoinedGroupsPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> showJoinedGroups(@Named("usermail") String usermail) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query PersonsInGroupQuery = new Query(DatastoreKindNames.PersonsInGroup.getKind());
-        PersonsInGroupQuery.addProjection(new PropertyProjection(DatastorePropertyNames.PersonsInGroup_personMail.getProperty(), String.class));
+        PersonsInGroupQuery.addProjection(new PropertyProjection(DatastorePropertyNames.PersonsInGroup_groupKey.getProperty(), String.class));
 
-        Filter keyFilter = new FilterPredicate(DatastorePropertyNames.PersonsInGroup_groupKey.getProperty(), FilterOperator.EQUAL, personsInGroup.getGroupKey());
+        Filter keyFilter = new FilterPredicate(DatastorePropertyNames.PersonsInGroup_personMail.getProperty(), FilterOperator.EQUAL, usermail);
         PersonsInGroupQuery.setFilter(keyFilter);
 
         PreparedQuery queryResult = datastore.prepare(PersonsInGroupQuery);
 
 
-        ArrayList<PersonsInGroup> personList = new ArrayList<>();
+        ArrayList<Search> groupList = new ArrayList<>();
 
         for (Entity result : queryResult.asIterable()) {
-            String data = result.getProperty(DatastorePropertyNames.PersonsInGroup_personMail.getProperty()).toString();
+            String keydata = result.getProperty(DatastorePropertyNames.PersonsInGroup_groupKey.getProperty()).toString();
+            Key key = KeyFactory.stringToKey(keydata);
 
-            PersonsInGroup p = new PersonsInGroup();
-            p.setPersonMail(data);
+            infoCollectorEndpoint getgrpinfo = new infoCollectorEndpoint();
+            infoCollector info = getgrpinfo.getinfo(keydata);
 
-            personList.add(p);
+            Groups grpinfo = info.getGroupdata();
+
+            Search s = new Search();
+            s.setData(grpinfo.getGroupName());
+            s.setLongitude(grpinfo.getLongitude());
+            s.setLatitude(grpinfo.getLatitude());
+            s.setKey(key);
+
+            groupList.add(s);
         }
-        return personList;
+        return groupList;
     }
 
     @ApiMethod(name = "getRequestKey", path = "getRequestKeyPath", httpMethod = ApiMethod.HttpMethod.POST)
