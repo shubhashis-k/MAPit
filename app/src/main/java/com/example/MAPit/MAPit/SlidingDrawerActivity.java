@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -181,18 +182,23 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 1:
                 fragment = new Friend_Search_Fragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 2:
                 fragment = new Groups_Fragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 3:
                 // fragment = new CommunityFragment();
                 break;
             case 4:
                 fragment = new MyWallFragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 break;
             case 5:
                 // fragment = new WhatsHotFragment();
@@ -291,10 +297,13 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
+            int count = getFragmentManager().getBackStackEntryCount();
             getFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            Toast.makeText(this,"Going Back",Toast.LENGTH_LONG).show();
+            Intent sigIn = new Intent(SlidingDrawerActivity.this,SignIn.class);
+            startActivity(sigIn);
         }
     }
 
