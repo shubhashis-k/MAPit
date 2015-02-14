@@ -41,7 +41,7 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
         userdata = params[0].second;
 
         try {
-            UserinfoModelCollection UserinfoResult = userinfo_api.getUserinfo(Commands.Userinfo_getpass.getCommand(), userdata).execute();
+            UserinfoModelCollection UserinfoResult = userinfo_api.getUserinfo(Commands.Userinfo_getinfo.getCommand(), userdata).execute();
 
             return UserinfoResult;
         }
@@ -53,7 +53,7 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
     }
 
     protected void onPostExecute(UserinfoModelCollection result){
-        Log.v("Sign:response", String.valueOf(maincontext));
+
         manipulator = (manipulate_Signin) ((Activity) maincontext);
 
         ArrayList <UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();

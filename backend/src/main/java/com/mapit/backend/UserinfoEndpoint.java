@@ -169,9 +169,18 @@ public class UserinfoEndpoint {
                 UserinfoModel um = new UserinfoModel();
 
                 um.setName((String) result.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()));
+                um.setPassword((String) result.getProperty(DatastorePropertyNames.Userinfo_Password.getProperty()));
                 um.setMail((String) result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
-                um.setImagedata((String) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty()));
-                um.setMobilephone((String) result.getProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty()));
+
+                String ImageData = (String) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
+                if(ImageData != null)
+                    um.setImagedata(ImageData);
+
+                String MobilePhone = (String) result.getProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty());
+                if(MobilePhone != null)
+                    um.setMobilephone(MobilePhone);
+
+
                 um.setLatitude((String) result.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()));
                 um.setLongitude((String) result.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()));
 

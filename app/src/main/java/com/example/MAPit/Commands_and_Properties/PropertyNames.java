@@ -10,8 +10,31 @@ public enum PropertyNames {
     Userinfo_Mail ("Mail"),
     Userinfo_Password ("Password"),
     Userinfo_Mobile ("Mobile"),
-    Userinfo_Profilepic ("Profilepic")
+    Userinfo_Profilepic ("Profilepic"),
+    Userinfo_latitude ("Latitude"),
+    Userinfo_longitude ("Longitude"),
 
+    Friends_mail1 ("Mail1"),
+    Friends_mail2 ("Mail2"),
+    Friends_status ("Status"),
+
+    Groups_groupname ("Groupname"),
+    Groups_creatormail ("CreatorMail"),
+    Groups_latitude ("latitude"),
+    Groups_longitude ("longitude"),
+    Groups_Description ("description"),
+
+    PersonsInGroup_personMail ("PersonMail"),
+    PersonsInGroup_groupKey ("GroupKey"),
+    PersonsInGroup_status ("Status"),
+
+    Status_groupKey ("groupKey"),
+    Status_personMail ("personMail"),
+    Status_latitude ("latitude"),
+    Status_longitude ("longitude"),
+    Status_text ("text"),
+    Status_time ("time"),
+    Status_image ("sttusimg")
     ;
 
     private String Property;

@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by shubhashis on 1/29/2015.
  */
-public class Status {
+public class StatusData {
     private String groupKey, status, personMail, latitude, longitude, kind, statusKey;
     private String statusPhoto;
     private Date publishDate;

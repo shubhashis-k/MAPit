@@ -27,7 +27,12 @@ public enum Commands {
     Group_Remove ("Remove"),
     Group_fetch_myGroups ("myGroups"),
     Group_fetch_GroupsnotMine ("notmyGroups"),
-    Group_Join_Group ("Join")
+    Group_Join_Group ("Join"),
+
+    Status_add ("addsttus"),
+    Status_showGroupStatus ("groupStatus"),
+    Status_showIndividualStatus ("individualStatus"),
+    Status_fetchFriendsStatus ("friendStatus")
     ;
 
     private String command;

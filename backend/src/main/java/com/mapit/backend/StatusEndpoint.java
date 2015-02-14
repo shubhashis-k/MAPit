@@ -11,17 +11,14 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.Text;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import javax.inject.Named;
 
@@ -41,7 +38,7 @@ public class StatusEndpoint {
 
 
     @ApiMethod(name = "addStatus", path = "addStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public void addStatus(Status status) {
+    public void addStatus(StatusData status) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Entity e = new Entity(status.getKind());
@@ -80,7 +77,7 @@ public class StatusEndpoint {
     }
 
     @ApiMethod(name = "showStatus", path = "showStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList <Status> showStatus(Status status) {
+    public ArrayList <StatusData> showStatus(StatusData status) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query statusQuery = new Query(status.getKind()).addSort(DatastorePropertyNames.Status_time.getProperty(), SortDirection.DESCENDING);
@@ -96,11 +93,11 @@ public class StatusEndpoint {
 
 
         PreparedQuery queryResult = datastore.prepare(statusQuery);
-        ArrayList<Status> statusList = new ArrayList<>();
+        ArrayList<StatusData> statusList = new ArrayList<>();
 
         if(status.getKind().equals(DatastoreKindNames.StatusInGroup.getKind())) {
             for (Entity result : queryResult.asIterable()) {
-                Status s = new Status();
+                StatusData s = new StatusData();
                 Key k = result.getKey();
                 s.setStatusKey(k);
 
@@ -130,7 +127,7 @@ public class StatusEndpoint {
         }
         else if(status.getKind().equals(DatastoreKindNames.StatusbyIndividual.getKind())){
             for (Entity result : queryResult.asIterable()) {
-                Status s = new Status();
+                StatusData s = new StatusData();
                 Key k = result.getKey();
                 s.setStatusKey(k);
 
@@ -164,7 +161,7 @@ public class StatusEndpoint {
     }
 
     @ApiMethod(name = "showLatestStatus", path = "showLatestStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public Status showLatestStatus(@Named("personMail") String personMail){
+    public StatusData showLatestStatus(@Named("personMail") String personMail){
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query statusQuery = new Query(DatastoreKindNames.StatusbyIndividual.getKind()).addSort(DatastorePropertyNames.Status_time.getProperty(), SortDirection.DESCENDING);
@@ -175,7 +172,7 @@ public class StatusEndpoint {
 
         PreparedQuery queryResult = datastore.prepare(statusQuery);
 
-        Status latestStatus = new Status();
+        StatusData latestStatus = new StatusData();
         for (Entity result : queryResult.asList(FetchOptions.Builder.withLimit(1))) {
 
                 Key k = result.getKey();
@@ -203,16 +200,16 @@ public class StatusEndpoint {
         }
 
     @ApiMethod(name = "fetchFriendStatus", path = "fetchFriendStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList <Status> fetchFriendStatus(@Named("personMail") String personMail) throws EntityNotFoundException{
+    public ArrayList <StatusData> fetchFriendStatus(@Named("personMail") String personMail) throws EntityNotFoundException{
         FriendsEndpoint friendsEndpoint = new FriendsEndpoint();
 
         ArrayList <Search> friendList = friendsEndpoint.fetchFriendList(personMail, "1");
 
-        ArrayList <Status> statusList = new ArrayList<>();
+        ArrayList <StatusData> statusList = new ArrayList<>();
         for(int i = 0 ;i < friendList.size() ; i++){
 
             String friendMail = friendList.get(i).getData();
-            Status s = showLatestStatus(friendMail);
+            StatusData s = showLatestStatus(friendMail);
 
             statusList.add(s);
         }
