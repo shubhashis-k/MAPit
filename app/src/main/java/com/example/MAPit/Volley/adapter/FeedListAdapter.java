@@ -3,6 +3,7 @@ package com.example.MAPit.Volley.adapter;
 /**
  * Created by SETU on 1/20/2015.
  */
+
 import java.util.List;
 
 import android.app.Activity;
@@ -59,7 +60,6 @@ public class FeedListAdapter extends BaseAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
             convertView = inflater.inflate(R.layout.feed_item, null);
-
 
 
         TextView name = (TextView) convertView.findViewById(R.id.name);

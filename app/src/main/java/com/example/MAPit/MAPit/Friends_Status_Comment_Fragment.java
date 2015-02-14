@@ -146,8 +146,9 @@ public class Friends_Status_Comment_Fragment extends Fragment {
             case R.id.go_to_frnd_location:
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new Friend_Location_Fragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 fragmentManager.beginTransaction().addToBackStack(null);
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
 
                 return true;
         }

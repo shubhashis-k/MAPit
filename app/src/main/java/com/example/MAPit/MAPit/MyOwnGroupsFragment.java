@@ -61,8 +61,9 @@ public class MyOwnGroupsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new Single_Group_Status_Fragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 fragmentManager.beginTransaction().addToBackStack(null);
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
             }
         });
 

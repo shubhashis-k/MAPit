@@ -141,8 +141,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onInfoWindowClick(Marker marker) {
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new FriendsStatusFragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
                 fragmentManager.beginTransaction().addToBackStack(null);
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+
             }
         });
 

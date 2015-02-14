@@ -25,6 +25,7 @@ import com.example.MAPit.model.NavDrawerItem;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{
@@ -208,9 +209,10 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     private void startFragment(Fragment fragment, int position) {
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(null);
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
-            fragmentManager.beginTransaction().addToBackStack(null);
+
 
             // update selected item and title, then close the drawer
             if (position != -1) {
@@ -286,6 +288,17 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+   @Override
+    public void onBackPressed() {
+
+        if(getFragmentManager().getBackStackEntryCount() >0){
+            getFragmentManager().popBackStack();
+        }
+        else{
+            super.onBackPressed();
+        }
+       //Toast.makeText(this,"it worked",Toast.LENGTH_LONG).show();
+    }
 
 
 }

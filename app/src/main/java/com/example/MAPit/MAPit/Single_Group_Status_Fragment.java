@@ -61,8 +61,9 @@ public class Single_Group_Status_Fragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment fragment = new Friends_Status_Comment_Fragment();
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 fragmentManager.beginTransaction().addToBackStack(null);
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
             }
         });
 
@@ -172,8 +173,9 @@ public class Single_Group_Status_Fragment extends Fragment {
             case R.id.group_addnew_post:
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new Add_GroupStatus_Fragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
                 fragmentManager.beginTransaction().addToBackStack(null);
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
