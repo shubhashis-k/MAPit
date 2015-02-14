@@ -181,6 +181,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
+               // mDrawerList.getChildAt(0).setEnabled(false);
                 break;
             case 1:
                 fragment = new Friend_Search_Fragment();
@@ -284,5 +285,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
+
 
 }

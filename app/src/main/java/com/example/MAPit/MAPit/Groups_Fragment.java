@@ -189,13 +189,15 @@ public class Groups_Fragment extends Fragment {
         switch (item.getItemId()){
             case R.id.create_group:
                 fragmentManager = getFragmentManager();
-                fragment = new Create_New_Group_Fragment();
+                fragment = new OnlyGoogleMap();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
                 return true;
             case R.id.my_groups:
                  fragmentManager = getFragmentManager();
                  fragment = new MyOwnGroupsFragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
                 return true;
         }
         return super.onOptionsItemSelected(item);

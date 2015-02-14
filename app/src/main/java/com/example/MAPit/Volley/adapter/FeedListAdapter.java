@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -28,7 +29,7 @@ public class FeedListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<FeedItem> feedItems;
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
 
     public FeedListAdapter(Activity activity, List<FeedItem> feedItems) {
         this.activity = activity;
@@ -59,8 +60,7 @@ public class FeedListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.feed_item, null);
 
-        if (imageLoader == null)
-            imageLoader = AppController.getInstance().getImageLoader();
+
 
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView timestamp = (TextView) convertView
@@ -68,9 +68,9 @@ public class FeedListAdapter extends BaseAdapter {
         TextView statusMsg = (TextView) convertView
                 .findViewById(R.id.txtStatusMsg);
         TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
-        NetworkImageView profilePic = (NetworkImageView) convertView
+        ImageView profilePic = (ImageView) convertView
                 .findViewById(R.id.profilePic);
-        FeedImageView feedImageView = (FeedImageView) convertView
+        ImageView feedImageView = (ImageView) convertView
                 .findViewById(R.id.feedImage1);
 
         FeedItem item = feedItems.get(position);
@@ -105,23 +105,17 @@ public class FeedListAdapter extends BaseAdapter {
             url.setVisibility(View.GONE);
         }
 
-        // user profile pic
-        profilePic.setImageUrl(item.getProfilePic(), imageLoader);
+        // user profile pic and converte the item.getProfilePic() to bitmap
+
+        //profilePic.setImageBitmap(bp);
+
 
         // Feed image
         if (item.getImge() != null) {
-            feedImageView.setImageUrl(item.getImge(), imageLoader);
+            //convert the Image to bitmap and set it
+            //feedImageView.setImageBitmap(bp);
             feedImageView.setVisibility(View.VISIBLE);
-            feedImageView
-                    .setResponseObserver(new FeedImageView.ResponseObserver() {
-                        @Override
-                        public void onError() {
-                        }
 
-                        @Override
-                        public void onSuccess() {
-                        }
-                    });
         } else {
             feedImageView.setVisibility(View.GONE);
         }

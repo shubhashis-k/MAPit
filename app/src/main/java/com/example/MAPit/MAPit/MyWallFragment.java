@@ -57,6 +57,7 @@ public class MyWallFragment extends Fragment{
                 Fragment fragment = new Friends_Status_Comment_Fragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
             }
         });
         // We first check for cached request
@@ -149,6 +150,7 @@ public class MyWallFragment extends Fragment{
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new Add_GroupStatus_Fragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
                 return true;
         }
         return super.onOptionsItemSelected(item);

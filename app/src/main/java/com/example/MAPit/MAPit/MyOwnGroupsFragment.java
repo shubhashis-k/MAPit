@@ -62,6 +62,7 @@ public class MyOwnGroupsFragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new Single_Group_Status_Fragment();
                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                fragmentManager.beginTransaction().addToBackStack(null);
             }
         });
 

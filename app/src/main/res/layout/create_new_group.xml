@@ -60,6 +60,7 @@
         android:src="@drawable/slide_profile"
         android:scaleType="fitCenter" />
 
+
     <Button
         android:id="@+id/bt_create_group"
         android:layout_width="wrap_content"

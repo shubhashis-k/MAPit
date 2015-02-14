@@ -48,6 +48,7 @@ public class FriendsStatusFragment extends Fragment{
               Fragment fragment = new Friends_Status_Comment_Fragment();
               FragmentManager fragmentManager = getFragmentManager();
               fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+              fragmentManager.beginTransaction().addToBackStack(null);
             }
         });
         // We first check for cached request
