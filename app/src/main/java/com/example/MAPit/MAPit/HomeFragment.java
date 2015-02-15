@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void drawLine() {
-
+      //need to change the latitudes and longitudes
         PolygonOptions options = new PolygonOptions()
                 .fillColor(0x330000FF)
                 .strokeColor(Color.BLUE)
