@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,9 +47,10 @@ public class FriendsStatusFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Fragment fragment = new Friends_Status_Comment_Fragment();
-              FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(null);
-              fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
             }
         });

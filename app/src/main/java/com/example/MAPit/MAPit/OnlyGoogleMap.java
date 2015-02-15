@@ -77,12 +77,11 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                 ll.putDouble("latitude",lat);
                 ll.putDouble("longitude",lng);
                 Fragment fragment = new Create_New_Group_Fragment();
-
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(null);
                 fragment.setArguments(ll);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, fragment).commit();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
 
             }

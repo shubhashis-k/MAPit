@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -59,10 +60,12 @@ public class MyOwnGroupsFragment extends Fragment {
         groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentManager fragmentManager = getFragmentManager();
+
                 Fragment fragment = new Single_Group_Status_Fragment();
-                fragmentManager.beginTransaction().addToBackStack(null);
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
             }
         });

@@ -4,7 +4,6 @@ package com.example.MAPit.MAPit;
 
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
@@ -20,18 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,23 +44,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private GoogleMap map;
     EditText et;
     MapFragment mapFrag;
-    public static View v;
+    //public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
 
-        if (v != null) {
+        /*if (v != null) {
             ViewGroup parent = (ViewGroup) v.getParent();
             if (parent != null){
-                parent.removeView(v);
+               parent.removeView(v);
                 }
         }
         try {
-            v = inflater.inflate(R.layout.home_map_activity, container, false);
+            v = inflater.inflate(R.layout.home_map_activity, null, false);
         } catch (InflateException e) {
-            Toast.makeText(getActivity(),"Map can't be loaded",Toast.LENGTH_LONG).show();
-        }
-        //View v = inflater.inflate(R.layout.home_map_activity, null, false);
+
+        }*/
+        View v = inflater.inflate(R.layout.home_map_activity, null, false);
 
         mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -139,17 +135,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new FriendsStatusFragment();
-                fragmentManager.beginTransaction().addToBackStack(null);
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
         return v;
-
-
     }
 
     private void drawLine() {
@@ -161,9 +155,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         for (int i = 0; i < 3; i++) {
             String a = latitude[i];
             String b = longitude[i];
-            double lati = Double.parseDouble(a);
+            double lat = Double.parseDouble(a);
             double longLat = Double.parseDouble(b);
-            LatLng ll = new LatLng(lati, longLat);
+            LatLng ll = new LatLng(lat, longLat);
             options.add(ll);
         }
         map.addPolygon(options);
@@ -230,4 +224,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             map = null;
         }
     }
+
 }
