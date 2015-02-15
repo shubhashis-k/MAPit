@@ -3,6 +3,8 @@ package com.example.MAPit.MAPit;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ import com.example.MAPit.model.NavDrawerItem;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 
 public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{
@@ -91,6 +95,23 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         adapter = new NavDrawerListAdapter(getApplicationContext(),
                 navDrawerItems);
         mDrawerList.setAdapter(adapter);
+
+
+
+       /* Log.d("First visible index: " , String.valueOf(mDrawerList.getFirstVisiblePosition()));
+        Log.d("Last visible index: " ,String.valueOf( mDrawerList.getLastVisiblePosition()));
+        for (int i = 0; i <= 5; i++) {
+            String tag = "asdf"; // Remove when bug is fixed.
+            if (mDrawerList == null) {
+                Log.d("f_listView is null","OK");
+            } else if (mDrawerList.getChildAt(i) == null) {
+                Log.d("Child at index " , i + " is null");
+            } else {
+                tag = (String) mDrawerList.getChildAt(i).getTag();
+                Log.d("Successful at index " , i + ", tag is: " + tag);
+            }
+
+        }*/
 
         // enabling action bar app icon and behaving it as toggle button
         // getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -181,18 +202,23 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 break;
             case 1:
                 fragment = new Friend_Search_Fragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 2:
                 fragment = new Groups_Fragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 3:
                 // fragment = new CommunityFragment();
                 break;
             case 4:
                 fragment = new MyWallFragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 5:
                 // fragment = new WhatsHotFragment();
@@ -206,16 +232,22 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
     private void startFragment(Fragment fragment, int position) {
         if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
-            fragmentManager.beginTransaction().addToBackStack(null);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container,fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
 
             // update selected item and title, then close the drawer
             if (position != -1) {
                 mDrawerList.setItemChecked(position, true);
                 mDrawerList.setSelection(position);
+
             }
+            /*if(position == 0){
+                if(mDrawerList.getChildAt(1)!=null)
+                mDrawerList.getChildAt(1).setEnabled(false);
+            }*/
             //setTitle(navMenuTitles[position]);
             mDrawerLayout.closeDrawer(mDrawerLinear);
         } else {
@@ -283,6 +315,18 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
+            int count = getFragmentManager().getBackStackEntryCount();
+            getFragmentManager().popBackStack();
+        } else {
+            Toast.makeText(this,"Leaving..",Toast.LENGTH_LONG).show();
+            Intent sigIn = new Intent(SlidingDrawerActivity.this,SignIn.class);
+            startActivity(sigIn);
+        }
     }
 
 }

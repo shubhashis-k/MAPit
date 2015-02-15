@@ -2,15 +2,15 @@ package com.example.MAPit.MAPit;
 
 //some test comment
 
-import android.app.AlertDialog;
+
 import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,10 +44,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private GoogleMap map;
     EditText et;
     MapFragment mapFrag;
-
+    //public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+        /*if (v != null) {
+            ViewGroup parent = (ViewGroup) v.getParent();
+            if (parent != null){
+               parent.removeView(v);
+                }
+        }
+        try {
+            v = inflater.inflate(R.layout.home_map_activity, null, false);
+        } catch (InflateException e) {
+
+        }*/
         View v = inflater.inflate(R.layout.home_map_activity, null, false);
 
         mapFrag = (MapFragment) getFragmentManager()
@@ -62,22 +71,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 @Override
                 public View getInfoWindow(Marker arg0) {
-                    // TODO Auto-generated method stub
+
                     return null;
                 }
 
                 @Override
                 public View getInfoContents(Marker marker) {
                     // creating my own info for latest frnd status
-                    String status="Hi how are you everyone? Have a nice day ahead";
+                    String status = "Hi how are you everyone? Have a nice day ahead";
                     View v = getActivity().getLayoutInflater().inflate(R.layout.map_info_listview, null);
                     TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
                     TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
                     tvFrndname.setText("Neerob Basak"); // Later it will be name of friend
                     //checking for length of status
-                    if(status.length()>10){
-                        String substatus = status.substring(0,20);
-                        substatus +="...";
+                    if (status.length() > 10) {
+                        String substatus = status.substring(0, 20);
+                        substatus += "...";
                         tvFrndStatus.setText(substatus);
                     }
                     return v;
@@ -96,40 +105,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //*/
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (int i = 0; i < 3; i++) {
-            String a= latitude[i];
-            String b=longitude[i];
+            String a = latitude[i];
+            String b = longitude[i];
             double lati = Double.parseDouble(a);
             double longLat = Double.parseDouble(b);
-            builder.include(new LatLng(lati,longLat));
+            builder.include(new LatLng(lati, longLat));
             map.addMarker(new MarkerOptions().position(new LatLng(lati, longLat)).title(a).snippet(b));
         }
         LatLngBounds bounds = builder.build();
         drawLine();
 
 
-
         // Move the camera instantly to hamburg with a zoom of 15.
-       // map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
+        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
 
         // Zoom in, animating the camera.
-        LatLng ll = new LatLng (53.558,9.927);
+        LatLng ll = new LatLng(53.558, 9.927);
 
-         map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-         //map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+        //map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         et = (EditText) v.findViewById(R.id.editText1);
         //added the go button listener
         Button go = (Button) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
 
-       //onclick listener on marker of friends location
+        //onclick listener on marker of friends location
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                FragmentManager fragmentManager = getFragmentManager();
                 Fragment fragment = new FriendsStatusFragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
@@ -137,17 +147,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void drawLine() {
-
+      //need to change the latitudes and longitudes
         PolygonOptions options = new PolygonOptions()
                 .fillColor(0x330000FF)
                 .strokeColor(Color.BLUE)
                 .strokeWidth(3);
         for (int i = 0; i < 3; i++) {
-            String a= latitude[i];
-            String b=longitude[i];
-            double lati = Double.parseDouble(a);
+            String a = latitude[i];
+            String b = longitude[i];
+            double lat = Double.parseDouble(a);
             double longLat = Double.parseDouble(b);
-            LatLng ll = new LatLng(lati,longLat);
+            LatLng ll = new LatLng(lat, longLat);
             options.add(ll);
         }
         map.addPolygon(options);
@@ -197,6 +207,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void hideSoftKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (map != null) {
+            map = null;
+        }
     }
 
 }

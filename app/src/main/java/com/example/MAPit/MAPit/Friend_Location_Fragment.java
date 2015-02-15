@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -99,5 +100,23 @@ public class Friend_Location_Fragment extends Fragment {
             dialog.dismiss();
         }
 
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        Fragment fragment = (Fragment) getFragmentManager().findFragmentById(R.id.route_frnd_location_map);
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if(directionMap!=null)
+            directionMap=null;
     }
 }

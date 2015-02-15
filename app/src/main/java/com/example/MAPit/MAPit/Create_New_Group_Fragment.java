@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -42,6 +44,7 @@ public class Create_New_Group_Fragment extends Fragment {
         chooseGroupPic = (Button) v.findViewById(R.id.choosenewgrppic);
         createGroup = (Button) v.findViewById(R.id.bt_create_group);
 
+
         chooseGroupPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,38 +54,47 @@ public class Create_New_Group_Fragment extends Fragment {
             }
         });
 
+
         createGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Groups g = new Groups();
-                g.setCreatorMail(getmail());
-                g.setGroupName(groupName.getText().toString());
-                g.setLongitude("12");
-                g.setLongitude("18");
-                g.setGroupDescription(groupDescription.getText().toString());
+                if (groupName.getText().toString().equals("") || groupImage.getDrawable() == null || groupDescription.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Fill All the Info", Toast.LENGTH_LONG).show();
+                } else {
+                    //getting latitude and longitude
+                    String lat = String.valueOf(getArguments().getDouble("latitude"));
+                    String lng = String.valueOf(getArguments().getDouble("longitude"));
 
-                Data d = new Data();
-                d.setCommand(Commands.Group_Create.getCommand());
+                    Groups g = new Groups();
+                    g.setCreatorMail(getmail());
+                    g.setGroupName(groupName.getText().toString());
+                    g.setLongitude(lng);
+                    g.setLatitude(lat);
+                    g.setGroupDescription(groupDescription.getText().toString());
 
-                new GroupsEndpointCommunicator(){
-                    @Override
-                    protected void onPostExecute(GroupsEndpointReturnData result){
+                    Data d = new Data();
+                    d.setCommand(Commands.Group_Create.getCommand());
 
-                        super.onPostExecute(result);
+                    new GroupsEndpointCommunicator() {
+                        @Override
+                        protected void onPostExecute(GroupsEndpointReturnData result) {
 
-                        String response = result.getResponseMessages();
+                            super.onPostExecute(result);
 
-                    }
-                }.execute(new Pair<Data, Groups>(d , g));
+                            String response = result.getResponseMessages();
+
+                        }
+                    }.execute(new Pair<Data, Groups>(d, g));
+                }
             }
         });
 
         return v;
     }
 
-    public String getmail(){
-        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+    public String getmail() {
+        Bundle mailBundle = ((SlidingDrawerActivity) getActivity()).getEmail();
         String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
         return mail;
     }

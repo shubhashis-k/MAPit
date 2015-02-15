@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.text.Editable;
@@ -179,7 +180,7 @@ public class Groups_Fragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_group_adding,menu);
+        inflater.inflate(R.menu.menu_group_adding, menu);
     }
 
     @Override
@@ -188,21 +189,23 @@ public class Groups_Fragment extends Fragment {
         Fragment fragment;
         switch (item.getItemId()){
             case R.id.create_group:
-                fragmentManager = getFragmentManager();
-                fragment = new Create_New_Group_Fragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
+                fragment = new OnlyGoogleMap();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
                 return true;
             case R.id.my_groups:
-                 fragmentManager = getFragmentManager();
-                 fragment = new MyOwnGroupsFragment();
-                 fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
-                 return true;
-            case R.id.joined_group:
-                fragmentManager = getFragmentManager();
-                fragment = new MyOwnGroupsFragment();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
-                return true;
 
+                fragment = new MyOwnGroupsFragment();
+                FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+                transaction1.replace(R.id.frame_container,fragment);
+                transaction1.addToBackStack(null);
+                transaction1.commit();
+
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
