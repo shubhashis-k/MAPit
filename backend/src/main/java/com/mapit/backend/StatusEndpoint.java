@@ -178,6 +178,8 @@ public class StatusEndpoint {
                 Key k = result.getKey();
                 latestStatus.setStatusKey(k);
 
+                latestStatus.setPersonMail(personMail);
+
                 String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
                 latestStatus.setStatus(personStatus);
 

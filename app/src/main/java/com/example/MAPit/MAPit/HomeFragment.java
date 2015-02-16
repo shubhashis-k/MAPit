@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,12 +33,15 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.mapit.backend.statusApi.model.StatusData;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
+    private Context context;
     // ...
     String[] latitude = {
             "53.558", "22.8427707", "53.551"
@@ -143,7 +151,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        fetchFriendStatus();
+
         return v;
+    }
+
+    public void fetchFriendStatus(){
+        Data d = new Data();
+        d.setCommand(Commands.Status_fetchFriendsStatus.getCommand());
+        d.setUsermail(getmail());
+
+        StatusData statusData = new StatusData();
+
+        context = this.getActivity();
+
+        new StatusEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(ArrayList <StatusData> result){
+
+                super.onPostExecute(result);
+
+                String test = "";
+
+                for(int i = 0 ; i < result.size() ; i++){
+                    test += result.get(i).getStatus();
+                }
+
+                Toast.makeText(context, test, Toast.LENGTH_SHORT).show();
+            }
+        }.execute(new Pair<Data, StatusData>(d, statusData));
+    }
+
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
     }
 
     private void drawLine() {
