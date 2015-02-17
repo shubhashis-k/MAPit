@@ -34,9 +34,11 @@
 
         <Button
             android:id="@+id/go"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="right"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/signinbutton_shape"
             android:text="Go" />
            <!-- android:onClick="geoLocate" -->
     </LinearLayout>

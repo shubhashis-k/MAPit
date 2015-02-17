@@ -4,7 +4,6 @@ package com.example.MAPit.MAPit;
 
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
@@ -33,12 +30,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.mapit.backend.statusApi.model.StatusData;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +49,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private GoogleMap map;
     EditText et;
     MapFragment mapFrag;
-    //public static View v;
+    Bundle data;
+
+   // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -66,7 +63,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
         }
         try {
-            v = inflater.inflate(R.layout.home_map_activity, null, false);
+             v = inflater.inflate(R.layout.home_map_activity, null, false);
         } catch (InflateException e) {
 
         }*/
@@ -91,8 +88,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     View v = getActivity().getLayoutInflater().inflate(R.layout.map_info_listview, null);
                     TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
                     TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
-                    tvFrndname.setText(marker.getTitle());
-                        tvFrndStatus.setText(marker.getSnippet());
+                    String status = marker.getTitle();
+                    String actual_status=status.substring(0, status.indexOf('/'));
+                    String email = status.substring(status.lastIndexOf('/')+1);
+                    tvFrndname.setText(actual_status);
+                    tvFrndStatus.setText(marker.getSnippet());
+                    data = new Bundle();
+                    data.putString("InfoWindowHome","InfoWindowHome");
+                    data.putString("Email",email);
 
                     return v;
                 }
@@ -110,6 +113,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Fragment fragment = new FriendsStatusFragment();
+                fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);
                 transaction.addToBackStack(null);
@@ -136,7 +140,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             protected void onPostExecute(ArrayList <StatusData> result){
 
                 super.onPostExecute(result);
-
+                //switchViewBundle.
                 drawMarkerAndLine(result);
 
             }
@@ -151,9 +155,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         for(int i = 0 ; i < result.size() ; i++){
             String status = result.get(i).getStatus();
             String name = result.get(i).getPersonName();
+            String email=result.get(i).getPersonMail();
+            name+="/"+email;
             Double lat = Double.parseDouble(result.get(i).getLatitude());
             Double lng = Double.parseDouble(result.get(i).getLongitude());
-            if (status.length() > 10) {
+            if (status.length() > 20) {
                  status = status.substring(0, 20);
                  status += "...";
             }
