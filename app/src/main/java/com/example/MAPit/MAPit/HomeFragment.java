@@ -4,6 +4,7 @@ package com.example.MAPit.MAPit;
 
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
@@ -13,6 +14,9 @@ import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -41,14 +45,12 @@ import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
+
+    public HomeFragment(){
+        setHasOptionsMenu(true);
+    }
+
     private Context context;
-    // ...
-    String[] latitude = {
-            "53.558", "22.8427707", "53.551"
-    };
-    String[] longitude = {
-            "9.927", "89.5980763", "9.993"
-    };
     private GoogleMap map;
     EditText et;
     MapFragment mapFrag;
@@ -86,54 +88,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public View getInfoContents(Marker marker) {
                     // creating my own info for latest frnd status
-                    String status = "Hi how are you everyone? Have a nice day ahead";
                     View v = getActivity().getLayoutInflater().inflate(R.layout.map_info_listview, null);
                     TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
                     TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
-                    tvFrndname.setText("Neerob Basak"); // Later it will be name of friend
-                    //checking for length of status
-                    if (status.length() > 10) {
-                        String substatus = status.substring(0, 20);
-                        substatus += "...";
-                        tvFrndStatus.setText(substatus);
-                    }
+                    tvFrndname.setText(marker.getTitle());
+                        tvFrndStatus.setText(marker.getSnippet());
+
                     return v;
                 }
             });
         }
-        /*Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG)
-                .title("Hamburg"));
-        Marker kiel = map.addMarker(new MarkerOptions()
-                .position(KIEL)
-                .title("Kiel")
-                .snippet("Kiel is cool")
-                .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.ic_launcher)));
 
-        //*/
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (int i = 0; i < 3; i++) {
-            String a = latitude[i];
-            String b = longitude[i];
-            double lati = Double.parseDouble(a);
-            double longLat = Double.parseDouble(b);
-            builder.include(new LatLng(lati, longLat));
-            map.addMarker(new MarkerOptions().position(new LatLng(lati, longLat)).title(a).snippet(b));
-        }
-        LatLngBounds bounds = builder.build();
-        drawLine();
-
-
-        // Move the camera instantly to hamburg with a zoom of 15.
-        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
-
-        // Zoom in, animating the camera.
-        LatLng ll = new LatLng(53.558, 9.927);
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-        //map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         et = (EditText) v.findViewById(R.id.editText1);
-        //added the go button listener
         Button go = (Button) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
@@ -171,38 +137,43 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 super.onPostExecute(result);
 
-                String test = "";
+                drawMarkerAndLine(result);
 
-                for(int i = 0 ; i < result.size() ; i++){
-                    test += result.get(i).getStatus();
-                }
-
-                Toast.makeText(context, test, Toast.LENGTH_SHORT).show();
             }
         }.execute(new Pair<Data, StatusData>(d, statusData));
+    }
+
+    private void drawMarkerAndLine(ArrayList<StatusData> result) {
+        PolygonOptions options = new PolygonOptions()
+                .fillColor(0x330000FF)
+                .strokeColor(Color.BLUE)
+                .strokeWidth(3);
+        for(int i = 0 ; i < result.size() ; i++){
+            String status = result.get(i).getStatus();
+            String name = result.get(i).getPersonName();
+            Double lat = Double.parseDouble(result.get(i).getLatitude());
+            Double lng = Double.parseDouble(result.get(i).getLongitude());
+            if (status.length() > 10) {
+                 status = status.substring(0, 20);
+                 status += "...";
+            }
+            LatLng ll = new LatLng(lat,lng);
+            options.add(ll);
+            map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+            if(i==0){
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+            }
+        }
+        map.addPolygon(options);
+
+
+
     }
 
     public String getmail(){
         Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
         String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
         return mail;
-    }
-
-    private void drawLine() {
-      //need to change the latitudes and longitudes
-        PolygonOptions options = new PolygonOptions()
-                .fillColor(0x330000FF)
-                .strokeColor(Color.BLUE)
-                .strokeWidth(3);
-        for (int i = 0; i < 3; i++) {
-            String a = latitude[i];
-            String b = longitude[i];
-            double lat = Double.parseDouble(a);
-            double longLat = Double.parseDouble(b);
-            LatLng ll = new LatLng(lat, longLat);
-            options.add(ll);
-        }
-        map.addPolygon(options);
     }
 
 
@@ -267,4 +238,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_home_fragment,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.switch_view_to_list:
+                Bundle bundle = new Bundle();
+                bundle.putString("HomeFragment","HomeFragment");
+                Fragment fragment = new FriendsStatusFragment();
+                fragment.setArguments(bundle);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

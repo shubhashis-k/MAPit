@@ -98,20 +98,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
 
 
-       /* Log.d("First visible index: " , String.valueOf(mDrawerList.getFirstVisiblePosition()));
-        Log.d("Last visible index: " ,String.valueOf( mDrawerList.getLastVisiblePosition()));
-        for (int i = 0; i <= 5; i++) {
-            String tag = "asdf"; // Remove when bug is fixed.
-            if (mDrawerList == null) {
-                Log.d("f_listView is null","OK");
-            } else if (mDrawerList.getChildAt(i) == null) {
-                Log.d("Child at index " , i + " is null");
-            } else {
-                tag = (String) mDrawerList.getChildAt(i).getTag();
-                Log.d("Successful at index " , i + ", tag is: " + tag);
-            }
 
-        }*/
 
         // enabling action bar app icon and behaving it as toggle button
         // getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -320,7 +307,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 1) {
-            int count = getFragmentManager().getBackStackEntryCount();
+            //int count = getFragmentManager().getBackStackEntryCount();
             getFragmentManager().popBackStack();
         } else {
             Toast.makeText(this,"Leaving..",Toast.LENGTH_LONG).show();
