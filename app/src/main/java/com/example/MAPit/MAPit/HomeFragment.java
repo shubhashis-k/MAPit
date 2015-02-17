@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.mapit.backend.statusApi.model.StatusData;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    public HomeFragment(){
+    public HomeFragment() {
         setHasOptionsMenu(true);
     }
 
@@ -51,7 +53,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     MapFragment mapFrag;
     Bundle data;
 
-   // public static View v;
+    // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -89,13 +91,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
                     TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
                     String status = marker.getTitle();
-                    String actual_status=status.substring(0, status.indexOf('/'));
-                    String email = status.substring(status.lastIndexOf('/')+1);
+                    String actual_status = status.substring(0, status.indexOf('/'));
+                    String email = status.substring(status.lastIndexOf('/') + 1);
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
                     data = new Bundle();
-                    data.putString("InfoWindowHome","InfoWindowHome");
-                    data.putString("Email",email);
+                    data.putString("InfoWindowHome", "InfoWindowHome");
+                    data.putString("Email", email);
 
                     return v;
                 }
@@ -115,7 +117,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Fragment fragment = new FriendsStatusFragment();
                 fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container,fragment);
+                transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -126,7 +128,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    public void fetchFriendStatus(){
+    public void fetchFriendStatus() {
         Data d = new Data();
         d.setCommand(Commands.Status_fetchFriendsStatus.getCommand());
         d.setUsermail(getmail());
@@ -135,9 +137,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         context = this.getActivity();
 
-        new StatusEndpointCommunicator(){
+        new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList <StatusData> result){
+            protected void onPostExecute(ArrayList<StatusData> result) {
 
                 super.onPostExecute(result);
                 //switchViewBundle.
@@ -152,32 +154,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .fillColor(0x330000FF)
                 .strokeColor(Color.BLUE)
                 .strokeWidth(3);
-        for(int i = 0 ; i < result.size() ; i++){
+        for (int i = 0; i < result.size(); i++) {
             String status = result.get(i).getStatus();
             String name = result.get(i).getPersonName();
-            String email=result.get(i).getPersonMail();
-            name+="/"+email;
+            String email = result.get(i).getPersonMail();
+            name += "/" + email;
             Double lat = Double.parseDouble(result.get(i).getLatitude());
             Double lng = Double.parseDouble(result.get(i).getLongitude());
             if (status.length() > 20) {
-                 status = status.substring(0, 20);
-                 status += "...";
+                status = status.substring(0, 20);
+                status += "...";
             }
-            LatLng ll = new LatLng(lat,lng);
+            LatLng ll = new LatLng(lat, lng);
             options.add(ll);
             map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-            if(i==0){
+            if (i == 0) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
             }
         }
         map.addPolygon(options);
 
 
-
     }
 
-    public String getmail(){
-        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+    public String getmail() {
+        Bundle mailBundle = ((SlidingDrawerActivity) getActivity()).getEmail();
         String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
         return mail;
     }
@@ -247,20 +248,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_home_fragment,menu);
+        inflater.inflate(R.menu.menu_home_fragment, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.switch_view_to_list:
                 Bundle bundle = new Bundle();
-                bundle.putString("HomeFragment","HomeFragment");
+                bundle.putString("HomeFragment", "HomeFragment");
                 Fragment fragment = new FriendsStatusFragment();
                 fragment.setArguments(bundle);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container,fragment);
+                transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 
