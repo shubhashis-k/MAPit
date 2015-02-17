@@ -172,9 +172,15 @@ public class UserinfoEndpoint {
                 um.setPassword((String) result.getProperty(DatastorePropertyNames.Userinfo_Password.getProperty()));
                 um.setMail((String) result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
 
-                String ImageData = (String) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
-                if(ImageData != null)
-                    um.setImagedata(ImageData);
+                try {
+                    Text imageText = (Text) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
+                    if (imageText != null) {
+                        String ImageData = imageText.getValue();
+                        um.setImagedata(ImageData);
+                    }
+                }catch(ClassCastException cx){
+
+                }
 
                 String MobilePhone = (String) result.getProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty());
                 if(MobilePhone != null)

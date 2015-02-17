@@ -145,28 +145,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void drawMarkerAndLine(ArrayList<StatusData> result) {
-        PolygonOptions options = new PolygonOptions()
-                .fillColor(0x330000FF)
-                .strokeColor(Color.BLUE)
-                .strokeWidth(3);
-        for(int i = 0 ; i < result.size() ; i++){
-            String status = result.get(i).getStatus();
-            String name = result.get(i).getPersonName();
-            Double lat = Double.parseDouble(result.get(i).getLatitude());
-            Double lng = Double.parseDouble(result.get(i).getLongitude());
-            if (status.length() > 10) {
-                 status = status.substring(0, 20);
-                 status += "...";
-            }
-            LatLng ll = new LatLng(lat,lng);
-            options.add(ll);
-            map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-            if(i==0){
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-            }
-        }
-        map.addPolygon(options);
 
+        if(result.size() != 0) {
+            PolygonOptions options = new PolygonOptions()
+                    .fillColor(0x330000FF)
+                    .strokeColor(Color.BLUE)
+                    .strokeWidth(3);
+            for (int i = 0; i < result.size(); i++) {
+                String status = result.get(i).getStatus();
+                String name = result.get(i).getPersonName();
+                Double lat = Double.parseDouble(result.get(i).getLatitude());
+                Double lng = Double.parseDouble(result.get(i).getLongitude());
+                if (status.length() > 10) {
+                    status = status.substring(0, 20);
+                    status += "...";
+                }
+                LatLng ll = new LatLng(lat, lng);
+                options.add(ll);
+                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                if (i == 0) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                }
+            }
+            map.addPolygon(options);
+        }
 
 
     }

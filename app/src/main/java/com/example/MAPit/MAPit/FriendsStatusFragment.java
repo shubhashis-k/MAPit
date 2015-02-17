@@ -59,7 +59,6 @@ public class FriendsStatusFragment extends Fragment{
             StatusListItem item = new StatusListItem();
             item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
-            item.setLocation("Khulna");
             statusListItems.add(item);
         }
 

@@ -7,10 +7,13 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,10 +21,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
 import com.mapit.backend.searchQueriesApi.model.Search;
@@ -38,6 +44,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     private LinearLayout mDrawerLinear;
     private TextView profile_name;
     public ArrayList <Search> searchData;
+    private ImageView profilePic;
     // nav drawer title
     private CharSequence mDrawerTitle;
 
@@ -60,6 +67,15 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
         //initializing profile_name
         profile_name = (TextView) findViewById(R.id.profile_name);
+        profilePic = (ImageView) findViewById(R.id.profile_image);
+
+        String profileName = getIntent().getExtras().getString(PropertyNames.Userinfo_Username.getProperty());
+        profile_name.setText(profileName);
+
+        String imageString = getIntent().getExtras().getString(PropertyNames.Userinfo_Profilepic.getProperty());
+        if(imageString != null)
+            profilePic.setImageBitmap(convertStringtoBitmap(imageString));
+
         mTitle = mDrawerTitle = getTitle();
 
         // load slide menu items
@@ -149,6 +165,12 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     {
         Bundle mailInfo = getIntent().getExtras();
         return mailInfo;
+    }
+
+    public Bitmap convertStringtoBitmap(String stringImage){
+        byte[] stringTobyte = Base64.decode(stringImage, Base64.NO_WRAP);
+        Bitmap bmp = BitmapFactory.decodeByteArray(stringTobyte, 0, stringTobyte.length);
+        return bmp;
     }
 
     @Override
