@@ -161,7 +161,7 @@ public class StatusEndpoint {
     }
 
     @ApiMethod(name = "showLatestStatus", path = "showLatestStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public StatusData showLatestStatus(@Named("personMail") String personMail){
+    public StatusData showLatestStatus(@Named("personMail") String personMail) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query statusQuery = new Query(DatastoreKindNames.StatusbyIndividual.getKind()).addSort(DatastorePropertyNames.Status_time.getProperty(), SortDirection.DESCENDING);
@@ -177,6 +177,17 @@ public class StatusEndpoint {
 
                 Key k = result.getKey();
                 latestStatus.setStatusKey(k);
+
+                /* fetch person Name*/
+                UserinfoEndpoint userinfoEndpoint = new UserinfoEndpoint();
+                Key personKey = userinfoEndpoint.getKeyfromMail(personMail);
+                Entity personEntity = datastore.get(personKey);
+                String personName = personEntity.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
+
+
+
+                latestStatus.setPersonName(personName);
+                latestStatus.setPersonMail(personMail);
 
                 String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
                 latestStatus.setStatus(personStatus);
