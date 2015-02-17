@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -34,6 +36,7 @@ public class Edit_Profile extends Fragment{
     private ImageView profile_image;
     private Button Edit_profile;
     private EditText Update_name, Update_phone, Update_password;
+    private String imageToString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +85,9 @@ public class Edit_Profile extends Fragment{
                     profile_image.setImageBitmap(selectedImage);
 
 
+                    imageToString = imageToStringConverter(selectedImage);
+
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -90,6 +96,16 @@ public class Edit_Profile extends Fragment{
         }
     }
 
+    public String imageToStringConverter(Bitmap image){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        String imageToString = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+
+        return imageToString;
+    }
+
+
     public void getData()
     {
         updateProfile = new UserinfoModel();
@@ -97,7 +113,7 @@ public class Edit_Profile extends Fragment{
         updateProfile.setPassword(Update_password.getText().toString());
         updateProfile.setMobilephone(Update_phone.getText().toString());
         updateProfile.setMail(getMail());
-
+        updateProfile.setImagedata(imageToString);
     }
 
 
