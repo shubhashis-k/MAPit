@@ -1,32 +1,19 @@
 package com.example.MAPit.MAPit;
 
-//some test comment
-
-
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -40,19 +27,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by SETU on 2/17/2015.
+ */
+public class Marker_MapView extends Fragment {
 
-public class HomeFragment extends Fragment implements View.OnClickListener {
-
-    public HomeFragment() {
+    public Marker_MapView() {
         setHasOptionsMenu(true);
     }
 
     private Context context;
     private GoogleMap map;
-    EditText et;
     MapFragment mapFrag;
-    Bundle info_data;
-    private ArrayList <StatusData> passThisData;
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -70,10 +56,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } catch (InflateException e) {
 
         }*/
-        View v = inflater.inflate(R.layout.home_map_activity, null, false);
+        View v = inflater.inflate(R.layout.route_direction_frnd_location, null, false);
 
         mapFrag = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.route_frnd_location_map);
         map = mapFrag.getMap();
         //added the custom info adapter
         if (map != null) {
@@ -96,17 +82,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     String email = status.substring(status.lastIndexOf('/') + 1);
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
-                    info_data = new Bundle();
-                    info_data.putString("InfoWindowHome", "InfoWindowHome");
-                    info_data.putString("Email", email);
                     return v;
                 }
             });
         }
-
-        et = (EditText) v.findViewById(R.id.editText1);
-        Button go = (Button) v.findViewById(R.id.go);
-        go.setOnClickListener(this);
 
 
         //onclick listener on marker of friends location
@@ -115,7 +94,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Fragment fragment = new FriendsStatusFragment();
-                fragment.setArguments(info_data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
@@ -128,7 +106,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    public void fetchFriendStatus(){
+    public void fetchFriendStatus() {
         Data d = new Data();
         d.setCommand(Commands.Status_fetchFriendsStatus.getCommand());
         d.setUsermail(getmail());
@@ -137,12 +115,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         context = this.getActivity();
 
-        new StatusEndpointCommunicator(){
+        new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList <StatusData> result){
+            protected void onPostExecute(ArrayList<StatusData> result) {
 
                 super.onPostExecute(result);
-                passThisData = result;
                 drawMarkerAndLine(result);
 
             }
@@ -184,54 +161,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.go:
-                try {
-                    geoLocate(v);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-    }
-
-
-    private void gotoLocation(double lat, double lng, float zoom) {
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
-        map.moveCamera(update);
-    }
-
-    public void geoLocate(View v) throws IOException {
-        hideSoftKeyboard(v);
-
-
-        String location = et.getText().toString();
-
-        Geocoder gc = new Geocoder(getActivity());
-        List<Address> list = gc.getFromLocationName(location, 1);
-        Address add = list.get(0);
-        String locality = add.getLocality();
-        Toast.makeText(getActivity(), locality, Toast.LENGTH_LONG).show();
-
-        double lat = add.getLatitude();
-        double lng = add.getLongitude();
-
-        gotoLocation(lat, lng, 15);
-
-    }
-    // to hide keyboard must use getActivity() and Context
-
-    private void hideSoftKeyboard(View v) {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-
     public void onDestroyView() {
         super.onDestroyView();
-        Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
+        Fragment fragment = (getFragmentManager().findFragmentById(R.id.route_frnd_location_map));
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
         ft.remove(fragment);
         ft.commit();
@@ -245,29 +177,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu_home_fragment, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.switch_view_to_list:
-                Bundle data = new Bundle();
-                data.putSerializable("data", passThisData);
-                data.putString("HomeFragment","HomeFragment");
-                Fragment fragment = new FriendsStatusFragment();
-                fragment.setArguments(data);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container,fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

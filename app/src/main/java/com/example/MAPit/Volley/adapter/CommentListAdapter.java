@@ -2,10 +2,7 @@ package com.example.MAPit.Volley.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +12,8 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.MAPit.MAPit.R;
-import com.example.MAPit.Volley.FeedImageView;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
-import com.example.MAPit.Volley.data.FeedItem;
 
 import java.util.List;
 

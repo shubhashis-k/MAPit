@@ -1,7 +1,6 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,9 +17,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.MAPit.Volley.adapter.FeedListAdapter;
+import com.example.MAPit.Volley.adapter.StatusListAdapter;
 import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.FeedItem;
+import com.example.MAPit.Volley.data.StatusListItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,16 +39,16 @@ public class MyWallFragment extends Fragment{
     }
 
     private ListView listView;
-    private FeedListAdapter listAdapter;
-    private List<FeedItem> feedItems;
+    private StatusListAdapter listAdapter;
+    private List<StatusListItem> statusListItems;
     private String URL_FEED="http://api.androidhive.info/feed/feed.json";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.friend_status,null,false);
         listView =(ListView)v.findViewById(R.id.list_frnd_status);
-        feedItems = new ArrayList<FeedItem>();
-        listAdapter = new FeedListAdapter(getActivity(),feedItems);
+        statusListItems = new ArrayList<StatusListItem>();
+        listAdapter = new StatusListAdapter(getActivity(), statusListItems);
         listView.setAdapter(listAdapter);
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -113,7 +112,7 @@ public class MyWallFragment extends Fragment{
             for (int i = 0; i < feedArray.length(); i++) {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                FeedItem item = new FeedItem();
+                StatusListItem item = new StatusListItem();
                 item.setId(feedObj.getInt("id"));
                 item.setName(feedObj.getString("name"));
 
@@ -130,7 +129,7 @@ public class MyWallFragment extends Fragment{
                         .getString("url");
                 item.setUrl(feedUrl);
 
-                feedItems.add(item);
+                statusListItems.add(item);
             }
 
             // notify data changes to list adapater
