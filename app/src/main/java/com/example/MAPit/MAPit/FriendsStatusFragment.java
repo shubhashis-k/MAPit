@@ -8,21 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.example.MAPit.Volley.adapter.FeedListAdapter;
-import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.FeedItem;
+import com.example.MAPit.Volley.adapter.StatusListAdapter;
+import com.example.MAPit.Volley.data.StatusListItem;
+import com.mapit.backend.statusApi.model.StatusData;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.android.volley.Cache;
-import com.android.volley.Cache.Entry;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 /**
  * Created by SETU on 1/20/2015.
@@ -30,17 +21,16 @@ import com.android.volley.toolbox.JsonObjectRequest;
 public class FriendsStatusFragment extends Fragment{
 
     private ListView listView;
-    private FeedListAdapter listAdapter;
-    private List<FeedItem> feedItems;
-    private String URL_FEED="http://api.androidhive.info/feed/feed.json";
+    private StatusListAdapter statuslistAdapter;
+    private List<StatusListItem> statusListItems;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.friend_status,null,false);
         listView =(ListView)v.findViewById(R.id.list_frnd_status);
-        feedItems = new ArrayList<FeedItem>();
-        listAdapter = new FeedListAdapter(getActivity(),feedItems);
-        listView.setAdapter(listAdapter);
+        statusListItems = new ArrayList<StatusListItem>();
+        statuslistAdapter = new StatusListAdapter(getActivity(), statusListItems);
+        listView.setAdapter(statuslistAdapter);
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -50,80 +40,29 @@ public class FriendsStatusFragment extends Fragment{
               fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
             }
         });
-        // We first check for cached request
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Entry entry = cache.get(URL_FEED);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeed(new JSONObject(data));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
 
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-                    //VolleyLog.d(TAG, "Response: " + response.toString());
-                    if (response != null) {
-                        parseJsonFeed(response);
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            });
-
-            // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
-        }
+        populateFriendsLatestStatus();
 
         return v;
     }
 
-    private void parseJsonFeed(JSONObject response) {
-        try {
-            JSONArray feedArray = response.getJSONArray("feed");
+    public void populateFriendsLatestStatus(){
+        Bundle data = getArguments();
+        ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable("data");
 
-            for (int i = 0; i < feedArray.length(); i++) {
-                JSONObject feedObj = (JSONObject) feedArray.get(i);
+        statusListItems.clear();
+        statuslistAdapter.notifyDataSetChanged();
 
-                FeedItem item = new FeedItem();
-                item.setId(feedObj.getInt("id"));
-                item.setName(feedObj.getString("name"));
+        for (int i = 0; i < result.size(); i++) {
+            StatusData statusData = result.get(i);
 
-                // Image might be null sometimes
-                String image = feedObj.isNull("image") ? null : feedObj
-                        .getString("image");
-                item.setImge(image);
-                item.setStatus(feedObj.getString("status"));
-                item.setProfilePic(feedObj.getString("profilePic"));
-                item.setTimeStamp(feedObj.getString("timeStamp"));
-
-                // url might be null sometimes
-                String feedUrl = feedObj.isNull("url") ? null : feedObj
-                        .getString("url");
-                item.setUrl(feedUrl);
-
-                feedItems.add(item);
-            }
-
-            // notify data changes to list adapater
-            listAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            StatusListItem item = new StatusListItem();
+            item.setName(statusData.getPersonName());
+            item.setStatus(statusData.getStatus());
+            item.setLocation("Khulna");
+            statusListItems.add(item);
         }
+
+        statuslistAdapter.notifyDataSetChanged();
     }
 }

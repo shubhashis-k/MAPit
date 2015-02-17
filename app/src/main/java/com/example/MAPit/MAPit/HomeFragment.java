@@ -45,7 +45,8 @@ import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-
+    private Bundle data;
+    private ArrayList <StatusData> passThisData;
     public HomeFragment(){
         setHasOptionsMenu(true);
     }
@@ -136,7 +137,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             protected void onPostExecute(ArrayList <StatusData> result){
 
                 super.onPostExecute(result);
-
+                passThisData = result;
                 drawMarkerAndLine(result);
 
             }
@@ -249,10 +250,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         switch (item.getItemId()){
             case R.id.switch_view_to_list:
-                Bundle bundle = new Bundle();
-                bundle.putString("HomeFragment","HomeFragment");
+                Bundle data = new Bundle();
+                data.putSerializable("data", passThisData);
+                data.putString("HomeFragment","HomeFragment");
                 Fragment fragment = new FriendsStatusFragment();
-                fragment.setArguments(bundle);
+                fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);
                 transaction.addToBackStack(null);

@@ -4,9 +4,7 @@ package com.example.MAPit.MAPit;
  * Created by SETU on 1/25/2015.
  */
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,12 +16,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.example.MAPit.Volley.adapter.FeedListAdapter;
+import com.example.MAPit.Volley.adapter.StatusListAdapter;
 import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.FeedItem;
+import com.example.MAPit.Volley.data.StatusListItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.UnsupportedEncodingException;
@@ -41,8 +38,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 public class Single_Group_Status_Fragment extends Fragment {
 
     private ListView listView;
-    private FeedListAdapter listAdapter;
-    private List<FeedItem> feedItems;
+    private StatusListAdapter listAdapter;
+    private List<StatusListItem> statusListItems;
     private String URL_FEED="http://api.androidhive.info/feed/feed.json";
 
     public Single_Group_Status_Fragment(){
@@ -53,8 +50,8 @@ public class Single_Group_Status_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.friend_status,null,false);
         listView =(ListView)v.findViewById(R.id.list_frnd_status);
-        feedItems = new ArrayList<FeedItem>();
-        listAdapter = new FeedListAdapter(getActivity(),feedItems);
+        statusListItems = new ArrayList<StatusListItem>();
+        listAdapter = new StatusListAdapter(getActivity(), statusListItems);
         listView.setAdapter(listAdapter);
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,7 +133,7 @@ public class Single_Group_Status_Fragment extends Fragment {
             for (int i = 0; i < feedArray.length(); i++) {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                FeedItem item = new FeedItem();
+                StatusListItem item = new StatusListItem();
                 item.setId(feedObj.getInt("id"));
                 item.setName(feedObj.getString("name"));
 
@@ -153,7 +150,7 @@ public class Single_Group_Status_Fragment extends Fragment {
                         .getString("url");
                 item.setUrl(feedUrl);
 
-                feedItems.add(item);
+                statusListItems.add(item);
             }
 
             // notify data changes to list adapater
