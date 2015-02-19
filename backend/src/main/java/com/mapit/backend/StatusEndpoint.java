@@ -213,7 +213,7 @@ public class StatusEndpoint {
 
 
             }
-        return latestStatus;
+            return latestStatus;
         }
 
     @ApiMethod(name = "fetchFriendStatus", path = "fetchFriendStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
@@ -228,7 +228,8 @@ public class StatusEndpoint {
             String friendMail = friendList.get(i).getData();
             StatusData s = showLatestStatus(friendMail);
 
-            statusList.add(s);
+            if(s.getPersonMail() != null)
+                statusList.add(s);
         }
 
         return statusList;
