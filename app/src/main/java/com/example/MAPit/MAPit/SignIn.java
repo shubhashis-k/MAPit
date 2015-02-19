@@ -78,5 +78,12 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(SignIn.this,MainActivity.class);
+        startActivity(intent);
+    }
 }
 

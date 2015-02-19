@@ -31,7 +31,13 @@ public class SignUp extends Activity implements SignUp_Endpoint_Communicator.man
             @Override
             public void onClick(View v) {
                 getInformation();
-                registerInformation();
+                if(signup_name.equals("") || signup_email.equals("") || signup_password.equals("") || signup_phonenumber.equals("")){
+
+                    Toast.makeText(getApplication(),"Enter all the Info",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    registerInformation();
+                }
             }
         });
     }
