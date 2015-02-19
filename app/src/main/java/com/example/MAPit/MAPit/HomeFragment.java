@@ -97,8 +97,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
                     info_data = new Bundle();
-                    info_data.putString("InfoWindowHome", "InfoWindowHome");
-                    info_data.putString("Email", email);
+                    info_data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Info.getCommand());
+                    info_data.putString(PropertyNames.Userinfo_Mail.getProperty(), email);
                     return v;
                 }
             });
@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new FriendsStatusFragment();
+                Fragment fragment = new StatusFragment();
                 fragment.setArguments(info_data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
@@ -260,9 +260,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (item.getItemId()){
             case R.id.switch_view_to_list:
                 Bundle data = new Bundle();
-                data.putSerializable("data", passThisData);
-                data.putString("HomeFragment","HomeFragment");
-                Fragment fragment = new FriendsStatusFragment();
+                data.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
+                data.putString(Commands.Fragment_Caller.getCommand(),Commands.Called_From_Home.getCommand());
+                Fragment fragment = new StatusFragment();
                 fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);

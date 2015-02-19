@@ -32,7 +32,16 @@ public enum Commands {
     Status_add ("addsttus"),
     Status_showGroupStatus ("groupStatus"),
     Status_showIndividualStatus ("individualStatus"),
-    Status_fetchFriendsStatus ("friendStatus")
+    Status_fetchFriendsStatus ("friendStatus"),
+
+
+    Fragment_Caller ("Caller"),
+    Called_From_Home ("Home"),
+    Called_From_Info ("Info"),
+
+
+    Arraylist_Values ("data")
+
     ;
 
     private String command;

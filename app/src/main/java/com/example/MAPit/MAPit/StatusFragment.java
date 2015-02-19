@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.DatastoreKindNames;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Volley.adapter.StatusListAdapter;
 import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.statusApi.model.StatusData;
@@ -22,9 +28,9 @@ import java.util.List;
 /**
  * Created by SETU on 1/20/2015.
  */
-public class FriendsStatusFragment extends Fragment{
+public class StatusFragment extends Fragment{
 
-    public FriendsStatusFragment(){
+    public StatusFragment(){
         setHasOptionsMenu(true);
     }
 
@@ -49,15 +55,49 @@ public class FriendsStatusFragment extends Fragment{
             }
         });
 
-        populateFriendsLatestStatus();
+        Bundle data = getArguments();
+        String command = data.getString(Commands.Fragment_Caller.getCommand());
+
+        if(command.equals(Commands.Called_From_Home.getCommand()))
+            populateFriendsLatestStatus();
+        else if(command.equals(Commands.Called_From_Info.getCommand()))
+            populatePersonStatus();
 
         return v;
     }
+    public void populatePersonStatus(){
+        Bundle data = getArguments();
+        String personMail = data.getString(PropertyNames.Userinfo_Mail.getProperty());
+
+        Data d = new Data();
+        d.setCommand(Commands.Status_showIndividualStatus.getCommand());
+
+
+        StatusData s = new StatusData();
+        s.setKind(DatastoreKindNames.StatusbyIndividual.getKind());
+        s.setPersonMail(personMail);
+
+
+        new StatusEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(ArrayList <StatusData> result){
+
+                super.onPostExecute(result);
+
+                populate(result);
+            }
+        }.execute(new Pair<Data, StatusData>(d, s));
+    }
+
 
     public void populateFriendsLatestStatus(){
         Bundle data = getArguments();
-        ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable("data");
+        ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
 
+        populate(result);
+    }
+
+    public void populate(ArrayList <StatusData> result){
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
 
@@ -65,13 +105,15 @@ public class FriendsStatusFragment extends Fragment{
             StatusData statusData = result.get(i);
 
             StatusListItem item = new StatusListItem();
-            item.setName(statusData.getPersonName());
+            item.setName(statusData.getPersonName());//names wont be shown for personStatus as we already know the name
             item.setStatus(statusData.getStatus());
             statusListItems.add(item);
         }
 
         statuslistAdapter.notifyDataSetChanged();
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

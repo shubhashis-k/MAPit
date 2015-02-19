@@ -23,9 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.mapit.backend.statusApi.model.StatusData;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by SETU on 2/17/2015.
@@ -93,7 +91,7 @@ public class Marker_MapView extends Fragment {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new FriendsStatusFragment();
+                Fragment fragment = new StatusFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
