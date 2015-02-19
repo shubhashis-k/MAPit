@@ -190,8 +190,15 @@ public class FriendsEndpoint {
         Search info = new Search();
         info.setData(userinfo.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString());
 
+        Text imageText = (Text) userinfo.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
+        String ImageData = imageText.getValue();
+        if(ImageData.length() > 0)
+            info.setPicData(ImageData);
 
         info.setKey(key);
+
+        info.setLatitude(userinfo.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()).toString());
+        info.setLongitude(userinfo.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()).toString());
 
         return info;
     }

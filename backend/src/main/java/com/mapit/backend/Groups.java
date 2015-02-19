@@ -7,8 +7,17 @@ public class Groups {
     private String CreatorMail;
     private String GroupName;
     private String GroupDescription;
+    private String GroupPic;
     private String latitude;
     private String longitude;
+
+    public String getGroupPic() {
+        return GroupPic;
+    }
+
+    public void setGroupPic(String groupPic) {
+        GroupPic = groupPic;
+    }
 
     public String getCreatorMail() {
         return CreatorMail;

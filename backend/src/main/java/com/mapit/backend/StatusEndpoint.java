@@ -60,7 +60,10 @@ public class StatusEndpoint {
             e.setUnindexedProperty(DatastorePropertyNames.Status_image.getProperty(), statusPhoto);
         }
         else
-            e.setUnindexedProperty(DatastorePropertyNames.Status_image.getProperty(), "");
+        {
+            Text statusPhoto = new Text("");
+            e.setUnindexedProperty(DatastorePropertyNames.Status_image.getProperty(), statusPhoto);
+        }
 
             datastore.put(e);
 
@@ -116,9 +119,10 @@ public class StatusEndpoint {
                 Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
                 s.setPublishDate(publishDate);
 
-                String statusImage = result.getProperty(DatastorePropertyNames.Status_image.getProperty()).toString();
-                if(statusImage!=null)
-                    s.setStatusPhoto(statusImage);
+                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
+                String ImageData = imageText.getValue();
+                if(ImageData.length() > 0)
+                    s.setStatusPhoto(ImageData);
 
                 statusList.add(s);
 
@@ -143,9 +147,10 @@ public class StatusEndpoint {
                 String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
                 s.setLongitude(longitude);
 
-                String statusImage = result.getProperty(DatastorePropertyNames.Status_image.getProperty()).toString();
-                if(statusImage!=null)
-                    s.setStatusPhoto(statusImage);
+                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
+                String ImageData = imageText.getValue();
+                if(ImageData.length() > 0)
+                    s.setStatusPhoto(ImageData);
 
                 Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
                 s.setPublishDate(publishDate);
@@ -198,9 +203,10 @@ public class StatusEndpoint {
                 String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
                 latestStatus.setLongitude(longitude);
 
-                String statusImage = result.getProperty(DatastorePropertyNames.Status_image.getProperty()).toString();
-                if(statusImage!=null)
-                    latestStatus.setStatusPhoto(statusImage);
+                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
+                String ImageData = imageText.getValue();
+                if(ImageData.length() > 0)
+                    latestStatus.setStatusPhoto(ImageData);
 
                 Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
                 latestStatus.setPublishDate(publishDate);

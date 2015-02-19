@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.*;
+import com.google.appengine.api.datastore.Text;
 import com.mapit.backend.Properties_and_Values.Commands;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
@@ -49,6 +50,18 @@ public class GroupsEndpoint {
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_latitude.getProperty(), group.getLatitude());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_longitude.getProperty(), group.getLongitude());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Description.getProperty(), group.getGroupDescription());
+
+            if(group.getGroupPic() != null)
+            {
+                Text image_Data = new Text(group.getGroupPic());
+                groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Picture.getProperty(), image_Data);
+            }
+            else
+            {
+                Text image_Data = new Text("");
+                groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Picture.getProperty(), image_Data);
+            }
+
             datastore.put(groupKind);
 
             rm.setMessage(rm.Group_Created);
@@ -99,7 +112,7 @@ public class GroupsEndpoint {
     }
 
     @ApiMethod(name = "getMyGroups", path = "getMyGroupsPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList<Search> getMyGroups(@Named("usermail") String mail) {
+    public ArrayList<Search> getMyGroups(@Named("usermail") String mail) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query.Filter Creator_Filter = new Query.FilterPredicate(DatastorePropertyNames.Groups_creatormail.getProperty(), Query.FilterOperator.EQUAL, mail);
@@ -115,19 +128,16 @@ public class GroupsEndpoint {
 
             GroupKey = result.getKey();
 
-            String groupName = result.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString();
-
-            Search s = new Search();
-            s.setKey(GroupKey);
-            s.setData(groupName);
+            Search s = getDetailedGroupInfo(GroupKey);
             searchResult.add(s);
+
         }
 
         return searchResult;
     }
 
     @ApiMethod(name = "getGroupsNotMine", path = "getGroupsNotMinePath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList<Search> getGroupsNotMine(@Named("usermail") String mail, @Named("searchQuery") String searchQuery) {
+    public ArrayList<Search> getGroupsNotMine(@Named("usermail") String mail, @Named("searchQuery") String searchQuery) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         SearchEndpoint getQueryResult = new SearchEndpoint();
@@ -137,7 +147,13 @@ public class GroupsEndpoint {
         ArrayList <Search> FilteredList = new ArrayList<>();
         for(int i = 0 ; i < QueryList.size(); i++){
             if(!myGroupList.contains(QueryList.get(i)))
-                FilteredList.add(QueryList.get(i));
+            {
+                Search s = QueryList.get(i);
+                Key k = KeyFactory.stringToKey(s.getKey());
+
+                s = getDetailedGroupInfo(k);
+                FilteredList.add(s);
+            }
         }
 
         return FilteredList;
@@ -189,4 +205,28 @@ public class GroupsEndpoint {
         return requestKey;
     }
 
+    @ApiMethod(name = "getDetailedGroupInfo", path = "getDetailedGroupInfoPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public Search getDetailedGroupInfo(Key groupKey) throws EntityNotFoundException{
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Entity GroupData = datastore.get(groupKey);
+
+        String groupName = GroupData.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString();
+
+        Search s = new Search();
+
+        Text imageText = (Text) GroupData.getProperty(DatastorePropertyNames.Groups_Picture.getProperty());
+        String ImageData = imageText.getValue();
+        if(ImageData.length() > 0)
+            s.setPicData(ImageData);
+
+
+        s.setKey(groupKey);
+        s.setData(groupName);
+        s.setLatitude(GroupData.getProperty(DatastorePropertyNames.Groups_latitude.getProperty()).toString());
+        s.setLongitude(GroupData.getProperty(DatastorePropertyNames.Groups_longitude.getProperty()).toString());
+        s.setExtra(GroupData.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());
+        return s;
+
+    }
 }
