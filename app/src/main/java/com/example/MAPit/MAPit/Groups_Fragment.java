@@ -189,7 +189,6 @@ public class Groups_Fragment extends Fragment {
         Fragment fragment;
         switch (item.getItemId()){
             case R.id.create_group:
-
                 fragment = new OnlyGoogleMap();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);

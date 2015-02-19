@@ -10,6 +10,16 @@ public class Search {
     private String data;
     private String key;
     private String latitude, longitude;
+    private String picData;
+
+    public String getPicData() {
+        return picData;
+    }
+
+    public void setPicData(String picData) {
+        this.picData = picData;
+    }
+
     public String getData() {
         return data;
     }

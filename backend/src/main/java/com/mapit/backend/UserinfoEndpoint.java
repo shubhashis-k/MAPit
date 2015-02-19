@@ -62,7 +62,8 @@ public class UserinfoEndpoint {
         }
         else
         {
-            Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), "");
+            Text image_Data = new Text("");
+            Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), image_Data);
         }
 
 
@@ -87,28 +88,28 @@ public class UserinfoEndpoint {
             Key k = getKeyfromMail(userinformation.getMail());
 
             Entity updatedinfo = datastore.get(k);
-            updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Username.getProperty(), userinformation.getName());
-            updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
-            updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_latitude.getProperty(), userinformation.getLatitude());
-            updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_longitude.getProperty(), userinformation.getLongitude());
+
+            if(userinformation.getName() != null)
+                updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Username.getProperty(), userinformation.getName());
+
+            if(userinformation.getPassword() != null)
+                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
+
+            if(userinformation.getLatitude() != null)
+                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_latitude.getProperty(), userinformation.getLatitude());
+
+            if(userinformation.getLongitude() != null)
+                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_longitude.getProperty(), userinformation.getLongitude());
 
             if(userinformation.getImagedata() != null)
             {
                 Text image_Data = new Text(userinformation.getImagedata());
                 updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), image_Data);
             }
-            else
-            {
-                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), "");
-            }
 
             if(userinformation.getMobilephone() != null)
             {
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), userinformation.getMobilephone());
-            }
-            else
-            {
-                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), "");
             }
 
             response_messages = new ResponseMessages();
@@ -172,18 +173,15 @@ public class UserinfoEndpoint {
                 um.setPassword((String) result.getProperty(DatastorePropertyNames.Userinfo_Password.getProperty()));
                 um.setMail((String) result.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()));
 
-                try {
-                    Text imageText = (Text) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
-                    if (imageText != null) {
-                        String ImageData = imageText.getValue();
-                        um.setImagedata(ImageData);
-                    }
-                }catch(ClassCastException cx){
 
-                }
+                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
+                String ImageData = imageText.getValue();
+                if(ImageData.length() > 0)
+                    um.setImagedata(ImageData);
+
 
                 String MobilePhone = (String) result.getProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty());
-                if(MobilePhone != null)
+                if(MobilePhone.length() > 0)
                     um.setMobilephone(MobilePhone);
 
 

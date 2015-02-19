@@ -2,8 +2,12 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +23,10 @@ import java.util.List;
  * Created by SETU on 1/20/2015.
  */
 public class FriendsStatusFragment extends Fragment{
+
+    public FriendsStatusFragment(){
+        setHasOptionsMenu(true);
+    }
 
     private ListView listView;
     private StatusListAdapter statuslistAdapter;
@@ -64,4 +72,29 @@ public class FriendsStatusFragment extends Fragment{
 
         statuslistAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_home_fragment,menu);
+        menu.findItem(R.id.switch_view_to_list).setTitle("Switch Back to Map");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.switch_view_to_list:
+
+                Fragment fragment = new Marker_MapView();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -55,27 +55,29 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
 
     @Override
     public void setResponseMessage(UserinfoModel logininfo) {
+
         retrieved_pass = logininfo.getPassword();
 
-        if(retrieved_pass.equals(input_pass))
-        {
-            Intent signin_intent = new Intent(SignIn.this,SlidingDrawerActivity.class);
-            signin_intent.putExtra(PropertyNames.Userinfo_Mail.getProperty(), input_mail);
-            signin_intent.putExtra(PropertyNames.Userinfo_Username.getProperty(), logininfo.getName());
+        if(retrieved_pass != null) {
+            if (retrieved_pass.equals(input_pass)) {
+                Intent signin_intent = new Intent(SignIn.this, SlidingDrawerActivity.class);
+                signin_intent.putExtra(PropertyNames.Userinfo_Mail.getProperty(), input_mail);
+                signin_intent.putExtra(PropertyNames.Userinfo_Username.getProperty(), logininfo.getName());
 
-            String imageData = logininfo.getImagedata();
-            if(imageData != null)
-                signin_intent.putExtra(PropertyNames.Userinfo_Profilepic.getProperty(), logininfo.getImagedata());
+                String imageData = logininfo.getImagedata();
+                if (imageData != null)
+                    signin_intent.putExtra(PropertyNames.Userinfo_Profilepic.getProperty(), logininfo.getImagedata());
 
-            signin_intent.putExtra(PropertyNames.Userinfo_longitude.getProperty(), logininfo.getLongitude());
-            signin_intent.putExtra(PropertyNames.Userinfo_latitude.getProperty(), logininfo.getLatitude());
-            startActivity(signin_intent);
+                signin_intent.putExtra(PropertyNames.Userinfo_longitude.getProperty(), logininfo.getLongitude());
+                signin_intent.putExtra(PropertyNames.Userinfo_latitude.getProperty(), logininfo.getLatitude());
+                startActivity(signin_intent);
+            } else {
+                Toast.makeText(this, "Login Failed! Wrong Password", Toast.LENGTH_LONG).show();
+            }
         }
-        else
-        {
-            Toast.makeText(this, "Login Failed!", Toast.LENGTH_LONG).show();
+        else{
+            Toast.makeText(this, "Login Failed! User does not exist", Toast.LENGTH_LONG).show();
         }
-
 
     }
 }

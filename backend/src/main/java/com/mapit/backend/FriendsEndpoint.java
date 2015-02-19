@@ -143,14 +143,14 @@ public class FriendsEndpoint {
                 String fmail1 = result.getProperty(DatastorePropertyNames.Friends_mail1.getProperty()).toString();
 
                 if (!fmail1.equals(Mail)) {
-                    Search s = getName(fmail1);
+                    Search s = getInfo(fmail1);
                     friendList.add(s);
                 }
 
                 String fmail2 = result.getProperty(DatastorePropertyNames.Friends_mail2.getProperty()).toString();
 
                 if (!fmail2.equals(Mail)) {
-                    Search s = getName(fmail2);
+                    Search s = getInfo(fmail2);
                     friendList.add(s);
                 }
 
@@ -170,7 +170,7 @@ public class FriendsEndpoint {
 
         ArrayList <Search> result = new ArrayList<>();
 
-        Search person = getName(Mail);
+        Search person = getInfo(Mail);
 
         for(int i = 0 ; i < searchedList.size(); i++){
             if(!friendList.contains(searchedList.get(i)) && !person.getKey().equals(searchedList.get(i).getKey()))
@@ -179,8 +179,8 @@ public class FriendsEndpoint {
         return result;
     }
 
-    @ApiMethod(name = "getName", path = "getName", httpMethod = ApiMethod.HttpMethod.POST)
-    public Search getName(@Named("usermail") String Mail) throws EntityNotFoundException {
+    @ApiMethod(name = "getInfo", path = "getInfo", httpMethod = ApiMethod.HttpMethod.POST)
+    public Search getInfo(@Named("usermail") String Mail) throws EntityNotFoundException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         UserinfoEndpoint userMailKeyfetcher = new UserinfoEndpoint();
@@ -189,6 +189,8 @@ public class FriendsEndpoint {
         Entity userinfo = datastore.get(key);
         Search info = new Search();
         info.setData(userinfo.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString());
+
+
         info.setKey(key);
 
         return info;

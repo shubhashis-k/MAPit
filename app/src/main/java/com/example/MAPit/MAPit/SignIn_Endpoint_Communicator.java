@@ -57,8 +57,10 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
         manipulator = (manipulate_Signin) ((Activity) maincontext);
 
         ArrayList <UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();
-        UserinfoModel logininfo = result_list.get(0);
+        UserinfoModel logininfo = new UserinfoModel();
 
+        if(result_list.size() > 0)
+            logininfo = result_list.get(0);
 
         manipulator.setResponseMessage(logininfo);
     }
