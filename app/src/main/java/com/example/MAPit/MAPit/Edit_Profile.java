@@ -84,9 +84,7 @@ public class Edit_Profile extends Fragment{
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     profile_image.setImageBitmap(selectedImage);
 
-
-                    imageToString = imageToStringConverter(selectedImage);
-
+                    imageToString = ImageConverter.imageToStringConverter(selectedImage);
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -94,15 +92,6 @@ public class Edit_Profile extends Fragment{
 
 
         }
-    }
-
-    public String imageToStringConverter(Bitmap image){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        String imageToString = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-
-        return imageToString;
     }
 
 

@@ -89,25 +89,25 @@ public class UserinfoEndpoint {
 
             Entity updatedinfo = datastore.get(k);
 
-            if(userinformation.getName() != null)
+            if(userinformation.getName() != null && userinformation.getName().length() > 0)
                 updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Username.getProperty(), userinformation.getName());
 
-            if(userinformation.getPassword() != null)
+            if(userinformation.getPassword() != null && userinformation.getPassword().length() > 0)
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
 
-            if(userinformation.getLatitude() != null)
+            if(userinformation.getLatitude() != null && userinformation.getLatitude().length() > 0)
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_latitude.getProperty(), userinformation.getLatitude());
 
-            if(userinformation.getLongitude() != null)
+            if(userinformation.getLongitude() != null && userinformation.getLongitude().length() > 0)
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_longitude.getProperty(), userinformation.getLongitude());
 
-            if(userinformation.getImagedata() != null)
+            if(userinformation.getImagedata() != null && userinformation.getImagedata().length() > 0)
             {
                 Text image_Data = new Text(userinformation.getImagedata());
                 updatedinfo.setProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty(), image_Data);
             }
 
-            if(userinformation.getMobilephone() != null)
+            if(userinformation.getMobilephone() != null && userinformation.getMobilephone().length() > 0)
             {
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), userinformation.getMobilephone());
             }

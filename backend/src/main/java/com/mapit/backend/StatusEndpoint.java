@@ -47,6 +47,7 @@ public class StatusEndpoint {
             e.setProperty(DatastorePropertyNames.Status_groupKey.getProperty(), status.getGroupKey());
         }
 
+        e.setProperty(DatastorePropertyNames.Status_personName.getProperty(), status.getPersonName());
         e.setProperty(DatastorePropertyNames.Status_personMail.getProperty(), status.getPersonMail());
         e.setProperty(DatastorePropertyNames.Status_latitude.getProperty(), status.getLatitude());
         e.setProperty(DatastorePropertyNames.Status_longitude.getProperty(), status.getLongitude());
@@ -65,7 +66,7 @@ public class StatusEndpoint {
             e.setUnindexedProperty(DatastorePropertyNames.Status_image.getProperty(), statusPhoto);
         }
 
-            datastore.put(e);
+        datastore.put(e);
 
     }
 
@@ -104,6 +105,9 @@ public class StatusEndpoint {
                 Key k = result.getKey();
                 s.setStatusKey(k);
 
+                String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
+                s.setPersonName(personName);
+
                 String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
                 s.setPersonMail(personMail);
 
@@ -134,6 +138,9 @@ public class StatusEndpoint {
                 StatusData s = new StatusData();
                 Key k = result.getKey();
                 s.setStatusKey(k);
+
+                String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
+                s.setPersonName(personName);
 
                 String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
                 s.setPersonMail(personMail);
@@ -183,16 +190,10 @@ public class StatusEndpoint {
                 Key k = result.getKey();
                 latestStatus.setStatusKey(k);
 
-                /* fetch person Name*/
-                UserinfoEndpoint userinfoEndpoint = new UserinfoEndpoint();
-                Key personKey = userinfoEndpoint.getKeyfromMail(personMail);
-                Entity personEntity = datastore.get(personKey);
-                String personName = personEntity.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
-
-
-
-                latestStatus.setPersonName(personName);
                 latestStatus.setPersonMail(personMail);
+
+                String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
+                latestStatus.setPersonName(personName);
 
                 String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
                 latestStatus.setStatus(personStatus);

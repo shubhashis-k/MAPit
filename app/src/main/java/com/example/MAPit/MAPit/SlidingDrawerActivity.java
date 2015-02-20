@@ -74,7 +74,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
         String imageString = getIntent().getExtras().getString(PropertyNames.Userinfo_Profilepic.getProperty());
         if(imageString != null)
-            profilePic.setImageBitmap(convertStringtoBitmap(imageString));
+            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(imageString));
 
         mTitle = mDrawerTitle = getTitle();
 
@@ -165,12 +165,6 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     {
         Bundle mailInfo = getIntent().getExtras();
         return mailInfo;
-    }
-
-    public Bitmap convertStringtoBitmap(String stringImage){
-        byte[] stringTobyte = Base64.decode(stringImage, Base64.NO_WRAP);
-        Bitmap bmp = BitmapFactory.decodeByteArray(stringTobyte, 0, stringTobyte.length);
-        return bmp;
     }
 
     @Override
