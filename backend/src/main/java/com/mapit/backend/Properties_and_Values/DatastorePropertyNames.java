@@ -31,6 +31,7 @@ public enum DatastorePropertyNames {
 
     Status_groupKey ("groupKey"),
     Status_personMail ("personMail"),
+    Status_personName ("personName"),
     Status_latitude ("latitude"),
     Status_longitude ("longitude"),
     Status_text ("text"),
