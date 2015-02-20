@@ -39,7 +39,7 @@ public class StatusFragment extends Fragment{
     private StatusListAdapter statuslistAdapter;
     private List<StatusListItem> statusListItems;
     public String command;
-    private ArrayList<StatusData> passThisData;
+    public ArrayList<StatusData> passThisData;
     public Bundle bundle;
     public Bundle data;
 
@@ -51,22 +51,6 @@ public class StatusFragment extends Fragment{
         statusListItems = new ArrayList<StatusListItem>();
         statuslistAdapter = new StatusListAdapter(getActivity(), statusListItems);
         listView.setAdapter(statuslistAdapter);
-        //listener for each listitem of friend status
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              Fragment fragment = new Friends_Status_Comment_Fragment();
-               bundle = new Bundle();
-                StatusData st = passThisData.get(position);
-                ArrayList <StatusData> passData = new ArrayList<StatusData>();
-                passData.add(st);
-                bundle.putSerializable(Commands.Called_From_Status.getCommand(),passData);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
-
-            }
-        });
-
         data = getArguments();
         command = data.getString(Commands.Fragment_Caller.getCommand());
 
@@ -74,6 +58,24 @@ public class StatusFragment extends Fragment{
             populateFriendsLatestStatus();
         else if(command.equals(Commands.Called_From_Info.getCommand()))
             populatePersonStatus();
+        //listener for each listitem of friend status
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+              Fragment fragment = new Friends_Status_Comment_Fragment();
+                bundle = new Bundle();
+                StatusData st = passThisData.get(position);
+                ArrayList <StatusData> passData = new ArrayList<StatusData>();
+                passData.add(st);
+                bundle.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
+                bundle.putSerializable(Commands.Arraylist_Values.getCommand(),passData);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
+            }
+        });
+
+
 
         return v;
     }

@@ -71,9 +71,10 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         url = (TextView) v.findViewById(R.id.txtUrl_single_status);
 
         bundle =getArguments();
-        command = bundle.getString(Commands.Called_From_Status.getCommand());
+        command = bundle.getString(Commands.Fragment_Caller.getCommand());
+
         if(command.equals(Commands.Called_From_Status.getCommand())){
-            dataReceived = (ArrayList<StatusData>) bundle.getSerializable(Commands.Called_From_Status.getCommand());
+            dataReceived = (ArrayList<StatusData>) bundle.getSerializable(Commands.Arraylist_Values.getCommand());
             StatusData data = dataReceived.get(0);
 
             name.setText(data.getPersonName());
@@ -88,7 +89,8 @@ public class Friends_Status_Comment_Fragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-           // profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getP));
+            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getProfilePic()));
+            feedPic.setImageBitmap(ImageConverter.stringToimageConverter(data.getStatusPhoto()));
 
         }
 
