@@ -12,7 +12,16 @@ public class StatusData {
     private String groupKey, status, personMail, latitude, longitude, kind, statusKey;
     private String personName;
     private String statusPhoto;
+    private String profilePic;
     private Date publishDate;
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 
     public String getStatusPhoto() {
         return statusPhoto;

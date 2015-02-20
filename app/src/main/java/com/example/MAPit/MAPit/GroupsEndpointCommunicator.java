@@ -33,7 +33,7 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl("http://10.0.3.2:8080/_ah/api/") //Genymotion Config
+                    .setRootUrl(Commands.Ip_address.getCommand()) //Genymotion Config
                             //.setRootUrl("http://192.168.10.1:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override

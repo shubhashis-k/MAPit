@@ -37,6 +37,10 @@ public class StatusFragment extends Fragment{
     private ListView listView;
     private StatusListAdapter statuslistAdapter;
     private List<StatusListItem> statusListItems;
+    public String command;
+    private ArrayList<StatusData> passThisData;
+    public Bundle bundle;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +60,7 @@ public class StatusFragment extends Fragment{
         });
 
         Bundle data = getArguments();
-        String command = data.getString(Commands.Fragment_Caller.getCommand());
+        command = data.getString(Commands.Fragment_Caller.getCommand());
 
         if(command.equals(Commands.Called_From_Home.getCommand()))
             populateFriendsLatestStatus();
@@ -83,7 +87,7 @@ public class StatusFragment extends Fragment{
             protected void onPostExecute(ArrayList <StatusData> result){
 
                 super.onPostExecute(result);
-
+                passThisData=result;
                 populate(result);
             }
         }.execute(new Pair<Data, StatusData>(d, s));
@@ -127,12 +131,23 @@ public class StatusFragment extends Fragment{
 
         switch (item.getItemId()){
             case R.id.switch_view_to_list:
-
-                Fragment fragment = new Marker_MapView();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container,fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                if(command.equals(Commands.Called_From_Home.getCommand())) {
+                    Fragment fragment = new HomeFragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                else if(command.equals(Commands.Called_From_Info.getCommand())) {
+                    bundle = new Bundle();
+                    bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
+                    Fragment fragment = new Marker_MapView();
+                    fragment.setArguments(bundle);
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
 
                 return true;
         }

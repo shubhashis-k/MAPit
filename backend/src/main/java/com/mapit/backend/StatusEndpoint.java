@@ -81,7 +81,7 @@ public class StatusEndpoint {
     }
 
     @ApiMethod(name = "showStatus", path = "showStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
-    public ArrayList <StatusData> showStatus(StatusData status) {
+    public ArrayList <StatusData> showStatus(StatusData status) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query statusQuery = new Query(status.getKind()).addSort(DatastorePropertyNames.Status_time.getProperty(), SortDirection.DESCENDING);
@@ -99,74 +99,42 @@ public class StatusEndpoint {
         PreparedQuery queryResult = datastore.prepare(statusQuery);
         ArrayList<StatusData> statusList = new ArrayList<>();
 
-        if(status.getKind().equals(DatastoreKindNames.StatusInGroup.getKind())) {
-            for (Entity result : queryResult.asIterable()) {
-                StatusData s = new StatusData();
-                Key k = result.getKey();
-                s.setStatusKey(k);
+        for (Entity result : queryResult.asIterable()) {
+            StatusData s = new StatusData();
+            Key k = result.getKey();
+            s.setStatusKey(k);
 
-                String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
-                s.setPersonName(personName);
+            String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
+            s.setPersonName(personName);
 
-                String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
-                s.setPersonMail(personMail);
+            String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
+            s.setPersonMail(personMail);
 
-                String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
-                s.setStatus(personStatus);
+            String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
+            s.setStatus(personStatus);
 
-                String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
-                s.setLatitude(latitude);
+            String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
+            s.setLatitude(latitude);
 
-                String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
-                s.setLongitude(longitude);
+            String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
+            s.setLongitude(longitude);
 
-                Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
-                s.setPublishDate(publishDate);
+            Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
+            s.setPublishDate(publishDate);
 
-                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
-                String ImageData = imageText.getValue();
-                if(ImageData.length() > 0)
-                    s.setStatusPhoto(ImageData);
-
-                statusList.add(s);
+            Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
+            String ImageData = imageText.getValue();
+            if (ImageData.length() > 0)
+                s.setStatusPhoto(ImageData);
 
 
-            }
+            Text profilePicText = fetchProfilePic(personMail);
+            String profilePic = profilePicText.getValue();
+            if (profilePic.length() > 0)
+                s.setProfilePic(profilePic);
+
+            statusList.add(s);
         }
-        else if(status.getKind().equals(DatastoreKindNames.StatusbyIndividual.getKind())){
-            for (Entity result : queryResult.asIterable()) {
-                StatusData s = new StatusData();
-                Key k = result.getKey();
-                s.setStatusKey(k);
-
-                String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
-                s.setPersonName(personName);
-
-                String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
-                s.setPersonMail(personMail);
-
-                String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
-                s.setStatus(personStatus);
-
-                String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
-                s.setLatitude(latitude);
-
-                String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
-                s.setLongitude(longitude);
-
-                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
-                String ImageData = imageText.getValue();
-                if(ImageData.length() > 0)
-                    s.setStatusPhoto(ImageData);
-
-                Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
-                s.setPublishDate(publishDate);
-
-                statusList.add(s);
-
-            }
-        }
-
 
         return statusList;
 
@@ -209,6 +177,12 @@ public class StatusEndpoint {
                 if(ImageData.length() > 0)
                     latestStatus.setStatusPhoto(ImageData);
 
+                Text profilePicText = fetchProfilePic(personMail);
+                String profilePic = profilePicText.getValue();
+                if(profilePic.length() > 0)
+                    latestStatus.setProfilePic(profilePic);
+
+
                 Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
                 latestStatus.setPublishDate(publishDate);
 
@@ -234,6 +208,20 @@ public class StatusEndpoint {
         }
 
         return statusList;
+    }
+
+    @ApiMethod(name = "fetchProfilePic", path = "fetchProfilePicPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public Text fetchProfilePic(@Named("personMail") String personMail) throws EntityNotFoundException {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        UserinfoEndpoint userinfoEndpoint = new UserinfoEndpoint();
+        Key k = userinfoEndpoint.getKeyfromMail(personMail);
+
+        Entity personInfo = datastore.get(k);
+
+        Text profilePic = (Text) personInfo.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
+
+        return profilePic;
     }
 }
 
