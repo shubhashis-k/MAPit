@@ -1,7 +1,6 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

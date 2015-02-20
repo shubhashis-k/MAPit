@@ -1,22 +1,17 @@
 package com.example.MAPit.MAPit;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,8 +28,6 @@ import com.example.MAPit.model.NavDrawerItem;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 
 public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{

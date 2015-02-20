@@ -13,7 +13,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -118,11 +117,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                Double lat = latLng.latitude;
-                Double lng = latLng.longitude;
-                final Bundle ll = new Bundle();
-                ll.putDouble("latitude", lat);
-                ll.putDouble("longitude", lng);
+                String lat = String.valueOf(latLng.latitude);
+                String lng = String.valueOf(latLng.longitude);
+                final Bundle dataToAddStatus = new Bundle();
+                dataToAddStatus.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Individual.getCommand());
+                dataToAddStatus.putString(PropertyNames.Status_latitude.getProperty(), lat);
+                dataToAddStatus.putString(PropertyNames.Status_longitude.getProperty(), lng);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Pick Up Your Choice")
@@ -133,15 +133,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                 switch (which) {
                                     case 0:
-                                        fragment = new Add_GroupStatus_Fragment();
-                                        fragment.setArguments(ll);
+                                        fragment = new AddStatus();
+                                        fragment.setArguments(dataToAddStatus);
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);
                                         transaction.commit();
                                         break;
                                     case 1:
                                         fragment = new Create_New_Group_Fragment();
-                                        fragment.setArguments(ll);
+                                        fragment.setArguments(dataToAddStatus);
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);
                                         transaction.commit();

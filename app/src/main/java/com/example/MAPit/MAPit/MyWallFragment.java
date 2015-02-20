@@ -150,7 +150,7 @@ public class MyWallFragment extends Fragment{
         switch (item.getItemId()){
             case R.id.add_new_status:
 
-                Fragment fragment = new Add_GroupStatus_Fragment();
+                Fragment fragment = new AddStatus();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);
                 transaction.addToBackStack(null);
