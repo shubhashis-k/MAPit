@@ -122,7 +122,7 @@ public class MyWallFragment extends Fragment{
                 item.setImge(image);
                 item.setStatus(feedObj.getString("status"));
                 item.setProfilePic(feedObj.getString("profilePic"));
-                item.setTimeStamp(feedObj.getString("timeStamp"));
+               // item.setTimeStamp(feedObj.getString("timeStamp"));
 
                 // url might be null sometimes
                 String feedUrl = feedObj.isNull("url") ? null : feedObj

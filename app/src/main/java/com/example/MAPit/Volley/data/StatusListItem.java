@@ -5,7 +5,7 @@ package com.example.MAPit.Volley.data;
  */
 public class StatusListItem {
     private int id;
-    private String name, status, StatusImage, profilePic, timeStamp, url;
+    private String name, status, StatusImage, profilePic, location, url;
 
     public int getId() {
         return id;
@@ -47,12 +47,12 @@ public class StatusListItem {
         this.profilePic = profilePic;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getLocation() {
+        return location;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getUrl() {

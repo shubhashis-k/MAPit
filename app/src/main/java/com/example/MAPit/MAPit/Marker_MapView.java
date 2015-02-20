@@ -93,38 +93,24 @@ public class Marker_MapView extends Fragment {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new FriendsStatusFragment();
+                /*Fragment fragment = new StatusFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
-                transaction.commit();
+                transaction.commit();*/
             }
         });
 
-        fetchFriendStatus();
+        //getting the bundle value
 
+        Bundle data = getArguments();
+        ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+
+        drawMarkerAndLine(result);
         return v;
     }
 
-    public void fetchFriendStatus() {
-        Data d = new Data();
-        d.setCommand(Commands.Status_fetchFriendsStatus.getCommand());
-        d.setUsermail(getmail());
 
-        StatusData statusData = new StatusData();
-
-        context = this.getActivity();
-
-        new StatusEndpointCommunicator() {
-            @Override
-            protected void onPostExecute(ArrayList<StatusData> result) {
-
-                super.onPostExecute(result);
-                drawMarkerAndLine(result);
-
-            }
-        }.execute(new Pair<Data, StatusData>(d, statusData));
-    }
 
     private void drawMarkerAndLine(ArrayList<StatusData> result) {
         PolygonOptions options = new PolygonOptions()

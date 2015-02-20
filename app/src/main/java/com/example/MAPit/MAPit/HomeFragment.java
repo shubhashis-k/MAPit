@@ -3,14 +3,17 @@ package com.example.MAPit.MAPit;
 //some test comment
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,7 +55,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     EditText et;
     MapFragment mapFrag;
     Bundle info_data;
-    private ArrayList <StatusData> passThisData;
+    private ArrayList<StatusData> passThisData;
+    final CharSequence[] items = {"Give Status", "Create Group"};
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -75,6 +79,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         map = mapFrag.getMap();
+
         //added the custom info adapter
         if (map != null) {
             map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -108,6 +113,52 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         Button go = (Button) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
+        //onclick listener on map
+
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Double lat = latLng.latitude;
+                Double lng = latLng.longitude;
+                final Bundle ll = new Bundle();
+                ll.putDouble("latitude", lat);
+                ll.putDouble("longitude", lng);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Pick Up Your Choice")
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Fragment fragment;
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                switch (which) {
+                                    case 0:
+                                        fragment = new Add_GroupStatus_Fragment();
+                                        fragment.setArguments(ll);
+                                        transaction.replace(R.id.frame_container, fragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                        break;
+                                    case 1:
+                                        fragment = new Create_New_Group_Fragment();
+                                        fragment.setArguments(ll);
+                                        transaction.replace(R.id.frame_container, fragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                        break;
+                                    default:
+                                        break;
+
+                                }
+
+                            }
+                        });
+
+                builder.show();
+
+            }
+        });
+
 
         //onclick listener on marker of friends location
 
@@ -128,7 +179,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    public void fetchFriendStatus(){
+
+    public void fetchFriendStatus() {
         Data d = new Data();
         d.setCommand(Commands.Status_fetchFriendsStatus.getCommand());
         d.setUsermail(getmail());
@@ -137,9 +189,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         context = this.getActivity();
 
-        new StatusEndpointCommunicator(){
+        new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList <StatusData> result){
+            protected void onPostExecute(ArrayList<StatusData> result) {
 
                 super.onPostExecute(result);
                 passThisData = result;
@@ -151,7 +203,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void drawMarkerAndLine(ArrayList<StatusData> result) {
 
-        if(result.size() != 0) {
+        if (result.size() != 0) {
             PolygonOptions options = new PolygonOptions()
                     .fillColor(0x330000FF)
                     .strokeColor(Color.BLUE)
@@ -257,15 +309,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.switch_view_to_list:
                 Bundle data = new Bundle();
                 data.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
-                data.putString(Commands.Fragment_Caller.getCommand(),Commands.Called_From_Home.getCommand());
+                data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Home.getCommand());
                 Fragment fragment = new StatusFragment();
                 fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container,fragment);
+                transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 

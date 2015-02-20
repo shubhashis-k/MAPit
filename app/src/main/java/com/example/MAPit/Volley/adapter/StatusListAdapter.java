@@ -59,7 +59,7 @@ public class StatusListAdapter extends BaseAdapter {
 
 
         TextView name = (TextView) convertView.findViewById(R.id.name);
-        TextView timestamp = (TextView) convertView.findViewById(R.id.timestamp);
+        TextView location = (TextView) convertView.findViewById(R.id.timestamp);
         TextView statusMsg = (TextView) convertView.findViewById(R.id.txtStatusMsg);
         TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
         ImageView profilePic = (ImageView) convertView.findViewById(R.id.profilePic);
@@ -69,6 +69,7 @@ public class StatusListAdapter extends BaseAdapter {
 
         name.setText(item.getName());
         statusMsg.setText(item.getStatus());
+        location.setText(item.getLocation());
         // Converting timestamp into x ago format
 
         /*
