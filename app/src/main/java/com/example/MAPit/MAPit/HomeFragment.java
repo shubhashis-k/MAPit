@@ -78,6 +78,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         map = mapFrag.getMap();
+        map.setMyLocationEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        map.getUiSettings().setCompassEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
+        map.getUiSettings().setAllGesturesEnabled(true);
+        map.setTrafficEnabled(true);
 
         //added the custom info adapter
         if (map != null) {

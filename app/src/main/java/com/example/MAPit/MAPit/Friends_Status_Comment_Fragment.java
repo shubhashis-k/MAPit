@@ -14,18 +14,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
+import com.mapit.backend.statusApi.model.StatusData;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +47,12 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     private ListView listView;
     private CommentListAdapter listAdapter;
     private List<Comment_Item> commentItems;
-    private String URL_FEED="http://api.androidhive.info/feed/feed.json";
+    ImageView profilePic,feedPic;
+    TextView name,location,status,url;
+    Bundle bundle;
+    public String command;
+    private ArrayList<StatusData> dataReceived;
+    String locname;
 
     //added this for adding fragment menu
     public Friends_Status_Comment_Fragment(){
@@ -48,6 +62,37 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.frnd_single_status,null,false);
+
+        profilePic = (ImageView) v.findViewById(R.id.group_Pic_single_status);
+        feedPic = (ImageView) v.findViewById(R.id.feedImage_single_status);
+        name = (TextView) v.findViewById(R.id.group_name_single_status);
+        location = (TextView) v.findViewById(R.id.timestamp_single_status);
+        status = (TextView) v.findViewById(R.id.txtStatusMsg_single_status);
+        url = (TextView) v.findViewById(R.id.txtUrl_single_status);
+
+        bundle =getArguments();
+        command = bundle.getString(Commands.Called_From_Status.getCommand());
+        if(command.equals(Commands.Called_From_Status.getCommand())){
+            dataReceived = (ArrayList<StatusData>) bundle.getSerializable(Commands.Called_From_Status.getCommand());
+            StatusData data = dataReceived.get(0);
+
+            name.setText(data.getPersonName());
+            status.setText(data.getStatus());
+            Double lat = Double.parseDouble(data.getLatitude());
+            Double lng = Double.parseDouble(data.getLongitude());
+            LatitudeToLocation latitudeToLocation = new LatitudeToLocation();
+            try {
+               locname = latitudeToLocation.GetLocation(lat,lng);
+               location.setText(locname);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+           // profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getP));
+
+        }
+
+
 
         listView =(ListView)v.findViewById(R.id.comment_single_status);
         commentItems = new ArrayList<Comment_Item>();
@@ -61,50 +106,11 @@ public class Friends_Status_Comment_Fragment extends Fragment {
             }
         });
         // We first check for cached request
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeed(new JSONObject(data));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
 
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-                    //VolleyLog.d(TAG, "Response: " + response.toString());
-                    if (response != null) {
-                        parseJsonFeed(response);
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            });
-
-            // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
-        }
-        //this must to be included to get the menu of fragment working
-        //setHasOptionsMenu(true);
         return v;
     }
 
-    private void parseJsonFeed(JSONObject response) {
+    /*private void parseJsonFeed(JSONObject response) {
         try {
             JSONArray feedArray = response.getJSONArray("feed");
 
@@ -127,7 +133,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -150,8 +156,6 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                 transaction.replace(R.id.frame_container,fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-
-
                 return true;
         }
         return super.onOptionsItemSelected(item);

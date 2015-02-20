@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.DatastoreKindNames;
@@ -40,6 +41,7 @@ public class StatusFragment extends Fragment{
     public String command;
     private ArrayList<StatusData> passThisData;
     public Bundle bundle;
+    public Bundle data;
 
 
     @Override
@@ -54,12 +56,18 @@ public class StatusFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Fragment fragment = new Friends_Status_Comment_Fragment();
-              FragmentManager fragmentManager = getFragmentManager();
-              fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+               bundle = new Bundle();
+                StatusData st = passThisData.get(position);
+                ArrayList <StatusData> passData = new ArrayList<StatusData>();
+                passData.add(st);
+                bundle.putSerializable(Commands.Called_From_Status.getCommand(),passData);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+
             }
         });
 
-        Bundle data = getArguments();
+        data = getArguments();
         command = data.getString(Commands.Fragment_Caller.getCommand());
 
         if(command.equals(Commands.Called_From_Home.getCommand()))
@@ -70,7 +78,7 @@ public class StatusFragment extends Fragment{
         return v;
     }
     public void populatePersonStatus(){
-        Bundle data = getArguments();
+         data = getArguments();
         String personMail = data.getString(PropertyNames.Userinfo_Mail.getProperty());
 
         Data d = new Data();
@@ -109,7 +117,7 @@ public class StatusFragment extends Fragment{
             StatusData statusData = result.get(i);
 
             StatusListItem item = new StatusListItem();
-            item.setName(statusData.getPersonName());//names wont be shown for personStatus as we already know the name
+            item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
             statusListItems.add(item);
         }

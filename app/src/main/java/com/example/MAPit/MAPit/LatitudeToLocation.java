@@ -12,13 +12,11 @@ import java.util.Locale;
  */
 public class LatitudeToLocation extends SlidingDrawerActivity {
 
-    public String GetLocation(String latitude,String longitude) throws IOException {
+    public String GetLocation(Double latitude,Double longitude) throws IOException {
         String loc="";
-        Double lat=Double.parseDouble(latitude);
-        Double lng=Double.parseDouble(longitude);
         Geocoder gcd = new Geocoder(this,Locale.getDefault());
 
-         List<Address> addressList = gcd.getFromLocation(lat,lng,1);
+         List<Address> addressList = gcd.getFromLocation(latitude,longitude,1);
          if (addressList.size() > 0)
           loc = addressList.get(0).getLocality();
 
