@@ -68,9 +68,12 @@ public class StatusFragment extends Fragment{
                 ArrayList <StatusData> passData = new ArrayList<StatusData>();
                 passData.add(st);
                 bundle.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
-                bundle.putSerializable(Commands.Arraylist_Values.getCommand(),passData);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container,fragment).commit();
+                bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
+                fragment.setArguments(bundle);
+                FragmentTransaction transaction =getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container,fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
             }
         });
@@ -107,7 +110,7 @@ public class StatusFragment extends Fragment{
     public void populateFriendsLatestStatus(){
         Bundle data = getArguments();
         ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
-
+        passThisData = result;
         populate(result);
     }
 
@@ -121,6 +124,14 @@ public class StatusFragment extends Fragment{
             StatusListItem item = new StatusListItem();
             item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
+            if(statusData.getStatusPhoto()!=null){
+                item.setImge(statusData.getStatusPhoto());
+            }
+            if(statusData.getProfilePic()!=null){
+                item.setProfilePic(statusData.getProfilePic());
+            }else{
+
+            }
             statusListItems.add(item);
         }
 

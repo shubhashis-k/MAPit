@@ -66,7 +66,7 @@ public class StatusListAdapter extends BaseAdapter {
         ImageView feedImageView = (ImageView) convertView.findViewById(R.id.feedImage1);
 
         StatusListItem item = statusListItems.get(position);
-
+       // profilePic.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile));
         name.setText(item.getName());
         statusMsg.setText(item.getStatus());
         location.setText(item.getLocation());

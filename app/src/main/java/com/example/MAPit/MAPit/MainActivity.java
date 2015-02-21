@@ -1,5 +1,7 @@
 package com.example.MAPit.MAPit;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -23,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
         signup.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Intent signupintent = new Intent(MainActivity.this,SignUp.class);
+                Intent signupintent = new Intent(MainActivity.this,HomeMapActivity.class);
                 startActivity(signupintent);
                 return false;
 

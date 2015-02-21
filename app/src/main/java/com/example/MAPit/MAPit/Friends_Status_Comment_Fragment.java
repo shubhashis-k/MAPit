@@ -53,6 +53,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     public String command;
     private ArrayList<StatusData> dataReceived;
     String locname;
+    Double lat,lng;
 
     //added this for adding fragment menu
     public Friends_Status_Comment_Fragment(){
@@ -79,9 +80,9 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
             name.setText(data.getPersonName());
             status.setText(data.getStatus());
-            Double lat = Double.parseDouble(data.getLatitude());
-            Double lng = Double.parseDouble(data.getLongitude());
-            LatitudeToLocation latitudeToLocation = new LatitudeToLocation();
+             lat = Double.parseDouble(data.getLatitude());
+             lng = Double.parseDouble(data.getLongitude());
+            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
             try {
                locname = latitudeToLocation.GetLocation(lat,lng);
                location.setText(locname);
@@ -89,8 +90,17 @@ public class Friends_Status_Comment_Fragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getProfilePic()));
-            feedPic.setImageBitmap(ImageConverter.stringToimageConverter(data.getStatusPhoto()));
+            if(data.getProfilePic() !=null) {
+                profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getProfilePic()));
+            }else{
+                profilePic.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile));
+
+            }
+            if(data.getStatusPhoto() !=null) {
+                feedPic.setImageBitmap(ImageConverter.stringToimageConverter(data.getStatusPhoto()));
+            }else {
+
+            }
 
         }
 
@@ -154,6 +164,10 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                 return true;
             case R.id.go_to_frnd_location:
                 Fragment fragment = new Friend_Location_Fragment();
+                Bundle data = new Bundle();
+                data.putDouble("latitude",lat);
+                data.putDouble("longitude",lng);
+                fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);
                 transaction.addToBackStack(null);
@@ -198,4 +212,6 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+
 }

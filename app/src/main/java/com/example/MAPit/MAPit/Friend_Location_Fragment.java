@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.model.GmapV2Direction;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,11 +34,12 @@ public class Friend_Location_Fragment extends Fragment {
     MapFragment fragment;
     GoogleMap directionMap;
     MarkerOptions markerOptions;
-    LatLng fromPosition,toPosition;
+    LatLng fromPosition, toPosition;
     Document document;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.route_direction_frnd_location,null,false);
+        View v = inflater.inflate(R.layout.route_direction_frnd_location, null, false);
         route = new GmapV2Direction();
         fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.route_frnd_location_map);
         directionMap = fragment.getMap();
@@ -50,8 +52,15 @@ public class Friend_Location_Fragment extends Fragment {
         directionMap.setTrafficEnabled(true);
         //directionMap.animateCamera(CameraUpdateFactory.zoomTo(10));
         markerOptions = new MarkerOptions();
-        fromPosition = new LatLng(11.663837, 78.147297);
-        toPosition = new LatLng(11.723512, 78.466287);
+        Bundle data = getArguments();
+        Double lat = data.getDouble("latitude");
+        Double lng = data.getDouble("longitude");
+
+        Bundle mydata = ((SlidingDrawerActivity)getActivity()).getEmail();
+        Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
+        Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
+        fromPosition = new LatLng(lat, lng);
+        toPosition = new LatLng(myLat, myLng);
         directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
         //calling the getroutetask for knowing the route
         GetRouteTask getRouteTask = new GetRouteTask();
@@ -62,9 +71,10 @@ public class Friend_Location_Fragment extends Fragment {
 
 
     //This class Get Route on the map
-    private class GetRouteTask extends AsyncTask<String,Void,String>{
+    private class GetRouteTask extends AsyncTask<String, Void, String> {
         private ProgressDialog dialog;
-        String response ="";
+        String response = "";
+
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(getActivity());
@@ -74,15 +84,15 @@ public class Friend_Location_Fragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            document = route.getDocument(fromPosition,toPosition,GmapV2Direction.MODE_DRIVING);
+            document = route.getDocument(fromPosition, toPosition, GmapV2Direction.MODE_DRIVING);
             response = "Success";
             return response;
         }
 
         @Override
         protected void onPostExecute(String s) {
-           // directionMap.clear();
-            if(response.equalsIgnoreCase("Success")){
+            // directionMap.clear();
+            if (response.equalsIgnoreCase("Success")) {
                 ArrayList<LatLng> directionPoint = route.getDirection(document);
                 PolylineOptions rectLine = new PolylineOptions().width(10).color(
                         Color.RED);
@@ -103,8 +113,7 @@ public class Friend_Location_Fragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView()
-    {
+    public void onDestroyView() {
         super.onDestroyView();
         Fragment fragment = (Fragment) getFragmentManager().findFragmentById(R.id.route_frnd_location_map);
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
@@ -113,10 +122,9 @@ public class Friend_Location_Fragment extends Fragment {
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
-        if(directionMap!=null)
-            directionMap=null;
+        if (directionMap != null)
+            directionMap = null;
     }
 }

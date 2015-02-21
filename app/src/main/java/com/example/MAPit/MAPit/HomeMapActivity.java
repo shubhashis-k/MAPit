@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.List;
 
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -52,6 +57,38 @@ public class HomeMapActivity extends FragmentActivity {
             //setContentView(R.layout.activity_main);
         }
 
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setAllGesturesEnabled(true);
+        mMap.setTrafficEnabled(true);
+        Button go = (Button) findViewById(R.id.go);
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    geoLocate(v);
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(),"Give Correct Input",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Double lat = latLng.latitude;
+                Double lng = latLng.longitude;
+                Bundle ll = new Bundle();
+                ll.putDouble("latitude",lat);
+                ll.putDouble("longitude",lng);
+                Intent intent = new Intent(HomeMapActivity.this,SignUp.class);
+                intent.putExtra("From HomeMapActivity",ll);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -80,18 +117,13 @@ public class HomeMapActivity extends FragmentActivity {
 
     private boolean initMap() {
         if (mMap == null) {
-            SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
+            MapFragment mapFrag = (MapFragment) getFragmentManager()
                     .findFragmentById(R.id.map);
             mMap = mapFrag.getMap();
         }
         return (mMap != null);
     }
 
-    private void gotoLocation(double lat, double lng) {
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
-        mMap.moveCamera(update);
-    }
 
     private void gotoLocation(double lat, double lng, float zoom) {
         LatLng ll = new LatLng(lat, lng);
