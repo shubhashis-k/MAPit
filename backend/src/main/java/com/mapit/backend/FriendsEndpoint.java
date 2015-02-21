@@ -127,14 +127,20 @@ public class FriendsEndpoint {
     public ArrayList<Search> fetchFriendList(@Named("usermail") String Mail, @Named("type") String type) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query Reuqest_Query = new Query();
-        Query.Filter Mail1_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail1.getProperty(), Query.FilterOperator.EQUAL, Mail);
-        Query.Filter Mail2_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, Mail);
-        Query.Filter request_Filter = Query.CompositeFilterOperator.or(Mail1_Filter, Mail2_Filter);
+        Query Request_Query = new Query();
 
-        Reuqest_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(request_Filter);
+        if(type.equals("1")) {
+            Query.Filter Mail1_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail1.getProperty(), Query.FilterOperator.EQUAL, Mail);
+            Query.Filter Mail2_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, Mail);
+            Query.Filter request_Filter = Query.CompositeFilterOperator.or(Mail1_Filter, Mail2_Filter);
 
-        PreparedQuery queryResult = datastore.prepare(Reuqest_Query);
+            Request_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(request_Filter);
+        }
+        else if(type.equals("0")){
+            Query.Filter Mail_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, Mail);
+            Request_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(Mail_Filter);
+        }
+        PreparedQuery queryResult = datastore.prepare(Request_Query);
 
         ArrayList <Search> friendList = new ArrayList<>();
 
