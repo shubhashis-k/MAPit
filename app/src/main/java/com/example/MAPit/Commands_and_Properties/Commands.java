@@ -12,6 +12,7 @@ public enum Commands {
     Userinfo_update ("Update"),
     Userinfo_create ("Create"),
 
+    Notification_job ("notification"),
     Friends_Request ("Request"),
     Friends_Make ("Make"),
     Friends_Remove ("Remove"),

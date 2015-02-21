@@ -141,9 +141,6 @@ public class StatusFragment extends Fragment {
             if (statusData.getStatusPhoto() != null) {
                 item.setImge(statusData.getStatusPhoto());
             }
-            if (statusData.getStatusPhoto() != null) {
-                item.setImge(statusData.getStatusPhoto());
-            }
             if (statusData.getProfilePic() != null) {
                 item.setProfilePic(statusData.getProfilePic());
             } else {

@@ -6,6 +6,7 @@ package com.example.MAPit.Volley.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
@@ -23,6 +25,7 @@ import com.example.MAPit.MAPit.FriendsEndpointCommunicator;
 import com.example.MAPit.MAPit.GroupsEndpointCommunicator;
 import com.example.MAPit.MAPit.ImageConverter;
 import com.example.MAPit.MAPit.R;
+import com.example.MAPit.MAPit.SlidingDrawerActivity;
 import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.infoCollectorApi.model.InfoCollector;
@@ -82,7 +85,7 @@ public class SearchListAdapter extends BaseAdapter {
         }
 
         final String buttonText = item.getButton();
-        final String usermail = item.getExtra();
+        final String RequestUsermail = item.getExtra();
         final String stringKey = item.getKey();
         button.setText(buttonText);
 
@@ -93,11 +96,11 @@ public class SearchListAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 if(buttonText.equals(Commands.Button_addFriend.getCommand())) {
-                    requestORremoveFriend(stringKey, usermail, Commands.Friends_Request.getCommand());
+                    requestORremoveFriend(RequestUsermail, Commands.Friends_Request.getCommand());
                     //here i have to to increment the counter of Friend Request menu in slidingDrawer
                 }
                 else if(buttonText.equals(Commands.Button_removeFriend.getCommand()))
-                    requestORremoveFriend(stringKey, usermail, Commands.Friends_Remove.getCommand());
+                    requestORremoveFriend(RequestUsermail, Commands.Friends_Remove.getCommand());
                 else if(buttonText.equals(Commands.Group_Remove.getCommand()))
                     removeGroup(stringKey);
 
@@ -126,27 +129,17 @@ public class SearchListAdapter extends BaseAdapter {
         }.execute(new Pair<Data, Groups>(d, g));
     }
 
-    public void requestORremoveFriend(String stringKey, final String requestMail, final String command){
+    public void requestORremoveFriend(final String requestUserMail, final String command){
 
-        new infoCollectorEndpointCommunicator(){
-            @Override
-            protected void onPostExecute(InfoCollector result){
-
-                super.onPostExecute(result);
-
-                UserinfoModel userdata = result.getUserdata();
-                String mail = userdata.getMail();
 
                 Friends friendData = new Friends();
-                friendData.setMail1(requestMail);
-                friendData.setMail2(mail);
+                friendData.setMail1(requestUserMail);
+                friendData.setMail2(getmail());
 
                 Data d = new Data();
                 d.setCommand(command);
 
                 finalizeRequest(d, friendData);
-            }
-        }.execute(new String(stringKey));
 
     }
 
@@ -163,6 +156,11 @@ public class SearchListAdapter extends BaseAdapter {
 
     }
 
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)activity).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
+    }
 }
 
 

@@ -4,8 +4,25 @@ package com.example.MAPit.Volley.data;
  * Created by SETU on 1/23/2015.
  */
 public class Friend_Request_ListItem {
-    private String user_name,user_image,user_location;
+    private String user_name,user_image,user_location,usermail;
 
+    private String button_type;
+
+    public String getUsermail() {
+        return usermail;
+    }
+
+    public void setUsermail(String usermail) {
+        this.usermail = usermail;
+    }
+
+    public String getButton_type() {
+        return button_type;
+    }
+
+    public void setButton_type(String button_type) {
+        this.button_type = button_type;
+    }
 
     public String getUser_Name() {
         return user_name;

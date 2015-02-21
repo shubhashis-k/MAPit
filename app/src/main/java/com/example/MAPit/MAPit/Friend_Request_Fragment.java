@@ -22,6 +22,7 @@ import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.Search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +31,7 @@ import java.util.Locale;
  * Created by SETU on 2/21/2015.
  */
 public class Friend_Request_Fragment extends Fragment {
-
+    Bundle data;
     private ListView listview;
 
     private Friend_RequestList_Adapter listAdapter;
@@ -50,8 +51,69 @@ public class Friend_Request_Fragment extends Fragment {
         listAdapter = new Friend_RequestList_Adapter(getActivity(), listItems);
         listview.setAdapter(listAdapter);
 
+        data = getArguments();
+        String command = data.getString(Commands.Notification_job.getCommand());
+
+        if (command.equals(Commands.Friends_Request.getCommand()))
+            populatePendingFriendRequest();
+
         return v;
     }
+
+    public void populatePendingFriendRequest(){
+        String personMail = getmail();
+
+        Data info = new Data();
+        info.setCommand(Commands.Friends_fetch_Pending.getCommand());
+        info.setUsermail(getmail());
+
+        Friends f = new Friends();
+
+        new FriendsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(FriendsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                ArrayList <Search> res = result.getDataList();
+                try {
+                    PopulateList(res , Commands.Friends_Request.getCommand());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.execute(new Pair<Data, Friends>(info, f));
+    }
+
+    public void PopulateList(ArrayList <Search> result, String request_Type) throws IOException{
+        listItems.clear();
+        listAdapter.notifyDataSetChanged();
+
+        for (int i = 0; i < result.size(); i++) {
+            Search s = result.get(i);
+
+            Friend_Request_ListItem item = new Friend_Request_ListItem();
+            item.setUser_Name(s.getData());
+            item.setButton_type(request_Type);
+            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
+            Double lat = Double.parseDouble(s.getLatitude());
+            Double lng = Double.parseDouble(s.getLongitude());
+            String loc = null;
+            loc = latitudeToLocation.GetLocation(lat,lng);
+            item.setUser_location(loc);
+            item.setUsermail(s.getExtra());
+            if (s.getPicData() != null) {
+                item.setUser_Imge(s.getPicData());
+            }
+
+            listItems.add(item);
+        }
+
+        // notify data changes to list adapter
+        listAdapter.notifyDataSetChanged();
+    }
+
 
     public String getmail(){
         Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();

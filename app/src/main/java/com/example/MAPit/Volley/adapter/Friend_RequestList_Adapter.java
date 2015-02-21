@@ -2,6 +2,8 @@ package com.example.MAPit.Volley.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +12,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
+import com.example.MAPit.MAPit.FriendsEndpointCommunicator;
 import com.example.MAPit.MAPit.ImageConverter;
 import com.example.MAPit.MAPit.R;
+import com.example.MAPit.MAPit.SlidingDrawerActivity;
 import com.example.MAPit.Volley.data.Friend_Request_ListItem;
+import com.mapit.backend.friendsApi.model.Friends;
+import com.mapit.backend.friendsApi.model.Search;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +57,7 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (inflater == null)
             inflater = (LayoutInflater) activity
@@ -60,7 +72,9 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
         final Button acceptRequest = (Button) convertView.findViewById(R.id.bt_add_frnd);
         final Button rejectRequest = (Button) convertView.findViewById(R.id.bt_delete_frnd);
 
-        Friend_Request_ListItem item = frndlistItems.get(position);
+        final Friend_Request_ListItem item = frndlistItems.get(position);
+
+        final String command = item.getButton_type();
 
         name.setText(item.getUser_Name());
         if(item.getUser_Imge()!=null){
@@ -70,12 +84,27 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
         }
         location.setText(item.getUser_location());
 
-        //button add listener is needed to fill
         acceptRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //addfrnd.setText("Request Sent");
-                //addfrnd.setEnabled(false);
+                if(command.equals(Commands.Friends_Request.getCommand())){
+                    Data info = new Data();
+                    info.setCommand(Commands.Friends_Make.getCommand());
+
+                    Friends f = new Friends();
+                    f.setMail1(getmail());
+                    f.setMail2(item.getUsermail());
+
+                    new FriendsEndpointCommunicator(){
+                        @Override
+                        protected void onPostExecute(FriendsEndpointReturnData result){
+
+                            super.onPostExecute(result);
+                        }
+                    }.execute(new Pair<Data, Friends>(info, f));
+                }
+                frndlistItems.remove(position);
+                notifyDataSetChanged();
             }
         });
         rejectRequest.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +116,13 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
 
         return convertView;
     }
+
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)activity).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
+    }
+
 
 }
 

@@ -211,12 +211,16 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
             case 3:
                 fragment = new Friend_Request_Fragment();
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                //Bundle data = new Bundle();
-                //data.putString(Commands.);
+                Bundle frienddata = new Bundle();
+                frienddata.putString(Commands.Notification_job.getCommand(), Commands.Friends_Request.getCommand());
+                fragment.setArguments(frienddata);
                 break;
             case 4:
-                fragment = new Group_Request_Fragment();
+                fragment = new Friend_Request_Fragment();
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                Bundle groupdata = new Bundle();
+                groupdata.putString(Commands.Notification_job.getCommand(), Commands.Group_Join_Group.getCommand());
+                fragment.setArguments(groupdata);
                 break;
             case 5:
                 fragment = new MyWallFragment();

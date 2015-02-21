@@ -118,7 +118,7 @@ public class Friend_Search_Fragment extends Fragment {
             item.setLocation("Khulna");
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
-            item.setExtra(getmail());
+            item.setExtra(s.getExtra());
             item.setImage(s.getPicData());
             listItems.add(item);
         }
@@ -166,7 +166,7 @@ public class Friend_Search_Fragment extends Fragment {
             item.setLocation("Khulna");
             item.setButton(Commands.Button_addFriend.getCommand());
             item.setKey(s.getKey());
-            item.setExtra(getmail());
+            item.setExtra(s.getExtra());
             listItems.add(item);
         }
 

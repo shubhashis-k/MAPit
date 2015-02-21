@@ -137,7 +137,7 @@ public class FriendsEndpoint {
             Request_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(request_Filter);
         }
         else if(type.equals("0")){
-            Query.Filter Mail_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, Mail);
+            Query.Filter Mail_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail1.getProperty(), Query.FilterOperator.EQUAL, Mail);
             Request_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(Mail_Filter);
         }
         PreparedQuery queryResult = datastore.prepare(Request_Query);
@@ -180,7 +180,16 @@ public class FriendsEndpoint {
 
         for(int i = 0 ; i < searchedList.size(); i++){
             if(!friendList.contains(searchedList.get(i)) && !person.getKey().equals(searchedList.get(i).getKey()))
-                result.add(searchedList.get(i));
+            {
+                String key = searchedList.get(i).getKey();
+                Key k = KeyFactory.stringToKey(key);
+
+                Entity e = datastore.get(k);
+                String usermail = e.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()).toString();
+
+
+                result.add(getInfo(usermail));
+            }
         }
         return result;
     }
@@ -195,7 +204,7 @@ public class FriendsEndpoint {
         Entity userinfo = datastore.get(key);
         Search info = new Search();
         info.setData(userinfo.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString());
-
+        info.setExtra(Mail);
         Text imageText = (Text) userinfo.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
         String ImageData = imageText.getValue();
         if(ImageData.length() > 0)
