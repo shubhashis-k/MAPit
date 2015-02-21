@@ -24,12 +24,12 @@
             android:paddingLeft="@dimen/feed_item_padding_left_right"
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/profilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
                 android:scaleType="fitCenter" >
-            </com.android.volley.toolbox.NetworkImageView>
+            </ImageView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -50,17 +50,30 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/timestamp"
                     android:textSize="@dimen/feed_item_timestamp" />
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end">
                 <Button
                     android:id="@+id/bt_add_frnd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="3dp"
-                    android:text="ADD"/>
-            </LinearLayout>
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="60dp"
+                    android:text="ACCEPT"/>
+
+                <Button
+                    android:id="@+id/bt_delete_frnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/bt_add_frnd"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="REJECT"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
-
+</LinearLayout>
+</LinearLayout>
 </LinearLayout>

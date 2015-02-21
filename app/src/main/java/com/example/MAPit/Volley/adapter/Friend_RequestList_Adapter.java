@@ -7,27 +7,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import com.example.MAPit.MAPit.ImageConverter;
 import com.example.MAPit.MAPit.R;
-import com.example.MAPit.Volley.app.AppController;
-import com.example.MAPit.Volley.data.Friend_Search_ListItem;
+import com.example.MAPit.Volley.data.Friend_Request_ListItem;
 
 import java.util.List;
 
 /**
  * Created by SETU on 1/23/2015.
  */
-public class Friend_SearchList_Adapter extends BaseAdapter {
+public class Friend_RequestList_Adapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Friend_Search_ListItem> frndlistItems;
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    private List<Friend_Request_ListItem> frndlistItems;
 
-    public Friend_SearchList_Adapter(Activity activity, List<Friend_Search_ListItem> frndlistItems) {
+    public Friend_RequestList_Adapter(Activity activity, List<Friend_Request_ListItem> frndlistItems) {
         this.activity = activity;
         this.frndlistItems = frndlistItems;
     }
@@ -54,28 +51,37 @@ public class Friend_SearchList_Adapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.frnd_search_list_item, null);
+            convertView = inflater.inflate(R.layout.frnd_request_list_item, null);
 
-        if (imageLoader == null)
-            imageLoader = AppController.getInstance().getImageLoader();
 
         TextView name = (TextView) convertView.findViewById(R.id.frnd_name);
         TextView location = (TextView) convertView.findViewById(R.id.frnd_location);
-        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
-        final Button addfrnd = (Button) convertView.findViewById(R.id.bt_add_frnd);
+        ImageView profilePic = (ImageView) convertView.findViewById(R.id.profilePic);
+        final Button acceptRequest = (Button) convertView.findViewById(R.id.bt_add_frnd);
+        final Button rejectRequest = (Button) convertView.findViewById(R.id.bt_delete_frnd);
 
-        Friend_Search_ListItem item = frndlistItems.get(position);
+        Friend_Request_ListItem item = frndlistItems.get(position);
 
         name.setText(item.getUser_Name());
-        profilePic.setImageUrl(item.getUser_Imge(), imageLoader);
+        if(item.getUser_Imge()!=null){
+            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(item.getUser_Imge()));
+        }else{
+            profilePic.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_profile));
+        }
         location.setText(item.getUser_location());
 
         //button add listener is needed to fill
-        addfrnd.setOnClickListener(new View.OnClickListener() {
+        acceptRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addfrnd.setText("Request Sent");
-                addfrnd.setEnabled(false);
+                //addfrnd.setText("Request Sent");
+                //addfrnd.setEnabled(false);
+            }
+        });
+        rejectRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

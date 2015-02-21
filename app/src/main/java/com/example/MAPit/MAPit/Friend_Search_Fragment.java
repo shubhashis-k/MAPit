@@ -7,6 +7,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -39,7 +41,7 @@ public class Friend_Search_Fragment extends Fragment {
 
     //added this for adding fragment menu
     public Friend_Search_Fragment() {
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -117,6 +119,7 @@ public class Friend_Search_Fragment extends Fragment {
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
             item.setExtra(getmail());
+            item.setImage(s.getPicData());
             listItems.add(item);
         }
 
@@ -172,4 +175,8 @@ public class Friend_Search_Fragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
 }

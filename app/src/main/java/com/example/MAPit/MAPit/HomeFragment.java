@@ -268,7 +268,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void geoLocate(View v) throws IOException {
         hideSoftKeyboard(v);
 
-
         String location = et.getText().toString();
 
         Geocoder gc = new Geocoder(getActivity());

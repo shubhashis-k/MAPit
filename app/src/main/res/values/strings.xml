@@ -15,7 +15,8 @@
         <item>Home</item>
         <item>Friends</item>
         <item>Groups</item>
-        <item>Notifications</item>
+        <item>Friend Request</item>
+        <item>Group Request</item>
         <item>My Wall</item>
     </string-array>
 
@@ -25,6 +26,7 @@
         <item>@drawable/ic_home</item>
         <item>@drawable/ic_friends</item>
         <item>@drawable/ic_groups</item>
+        <item>@drawable/ic_notifications</item>
         <item>@drawable/ic_notifications</item>
         <item>@drawable/ic_activities</item>
     </array>

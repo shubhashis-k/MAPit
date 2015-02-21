@@ -22,9 +22,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
+import com.google.android.gms.maps.GoogleMap;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import java.util.ArrayList;
@@ -93,8 +95,9 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         // Communities, Will add a counter here
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, "22"));
         // Pages
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
 
 
         // Recycle the typed array
@@ -148,8 +151,6 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 fragment.setArguments(getEmail());
                 startFragment(fragment, -1);
                 return false;
-
-
             }
         });
     }
@@ -193,13 +194,11 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
      * Displaying fragment view for selected nav drawer list item
      */
     private void displayView(int position) {
-        // update the main content by replacing fragments
-        // Fragment fragment = null;
+
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
                 break;
             case 1:
                 fragment = new Friend_Search_Fragment();
@@ -210,15 +209,20 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 3:
-                // fragment = new CommunityFragment();
+                fragment = new Friend_Request_Fragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                //Bundle data = new Bundle();
+                //data.putString(Commands.);
                 break;
             case 4:
-                fragment = new MyWallFragment();
+                fragment = new Group_Request_Fragment();
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 5:
-                // fragment = new WhatsHotFragment();
+                fragment = new MyWallFragment();
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
+
 
             default:
                 break;
@@ -261,21 +265,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // toggle nav drawer on selecting action bar app icon/title
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        // Handle action bar actions click
-        switch (item.getItemId()) {
-           /* case R.id.action_settings:
-                return true;
-                */
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+
 
     /**
      * Called when invalidateOptionsMenu() is triggered

@@ -46,6 +46,7 @@ public enum Commands {
     Status_Job_Type_Individual ("Individual"),
     Status_Job_Type_Group ("Group"),
 
+
     Arraylist_Values ("data")
 
     ;
