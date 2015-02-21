@@ -3,19 +3,8 @@ package com.example.MAPit.Volley.data;
 /**
  * Created by SETU on 1/23/2015.
  */
-public class Friend_Search_ListItem {
+public class Friend_Request_ListItem {
     private String user_name,user_image,user_location;
-
-    public Friend_Search_ListItem() {
-
-    }
-
-    public Friend_Search_ListItem(String user_name, String user_image, String user_location) {
-        super();
-        this.user_name = user_name;
-        this.user_image = user_image;
-        this.user_location=user_location;
-    }
 
 
     public String getUser_Name() {

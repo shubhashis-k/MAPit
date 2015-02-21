@@ -23,6 +23,7 @@ import com.example.MAPit.Volley.adapter.StatusListAdapter;
 import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.statusApi.model.StatusData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +102,11 @@ public class StatusFragment extends Fragment {
 
                 super.onPostExecute(result);
                 passThisData = result;
-                populate(result);
+                try {
+                    populate(result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }.execute(new Pair<Data, StatusData>(d, s));
     }
@@ -111,10 +116,14 @@ public class StatusFragment extends Fragment {
         Bundle data = getArguments();
         ArrayList<StatusData> result = (ArrayList<StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
         passThisData = result;
-        populate(result);
+        try {
+            populate(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void populate(ArrayList<StatusData> result) {
+    public void populate(ArrayList<StatusData> result) throws IOException {
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
 
@@ -124,7 +133,11 @@ public class StatusFragment extends Fragment {
             StatusListItem item = new StatusListItem();
             item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
-
+            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
+            Double lat = Double.parseDouble(statusData.getLatitude());
+            Double lng = Double.parseDouble(statusData.getLongitude());
+            String loc = latitudeToLocation.GetLocation(lat,lng);
+            item.setLocation(loc);
             if (statusData.getStatusPhoto() != null) {
                 item.setImge(statusData.getStatusPhoto());
             }

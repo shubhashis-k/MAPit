@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
@@ -20,6 +21,7 @@ import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.MAPit.FriendsEndpointCommunicator;
 import com.example.MAPit.MAPit.GroupsEndpointCommunicator;
+import com.example.MAPit.MAPit.ImageConverter;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.friendsApi.model.Friends;
@@ -66,13 +68,18 @@ public class SearchListAdapter extends BaseAdapter {
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView location = (TextView) convertView.findViewById(R.id.location);
         Button button = (Button) convertView.findViewById(R.id.command_button);
-
+        ImageView profilePic = (ImageView) convertView.findViewById(R.id.myfrnd_profilePic);
 
         SearchListItem item = listItems.get(position);
 
 
         name.setText(item.getName());
         location.setText(item.getLocation());
+        if(item.getImage()!=null){
+            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(item.getImage()));
+        }else{
+            profilePic.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_profile));
+        }
 
         final String buttonText = item.getButton();
         final String usermail = item.getExtra();
@@ -85,8 +92,10 @@ public class SearchListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                if(buttonText.equals(Commands.Button_addFriend.getCommand()))
+                if(buttonText.equals(Commands.Button_addFriend.getCommand())) {
                     requestORremoveFriend(stringKey, usermail, Commands.Friends_Request.getCommand());
+                    //here i have to to increment the counter of Friend Request menu in slidingDrawer
+                }
                 else if(buttonText.equals(Commands.Button_removeFriend.getCommand()))
                     requestORremoveFriend(stringKey, usermail, Commands.Friends_Remove.getCommand());
                 else if(buttonText.equals(Commands.Group_Remove.getCommand()))
