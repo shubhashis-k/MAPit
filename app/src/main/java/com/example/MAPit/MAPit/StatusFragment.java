@@ -29,9 +29,9 @@ import java.util.List;
 /**
  * Created by SETU on 1/20/2015.
  */
-public class StatusFragment extends Fragment{
+public class StatusFragment extends Fragment {
 
-    public StatusFragment(){
+    public StatusFragment() {
         setHasOptionsMenu(true);
     }
 
@@ -46,32 +46,32 @@ public class StatusFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v= inflater.inflate(R.layout.friend_status,null,false);
-        listView =(ListView)v.findViewById(R.id.list_frnd_status);
+        View v = inflater.inflate(R.layout.friend_status, null, false);
+        listView = (ListView) v.findViewById(R.id.list_frnd_status);
         statusListItems = new ArrayList<StatusListItem>();
         statuslistAdapter = new StatusListAdapter(getActivity(), statusListItems);
         listView.setAdapter(statuslistAdapter);
         data = getArguments();
         command = data.getString(Commands.Fragment_Caller.getCommand());
 
-        if(command.equals(Commands.Called_From_Home.getCommand()))
+        if (command.equals(Commands.Called_From_Home.getCommand()))
             populateFriendsLatestStatus();
-        else if(command.equals(Commands.Called_From_Info.getCommand()))
+        else if (command.equals(Commands.Called_From_Info.getCommand()))
             populatePersonStatus();
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              Fragment fragment = new Friends_Status_Comment_Fragment();
+                Fragment fragment = new Friends_Status_Comment_Fragment();
                 bundle = new Bundle();
                 StatusData st = passThisData.get(position);
-                ArrayList <StatusData> passData = new ArrayList<StatusData>();
+                ArrayList<StatusData> passData = new ArrayList<StatusData>();
                 passData.add(st);
                 bundle.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
                 bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
                 fragment.setArguments(bundle);
-                FragmentTransaction transaction =getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container,fragment);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 
@@ -79,11 +79,11 @@ public class StatusFragment extends Fragment{
         });
 
 
-
         return v;
     }
-    public void populatePersonStatus(){
-         data = getArguments();
+
+    public void populatePersonStatus() {
+        data = getArguments();
         String personMail = data.getString(PropertyNames.Userinfo_Mail.getProperty());
 
         Data d = new Data();
@@ -95,26 +95,26 @@ public class StatusFragment extends Fragment{
         s.setPersonMail(personMail);
 
 
-        new StatusEndpointCommunicator(){
+        new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList <StatusData> result){
+            protected void onPostExecute(ArrayList<StatusData> result) {
 
                 super.onPostExecute(result);
-                passThisData=result;
+                passThisData = result;
                 populate(result);
             }
         }.execute(new Pair<Data, StatusData>(d, s));
     }
 
 
-    public void populateFriendsLatestStatus(){
+    public void populateFriendsLatestStatus() {
         Bundle data = getArguments();
-        ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+        ArrayList<StatusData> result = (ArrayList<StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
         passThisData = result;
         populate(result);
     }
 
-    public void populate(ArrayList <StatusData> result){
+    public void populate(ArrayList<StatusData> result) {
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
 
@@ -124,12 +124,16 @@ public class StatusFragment extends Fragment{
             StatusListItem item = new StatusListItem();
             item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
-            if(statusData.getStatusPhoto()!=null){
+
+            if (statusData.getStatusPhoto() != null) {
                 item.setImge(statusData.getStatusPhoto());
             }
-            if(statusData.getProfilePic()!=null){
+            if (statusData.getStatusPhoto() != null) {
+                item.setImge(statusData.getStatusPhoto());
+            }
+            if (statusData.getProfilePic() != null) {
                 item.setProfilePic(statusData.getProfilePic());
-            }else{
+            } else {
 
             }
             statusListItems.add(item);
@@ -139,27 +143,25 @@ public class StatusFragment extends Fragment{
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_home_fragment,menu);
+        inflater.inflate(R.menu.menu_home_fragment, menu);
         menu.findItem(R.id.switch_view_to_list).setTitle("Switch Back to Map");
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.switch_view_to_list:
-                if(command.equals(Commands.Called_From_Home.getCommand())) {
+                if (command.equals(Commands.Called_From_Home.getCommand())) {
                     Fragment fragment = new HomeFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame_container, fragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-                }
-                else if(command.equals(Commands.Called_From_Info.getCommand())) {
+                } else if (command.equals(Commands.Called_From_Info.getCommand())) {
                     bundle = new Bundle();
                     bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
                     Fragment fragment = new Marker_MapView();

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.adapter.NavDrawerListAdapter;
 import com.example.MAPit.model.NavDrawerItem;
+import com.google.android.gms.maps.GoogleMap;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import java.util.ArrayList;
@@ -261,21 +262,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // toggle nav drawer on selecting action bar app icon/title
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        // Handle action bar actions click
-        switch (item.getItemId()) {
-           /* case R.id.action_settings:
-                return true;
-                */
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+
 
     /**
      * Called when invalidateOptionsMenu() is triggered

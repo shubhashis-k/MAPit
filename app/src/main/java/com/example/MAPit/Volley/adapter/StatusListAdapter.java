@@ -8,6 +8,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -19,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.MAPit.MAPit.ImageConverter;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.Volley.data.StatusListItem;
 
@@ -66,10 +70,17 @@ public class StatusListAdapter extends BaseAdapter {
         ImageView feedImageView = (ImageView) convertView.findViewById(R.id.feedImage1);
 
         StatusListItem item = statusListItems.get(position);
-       // profilePic.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile));
+        if(item.getProfilePic()!=null){
+            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(item.getProfilePic()));
+       }else{
+            profilePic.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_profile));
+        }
         name.setText(item.getName());
         statusMsg.setText(item.getStatus());
         location.setText(item.getLocation());
+        if(item.getImge()!=null){
+            feedImageView.setImageBitmap(ImageConverter.stringToimageConverter(item.getImge()));
+        }
         // Converting timestamp into x ago format
 
         /*

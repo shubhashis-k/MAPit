@@ -7,9 +7,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -39,6 +43,9 @@ public class Marker_MapView extends Fragment {
     private Context context;
     private GoogleMap map;
     MapFragment mapFrag;
+    ArrayList <StatusData> result;
+    Bundle data;
+
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -87,6 +94,14 @@ public class Marker_MapView extends Fragment {
                     String status = marker.getTitle();
                     String actual_status = status.substring(0, status.indexOf('/'));
                     String email = status.substring(status.lastIndexOf('/') + 1);
+                    String pos = status.substring(status.lastIndexOf('&')+1);
+                    int position = Integer.parseInt(pos);
+                    StatusData st = result.get(position);
+                    data = new Bundle();
+                    ArrayList <StatusData> passData = new ArrayList<StatusData>();
+                    passData.add(st);
+                    data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
+                    data.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
                     return v;
@@ -100,18 +115,19 @@ public class Marker_MapView extends Fragment {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                /*Fragment fragment = new StatusFragment();
+                Fragment fragment = new Friends_Status_Comment_Fragment();
+                fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
-                transaction.commit();*/
+                transaction.commit();
             }
         });
 
         //getting the bundle value
 
         Bundle data = getArguments();
-        ArrayList <StatusData> result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+         result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
 
         drawMarkerAndLine(result);
         return v;
@@ -129,6 +145,7 @@ public class Marker_MapView extends Fragment {
             String name = result.get(i).getPersonName();
             String email = result.get(i).getPersonMail();
             name += "/" + email;
+            name +="&" + String.valueOf(i);
             Double lat = Double.parseDouble(result.get(i).getLatitude());
             Double lng = Double.parseDouble(result.get(i).getLongitude());
             if (status.length() > 20) {
@@ -170,5 +187,10 @@ public class Marker_MapView extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+
+    }
 
 }
