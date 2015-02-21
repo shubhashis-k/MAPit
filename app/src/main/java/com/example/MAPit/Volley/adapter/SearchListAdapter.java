@@ -141,6 +141,7 @@ public class SearchListAdapter extends BaseAdapter {
 
                 finalizeRequest(d, friendData);
 
+
     }
 
     public void finalizeRequest(Data d, Friends f){

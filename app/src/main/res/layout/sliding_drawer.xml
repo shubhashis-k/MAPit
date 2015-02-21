@@ -38,14 +38,14 @@
                 android:layout_centerInParent="true"
                 android:layout_alignParentLeft="true"/>
             <TextView
-                android:id="@+id/profile_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Setu Basak"
-                android:layout_centerInParent="true"
-                android:textColor="#FFF"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/profile_image"/>
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anonymous"
+            android:layout_centerInParent="true"
+            android:textColor="#FFF"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/profile_image"/>
         </RelativeLayout>
 
 

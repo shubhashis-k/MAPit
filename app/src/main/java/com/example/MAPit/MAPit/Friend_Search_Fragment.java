@@ -26,6 +26,7 @@ import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.Search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -69,7 +70,7 @@ public class Friend_Search_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String pattern = searchBox.getText().toString().toLowerCase(Locale.getDefault());
-                if(pattern.length() != 0)
+                if (pattern.length() != 0)
                     searchUser(pattern);
                 else
                     showFriends();
@@ -79,13 +80,13 @@ public class Friend_Search_Fragment extends Fragment {
         return v;
     }
 
-    public String getmail(){
-        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+    public String getmail() {
+        Bundle mailBundle = ((SlidingDrawerActivity) getActivity()).getEmail();
         String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
         return mail;
     }
 
-    public void showFriends(){
+    public void showFriends() {
         Data info = new Data();
         info.setContext(getActivity());
         info.setCommand(Commands.Friends_fetch.getCommand());
@@ -93,20 +94,20 @@ public class Friend_Search_Fragment extends Fragment {
 
         Friends f = new Friends();
 
-        new FriendsEndpointCommunicator(){
+        new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result) {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+                ArrayList<Search> res = result.getDataList();
                 PopulateFriends(res);
 
             }
         }.execute(new Pair<Data, Friends>(info, f));
     }
 
-    public void PopulateFriends(ArrayList<Search> a){
+    public void PopulateFriends(ArrayList<Search> a) {
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
 
@@ -115,11 +116,23 @@ public class Friend_Search_Fragment extends Fragment {
 
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
-            item.setLocation("Khulna");
+            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
+            Double lat = Double.parseDouble(s.getLatitude());
+            Double lng = Double.parseDouble(s.getLongitude());
+            String loc = null;
+            try {
+                loc = latitudeToLocation.GetLocation(lat, lng);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            item.setLocation(loc);
+
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
             item.setExtra(s.getExtra());
-            item.setImage(s.getPicData());
+            if (s.getPicData() != null) {
+                item.setImage(s.getPicData());
+            }
             listItems.add(item);
         }
 
@@ -129,7 +142,7 @@ public class Friend_Search_Fragment extends Fragment {
     }
 
 
-    public void searchUser(String pattern){
+    public void searchUser(String pattern) {
         Search searchProperty = new Search();
         searchProperty.setData(pattern);
 
@@ -141,20 +154,20 @@ public class Friend_Search_Fragment extends Fragment {
 
         Friends f = new Friends();
 
-        new FriendsEndpointCommunicator(){
+        new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result) {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+                ArrayList<Search> res = result.getDataList();
                 PopulateNotFriends(res);
 
             }
         }.execute(new Pair<Data, Friends>(info, f));
     }
 
-    public void PopulateNotFriends(ArrayList<Search> a){
+    public void PopulateNotFriends(ArrayList<Search> a) {
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
 
