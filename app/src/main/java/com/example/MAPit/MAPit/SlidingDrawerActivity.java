@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -182,11 +183,20 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
      */
     private class SlideMenuClickListener implements
             ListView.OnItemClickListener {
+
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
+        public void onItemClick(AdapterView<?> parent, View view, final int position,
                                 long id) {
+            mDrawerLayout.closeDrawer(mDrawerLinear);
             // display view for selected nav drawer item
-            displayView(position);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    displayView(position);
+                }
+            },250);
+
+
         }
     }
 
@@ -238,7 +248,13 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     }
 
     private void startFragment(Fragment fragment, int position) {
-        mDrawerLayout.closeDrawer(mDrawerLinear);
+        //mDrawerLayout.closeDrawer(mDrawerLinear);
+        FragmentManager fm= getFragmentManager();
+        int count = fm.getBackStackEntryCount();
+        for (int i = 0; i < count; ++i) {
+            fm.popBackStackImmediate();
+        }
+
         if (fragment != null) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.frame_container,fragment);

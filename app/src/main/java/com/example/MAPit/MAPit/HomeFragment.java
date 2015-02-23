@@ -13,6 +13,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,7 +59,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ArrayList<StatusData> passThisData;
     final CharSequence[] items = {"Give Status", "Create Group"};
 
-    // public static View v;
+    //public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -71,6 +73,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         try {
              v = inflater.inflate(R.layout.home_map_activity, null, false);
         } catch (InflateException e) {
+            Toast.makeText(getActivity(),"I am here",Toast.LENGTH_LONG).show();
 
         }*/
         View v = inflater.inflate(R.layout.home_map_activity, null, false);
@@ -289,6 +292,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
+   @Override
     public void onDestroyView() {
         super.onDestroyView();
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
