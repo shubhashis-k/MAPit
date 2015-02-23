@@ -40,6 +40,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     private TextView profile_name;
     public ArrayList <Search> searchData;
     private ImageView profilePic;
+    public int Count;
     // nav drawer title
     private CharSequence mDrawerTitle;
 
@@ -87,17 +88,14 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
         // adding nav drawer items to array
-        // Home
+
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Find People
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Photos
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Communities, Will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, "22"));
-        // Pages
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, ""));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, ""));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
 
 
         // Recycle the typed array
@@ -160,6 +158,8 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         Bundle mailInfo = getIntent().getExtras();
         return mailInfo;
     }
+
+
 
     @Override
     public void setResponseMessage(ResponseMessages response) {
@@ -226,7 +226,10 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 fragment = new MyWallFragment();
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
-
+            case 6:
+                Intent intent = new Intent(SlidingDrawerActivity.this,SignIn.class);
+                startActivity(intent);
+                break;
 
             default:
                 break;
@@ -235,6 +238,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     }
 
     private void startFragment(Fragment fragment, int position) {
+        mDrawerLayout.closeDrawer(mDrawerLinear);
         if (fragment != null) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.frame_container,fragment);
@@ -253,7 +257,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 mDrawerList.getChildAt(1).setEnabled(false);
             }*/
             //setTitle(navMenuTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerLinear);
+            //mDrawerLayout.closeDrawer(mDrawerLinear);
         } else {
             // error in creating fragment
             Log.e("MainActivity", "Error in creating fragment");

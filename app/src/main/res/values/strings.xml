@@ -18,6 +18,7 @@
         <item>Friend Request</item>
         <item>Group Request</item>
         <item>My Wall</item>
+        <item>Sign Out</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -28,6 +29,7 @@
         <item>@drawable/ic_groups</item>
         <item>@drawable/ic_notifications</item>
         <item>@drawable/ic_notifications</item>
+        <item>@drawable/ic_activities</item>
         <item>@drawable/ic_activities</item>
     </array>
 

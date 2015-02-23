@@ -26,6 +26,7 @@ import com.example.MAPit.Volley.data.SearchListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.Search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -106,7 +107,7 @@ public class Friend_Search_Fragment extends Fragment {
         }.execute(new Pair<Data, Friends>(info, f));
     }
 
-    public void PopulateFriends(ArrayList<Search> a){
+    public void PopulateFriends(ArrayList<Search> a) {
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
 
@@ -115,11 +116,23 @@ public class Friend_Search_Fragment extends Fragment {
 
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
-            item.setLocation("Khulna");
+            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
+            Double lat = Double.parseDouble(s.getLatitude());
+            Double lng = Double.parseDouble(s.getLongitude());
+            String loc = null;
+            try {
+                loc = latitudeToLocation.GetLocation(lat, lng);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            item.setLocation(loc);
+
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
             item.setExtra(s.getExtra());
-            item.setImage(s.getPicData());
+            if (s.getPicData() != null) {
+                item.setImage(s.getPicData());
+            }
             listItems.add(item);
         }
 
@@ -127,7 +140,6 @@ public class Friend_Search_Fragment extends Fragment {
         searchListAdapter.notifyDataSetChanged();
 
     }
-
 
     public void searchUser(String pattern){
         Search searchProperty = new Search();
