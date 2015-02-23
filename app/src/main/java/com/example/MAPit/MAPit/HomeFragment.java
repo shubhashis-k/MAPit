@@ -210,6 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }.execute(new Pair<Data, StatusData>(d, statusData));
     }
 
+
     private void drawMarkerAndLine(ArrayList<StatusData> result) {
 
         if (result.size() != 0) {
