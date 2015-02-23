@@ -190,14 +190,15 @@ public class PersonsInGroupEndpoint {
             String username = user.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
             String latitude = user.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()).toString();
             String longitude = user.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()).toString();
-            Key RequestKey = result.getKey();
 
             Text picText = (Text) user.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
             String picData = picText.getValue();
 
+            Key gk = KeyFactory.stringToKey(groupKey);
+
             Search s = new Search();
             s.setData(username);
-            s.setKey(RequestKey);
+            s.setKey(gk);
             s.setLongitude(longitude);
             s.setLatitude(latitude);
             s.setPicData(picData);

@@ -143,10 +143,10 @@ public class GroupsEndpoint {
         SearchEndpoint getQueryResult = new SearchEndpoint();
         ArrayList <Search> QueryList = getQueryResult.getResult(DatastoreKindNames.Groups.getKind(), searchQuery);
         ArrayList <Search> myGroupList = getMyGroups(mail);
-
+        ArrayList <Search> JoinedGroupList = getJoinedGroups(mail);
         ArrayList <Search> FilteredList = new ArrayList<>();
         for(int i = 0 ; i < QueryList.size(); i++){
-            if(!myGroupList.contains(QueryList.get(i)))
+            if(!myGroupList.contains(QueryList.get(i)) && !JoinedGroupList.contains(QueryList.get(i)))
             {
                 Search s = QueryList.get(i);
                 Key k = KeyFactory.stringToKey(s.getKey());

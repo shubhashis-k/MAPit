@@ -16,13 +16,16 @@ import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
+import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.MAPit.FriendsEndpointCommunicator;
+import com.example.MAPit.MAPit.GroupsEndpointCommunicator;
 import com.example.MAPit.MAPit.ImageConverter;
 import com.example.MAPit.MAPit.R;
 import com.example.MAPit.MAPit.SlidingDrawerActivity;
 import com.example.MAPit.Volley.data.Friend_Request_ListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.Search;
+import com.mapit.backend.groupApi.model.Groups;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,6 +106,24 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
                         }
                     }.execute(new Pair<Data, Friends>(info, f));
                 }
+
+                else if(command.equals(Commands.Group_Join_Group.getCommand())){
+                    Groups g = new Groups();
+                    Data d = new Data();
+                    d.setCommand(Commands.Accept_Group.getCommand());
+                    d.setStringKey(item.getStringKey());
+                    d.setUsermail(item.getUsermail());
+
+                    new GroupsEndpointCommunicator(){
+                        @Override
+                        protected void onPostExecute(GroupsEndpointReturnData result){
+
+                            super.onPostExecute(result);
+
+                            String response = result.getResponseMessages();
+                        }
+                    }.execute(new Pair<Data, Groups>(d, g));
+                }
                 frndlistItems.remove(position);
                 notifyDataSetChanged();
             }
@@ -125,6 +146,23 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
                             super.onPostExecute(result);
                         }
                     }.execute(new Pair<Data, Friends>(info, f));
+                }
+                else if(command.equals(Commands.Group_Join_Group.getCommand())){
+                    Groups g = new Groups();
+                    Data d = new Data();
+                    d.setCommand(Commands.Leave_Group.getCommand());
+                    d.setStringKey(item.getStringKey());
+                    d.setUsermail(item.getUsermail());
+
+                    new GroupsEndpointCommunicator(){
+                        @Override
+                        protected void onPostExecute(GroupsEndpointReturnData result){
+
+                            super.onPostExecute(result);
+
+                            String response = result.getResponseMessages();
+                        }
+                    }.execute(new Pair<Data, Groups>(d, g));
                 }
                 frndlistItems.remove(position);
                 notifyDataSetChanged();

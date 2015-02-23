@@ -117,7 +117,7 @@ public class SearchListAdapter extends BaseAdapter {
     public void JoinGroup(String stringKey, String mail){
         Groups g = new Groups();
         Data d = new Data();
-        d.setCommand(Commands.Group_Join_Group.getCommand());
+        d.setCommand(Commands.Request_Group.getCommand());
         d.setStringKey(stringKey);
         d.setUsermail(mail);
 
