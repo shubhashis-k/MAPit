@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.*;
+import com.google.appengine.api.datastore.Text;
 import com.mapit.backend.Properties_and_Values.Commands;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
@@ -158,5 +159,53 @@ public class PersonsInGroupEndpoint {
         }
 
         return requestKey;
+    }
+
+
+    @ApiMethod(name = "showRequests", path = "showRequestsPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> showRequest(@Named("GroupKey") String groupKey) throws EntityNotFoundException {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query PersonsInGroupQuery = new Query(DatastoreKindNames.PersonsInGroup.getKind());
+        PersonsInGroupQuery.addProjection(new PropertyProjection(DatastorePropertyNames.PersonsInGroup_personMail.getProperty(), String.class));
+
+        Filter keyFilter = new FilterPredicate(DatastorePropertyNames.PersonsInGroup_groupKey.getProperty(), FilterOperator.EQUAL, groupKey);
+        Filter statusFilter = new FilterPredicate(DatastorePropertyNames.PersonsInGroup_status.getProperty(), FilterOperator.EQUAL, "0");
+
+        Filter Request_Filter = Query.CompositeFilterOperator.and(keyFilter, statusFilter);
+        PersonsInGroupQuery.setFilter(Request_Filter);
+
+        PreparedQuery queryResult = datastore.prepare(PersonsInGroupQuery);
+
+
+        ArrayList <Search> personList = new ArrayList<>();
+
+        for (Entity result : queryResult.asIterable()) {
+            String personMail = result.getProperty(DatastorePropertyNames.PersonsInGroup_personMail.getProperty()).toString();
+
+            UserinfoEndpoint userinfoEndpoint = new UserinfoEndpoint();
+            Key k = userinfoEndpoint.getKeyfromMail(personMail);
+
+            Entity user = datastore.get(k);
+            String username = user.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
+            String latitude = user.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()).toString();
+            String longitude = user.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()).toString();
+            Key RequestKey = result.getKey();
+
+            Text picText = (Text) user.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
+            String picData = picText.getValue();
+
+            Search s = new Search();
+            s.setData(username);
+            s.setKey(RequestKey);
+            s.setLongitude(longitude);
+            s.setLatitude(latitude);
+            s.setPicData(picData);
+            s.setExtra(personMail);
+
+            personList.add(s);
+
+        }
+        return personList;
     }
 }

@@ -31,6 +31,7 @@ public enum Commands {
     Group_fetch_myGroups ("myGroups"),
     Group_fetch_GroupsnotMine ("notmyGroups"),
     Group_Join_Group ("Join"),
+    Group_fetch_notification ("fetch"),
 
     Status_add ("addsttus"),
     Status_showGroupStatus ("groupStatus"),
@@ -48,8 +49,11 @@ public enum Commands {
     Status_Job_Type_Group ("Group"),
 
 
-    Arraylist_Values ("data")
+    Arraylist_Values ("data"),
 
+
+    Request_Group ("Request"),
+    Accept_Group ("Accept"),
     ;
 
     private String command;

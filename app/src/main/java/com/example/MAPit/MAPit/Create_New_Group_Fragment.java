@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -31,6 +32,7 @@ public class Create_New_Group_Fragment extends Fragment {
     private EditText groupName, groupDescription;
     private Button chooseGroupPic, createGroup;
     private ImageView groupImage;
+    private String stringGroupImage;
     private final int SELECT_PHOTO = 1;
 
     @Override
@@ -72,6 +74,9 @@ public class Create_New_Group_Fragment extends Fragment {
                     g.setLatitude(lat);
                     g.setGroupDescription(groupDescription.getText().toString());
 
+                    if(stringGroupImage != null)
+                        g.setGroupPic(stringGroupImage);
+
                     Data d = new Data();
                     d.setCommand(Commands.Group_Create.getCommand());
 
@@ -109,6 +114,8 @@ public class Create_New_Group_Fragment extends Fragment {
                     final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     groupImage.setImageBitmap(selectedImage);
+
+                    stringGroupImage = ImageConverter.imageToStringConverter(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

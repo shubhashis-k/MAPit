@@ -115,6 +115,38 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
                 return null;
             }
         }
+        else if(command.equals(Commands.Group_fetch_notification.getCommand())){
+            try {
+                SearchCollection myGroupCollection = groupApi.getRequeststoGroup(usermail).execute();
+                ArrayList<Search> myGroupList = (ArrayList <Search>) myGroupCollection.getItems();
+
+
+                GroupsEndpointReturnData returnData = new GroupsEndpointReturnData();
+                returnData.setDataList(myGroupList);
+
+                return returnData;
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else if(command.equals(Commands.Group_Join_Group.getCommand())){
+            try {
+                ResponseMessages rm = groupApi.joinOrLeaveGroup(StringKey, Commands.Request_Group.getCommand() , usermail ).execute();
+                String response = rm.getResponseMessage();
+                GroupsEndpointReturnData returnData = new GroupsEndpointReturnData();
+                returnData.setResponseMessages(response);
+
+                return returnData;
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
+        }
         return null;
     }
 }

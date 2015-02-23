@@ -229,4 +229,22 @@ public class GroupsEndpoint {
         return s;
 
     }
+
+    @ApiMethod(name = "getRequeststoGroup", path = "getRequeststoGroupPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> getRequeststoGroup(@Named("usermail") String usermail) throws EntityNotFoundException {
+        ArrayList <Search> MyGroups = getMyGroups(usermail);
+
+        ArrayList <Search> personInfo = new ArrayList<>();
+        for(int i = 0 ; i < MyGroups.size() ; i++){
+            Search s = MyGroups.get(i);
+            String groupKey = s.getKey();
+
+            PersonsInGroupEndpoint personsInGroupEndpoint = new PersonsInGroupEndpoint();
+
+            personInfo.addAll(personsInGroupEndpoint.showRequest(groupKey));
+        }
+
+        return personInfo;
+    }
+
 }

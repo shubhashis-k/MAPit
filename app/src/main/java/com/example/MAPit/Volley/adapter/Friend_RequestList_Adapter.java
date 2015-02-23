@@ -110,7 +110,24 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
         rejectRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(command.equals(Commands.Friends_Request.getCommand())){
+                    Data info = new Data();
+                    info.setCommand(Commands.Friends_Remove.getCommand());
 
+                    Friends f = new Friends();
+                    f.setMail1(getmail());
+                    f.setMail2(item.getUsermail());
+
+                    new FriendsEndpointCommunicator(){
+                        @Override
+                        protected void onPostExecute(FriendsEndpointReturnData result){
+
+                            super.onPostExecute(result);
+                        }
+                    }.execute(new Pair<Data, Friends>(info, f));
+                }
+                frndlistItems.remove(position);
+                notifyDataSetChanged();
             }
         });
 
