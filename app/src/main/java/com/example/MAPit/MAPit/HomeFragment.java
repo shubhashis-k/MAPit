@@ -288,7 +288,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
