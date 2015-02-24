@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,6 +55,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     private ArrayList<StatusData> dataReceived;
     String locname;
     Double lat, lng;
+    StatusData data;
 
     //added this for adding fragment menu
     public Friends_Status_Comment_Fragment() {
@@ -76,20 +78,16 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         if (command.equals(Commands.Called_From_Status.getCommand())) {
             dataReceived = (ArrayList<StatusData>) bundle.getSerializable(Commands.Arraylist_Values.getCommand());
-            StatusData data = dataReceived.get(0);
+            data = dataReceived.get(0);
 
             name.setText(data.getPersonName());
             status.setText(data.getStatus());
             lat = Double.parseDouble(data.getLatitude());
             lng = Double.parseDouble(data.getLongitude());
-            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
-            try {
-                locname = latitudeToLocation.GetLocation(lat, lng);
-                location.setText(locname);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Double[] dd = new Double[]{lat,lng};
+            new LocationFinder().execute(dd);
+
             if (data.getProfilePic() != null) {
                 profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getProfilePic()));
             } else {
@@ -121,30 +119,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         return v;
     }
 
-    /*private void parseJsonFeed(JSONObject response) {
-        try {
-            JSONArray feedArray = response.getJSONArray("feed");
 
-            for (int i = 0; i < feedArray.length(); i++) {
-                JSONObject feedObj = (JSONObject) feedArray.get(i);
-
-                Comment_Item item = new Comment_Item();
-                item.setUser_Name(feedObj.getString("name"));
-
-                // Image might be null sometimes
-                item.setUser_comment(feedObj.getString("status"));
-                item.setUser_Imge(feedObj.getString("profilePic"));
-                item.setComment_TimeStamp(feedObj.getString("timeStamp"));
-
-                commentItems.add(item);
-            }
-
-            // notify data changes to list adapater
-            listAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -212,5 +187,26 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         alert.show();
     }
 
+    private class LocationFinder extends AsyncTask<Double, Void, String> {
+        @Override
+        protected String doInBackground(Double... params) {
+
+            String loc="";
+            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
+            try {
+                loc=ll.GetLocation(params[0],params[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return loc;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            location.setText(s);
+
+        }
+    }
 
 }

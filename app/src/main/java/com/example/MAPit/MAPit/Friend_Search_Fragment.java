@@ -1,7 +1,9 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,9 +37,10 @@ public class Friend_Search_Fragment extends Fragment {
     String usermail;
     private EditText searchBox;
     private ListView listview;
-
+    SearchListItem item;
     private SearchListAdapter searchListAdapter;
     private List<SearchListItem> listItems;
+    String loc=null;
 
 
     //added this for adding fragment menu
@@ -112,20 +115,14 @@ public class Friend_Search_Fragment extends Fragment {
         searchListAdapter.notifyDataSetChanged();
 
         for (int i = 0; i < a.size(); i++) {
-            Search s = a.get(i);
+             Search s = a.get(i);
 
-            SearchListItem item = new SearchListItem();
+            item = new SearchListItem();
             item.setName(s.getData());
-            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
             Double lat = Double.parseDouble(s.getLatitude());
             Double lng = Double.parseDouble(s.getLongitude());
-            String loc = null;
-            try {
-                loc = latitudeToLocation.GetLocation(lat, lng);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            item.setLocation(loc);
+            Double[] dd = new Double[]{lat,lng};
+            new LocationFinder().execute(dd);
 
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
@@ -173,9 +170,12 @@ public class Friend_Search_Fragment extends Fragment {
         for (int i = 0; i < a.size(); i++) {
             Search s = a.get(i);
 
-            SearchListItem item = new SearchListItem();
+            item = new SearchListItem();
             item.setName(s.getData());
-            item.setLocation("Khulna");
+            Double lat = Double.parseDouble(s.getLatitude());
+            Double lng = Double.parseDouble(s.getLongitude());
+            Double[] dd = new Double[]{lat,lng};
+            new LocationFinder().execute(dd);
             item.setButton(Commands.Button_addFriend.getCommand());
             item.setKey(s.getKey());
             item.setExtra(s.getExtra());
@@ -190,5 +190,29 @@ public class Friend_Search_Fragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
+    }
+
+
+    private class LocationFinder extends AsyncTask<Double, Void, String>{
+        @Override
+        protected String doInBackground(Double... params) {
+
+            String loc="";
+            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
+            try {
+                loc=ll.GetLocation(params[0],params[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return loc;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            item.setLocation(s);
+            searchListAdapter.notifyDataSetChanged();
+
+        }
     }
 }

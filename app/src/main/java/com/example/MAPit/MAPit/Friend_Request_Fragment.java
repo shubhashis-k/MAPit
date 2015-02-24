@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -32,7 +33,7 @@ public class Friend_Request_Fragment extends Fragment {
 
     private Friend_RequestList_Adapter listAdapter;
     private List<Friend_Request_ListItem> listItems;
-
+    Friend_Request_ListItem item;
 
     //added this for adding fragment menu
     public Friend_Request_Fragment() {
@@ -113,15 +114,14 @@ public class Friend_Request_Fragment extends Fragment {
         for (int i = 0; i < result.size(); i++) {
             com.mapit.backend.groupApi.model.Search s = result.get(i);
 
-            Friend_Request_ListItem item = new Friend_Request_ListItem();
+            item = new Friend_Request_ListItem();
             item.setUser_Name(s.getData());
             item.setButton_type(request_Type);
-            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
+
             Double lat = Double.parseDouble(s.getLatitude());
             Double lng = Double.parseDouble(s.getLongitude());
-            String loc = null;
-            loc = latitudeToLocation.GetLocation(lat,lng);
-            item.setUser_location(loc);
+            Double[] dd = new Double[]{lat,lng};
+            new LocationFinder().execute(dd);
             item.setUsermail(s.getExtra());
             item.setStringKey(s.getKey());
 
@@ -145,15 +145,13 @@ public class Friend_Request_Fragment extends Fragment {
         for (int i = 0; i < result.size(); i++) {
             Search s = result.get(i);
 
-            Friend_Request_ListItem item = new Friend_Request_ListItem();
+            item = new Friend_Request_ListItem();
             item.setUser_Name(s.getData());
             item.setButton_type(request_Type);
-            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
             Double lat = Double.parseDouble(s.getLatitude());
             Double lng = Double.parseDouble(s.getLongitude());
-            String loc = null;
-            loc = latitudeToLocation.GetLocation(lat,lng);
-            item.setUser_location(loc);
+            Double[] dd = new Double[]{lat,lng};
+            new LocationFinder().execute(dd);
             item.setUsermail(s.getExtra());
             if (s.getPicData() != null) {
                 item.setUser_Imge(s.getPicData());
@@ -171,6 +169,29 @@ public class Friend_Request_Fragment extends Fragment {
         Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
         String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
         return mail;
+    }
+
+    private class LocationFinder extends AsyncTask<Double, Void, String> {
+        @Override
+        protected String doInBackground(Double... params) {
+
+            String loc="";
+            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
+            try {
+                loc=ll.GetLocation(params[0],params[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return loc;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            item.setUser_location(s);
+            listAdapter.notifyDataSetChanged();
+
+        }
     }
 
 }

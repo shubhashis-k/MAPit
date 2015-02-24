@@ -3,6 +3,7 @@ package com.example.MAPit.MAPit;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -43,6 +44,9 @@ public class StatusFragment extends Fragment {
     public ArrayList<StatusData> passThisData;
     public Bundle bundle;
     public Bundle data;
+    StatusListItem item;
+    static int counter=0;
+    static int size=0;
 
 
     @Override
@@ -126,18 +130,19 @@ public class StatusFragment extends Fragment {
     public void populate(ArrayList<StatusData> result) throws IOException {
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
-
+        size=result.size();
         for (int i = 0; i < result.size(); i++) {
             StatusData statusData = result.get(i);
 
-            StatusListItem item = new StatusListItem();
+            item = new StatusListItem();
             item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
-            LatitudeToLocation latitudeToLocation = new LatitudeToLocation(getActivity());
+
             Double lat = Double.parseDouble(statusData.getLatitude());
             Double lng = Double.parseDouble(statusData.getLongitude());
-            String loc = latitudeToLocation.GetLocation(lat,lng);
-            item.setLocation(loc);
+            Double[] dd = new Double[]{lat,lng};
+            new LocationFinder().execute(dd);
+
             if (statusData.getStatusPhoto() != null) {
                 item.setImge(statusData.getStatusPhoto());
             }
@@ -146,7 +151,9 @@ public class StatusFragment extends Fragment {
             } else {
 
             }
+
             statusListItems.add(item);
+            //statuslistAdapter.notifyDataSetChanged();
         }
 
         statuslistAdapter.notifyDataSetChanged();
@@ -185,6 +192,34 @@ public class StatusFragment extends Fragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class LocationFinder extends AsyncTask<Double, Void, String> {
+
+        @Override
+        protected String doInBackground(Double... params) {
+
+            String loc="";
+            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
+            try {
+                loc=ll.GetLocation(params[0],params[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return loc;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            item.setLocation(s);
+            counter++;
+           // statuslistAdapter.notifyDataSetChanged();
+            if(counter==size) {
+                statuslistAdapter.notifyDataSetChanged();
+            }
+
+        }
     }
 
 }
