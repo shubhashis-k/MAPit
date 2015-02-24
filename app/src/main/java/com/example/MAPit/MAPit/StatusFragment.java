@@ -46,8 +46,6 @@ public class StatusFragment extends Fragment {
     public Bundle bundle;
     public Bundle data;
     StatusListItem item;
-    static int counter=0;
-    static int size=0;
 
 
     @Override
@@ -65,6 +63,9 @@ public class StatusFragment extends Fragment {
             populateFriendsLatestStatus();
         else if (command.equals(Commands.Called_From_Info.getCommand()))
             populatePersonStatus();
+        else if (command.equals(Commands.Called_From_Group.getCommand()))
+            populateGroupStatus();
+
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,6 +88,31 @@ public class StatusFragment extends Fragment {
 
 
         return v;
+    }
+
+    public void populateGroupStatus(){
+        data = getArguments();
+        String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+
+        Data d = new Data();
+        d.setCommand(Commands.Status_showGroupStatus.getCommand());
+
+        StatusData s= new StatusData();
+        s.setKind(DatastoreKindNames.StatusInGroup.getKind());
+
+        new StatusEndpointCommunicator() {
+            @Override
+            protected void onPostExecute(ArrayList<StatusData> result) {
+
+                super.onPostExecute(result);
+                passThisData = result;
+                try {
+                    populate(result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute(new Pair<Data, StatusData>(d, s));
     }
 
     public void populatePersonStatus() {
@@ -132,7 +158,7 @@ public class StatusFragment extends Fragment {
     public void populate(ArrayList<StatusData> result) throws IOException {
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
-        size=result.size();
+
         for (int i = 0; i < result.size(); i++) {
             StatusData statusData = result.get(i);
 

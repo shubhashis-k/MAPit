@@ -47,6 +47,7 @@ public enum Commands {
     Called_From_Home ("Home"),
     Called_From_Info ("Info"),
     Called_From_Status("Status"),
+    Called_From_Group ("Group"),
 
     Status_Job ("Job"),
     Status_Job_Type_Individual ("Individual"),

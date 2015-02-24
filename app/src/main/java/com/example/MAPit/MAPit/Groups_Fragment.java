@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -36,7 +37,7 @@ public class Groups_Fragment extends Fragment {
     String usermail;
     private EditText searchBox;
     private ListView listview;
-
+    private ArrayList <Search> res;
     private SearchListAdapter searchListAdapter;
     private List<SearchListItem> listItems;
 
@@ -47,12 +48,30 @@ public class Groups_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.search_list_adapter_layout, null, false);
-
+        res = new ArrayList<>();
         searchBox = (EditText) v.findViewById(R.id.searchBox);
         listview = (ListView) v.findViewById(R.id.listview);
         listItems = new ArrayList<SearchListItem>();
         searchListAdapter = new SearchListAdapter(getActivity(), listItems);
         listview.setAdapter(searchListAdapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle data = new Bundle();
+                Search s = res.get(position);
+                data.putString(PropertyNames.Status_groupKey.getProperty(), s.getKey());
+                data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Group.getCommand());
+
+                Fragment fragment = new StatusFragment();
+                fragment.setArguments(data);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+            }
+        });
 
         showMyGroups();
         searchBox.addTextChangedListener(new TextWatcher() {
@@ -102,7 +121,7 @@ public class Groups_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+                res = result.getDataList();
                 PopulateMyGroups(res);
 
             }
@@ -148,7 +167,7 @@ public class Groups_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+                res = result.getDataList();
                 PopulateSearchGroup(res);
 
             }
