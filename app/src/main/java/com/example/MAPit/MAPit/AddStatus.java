@@ -35,7 +35,7 @@ public class AddStatus extends Fragment {
     private EditText mainMessage,postUrl;
     private ImageView postImage;
     private Button addPost,choosePic;
-    private String statusImage;
+    private String statusImage = "";
     private final int SELECT_PHOTO = 1;
 
     public AddStatus(){setHasOptionsMenu(true);}

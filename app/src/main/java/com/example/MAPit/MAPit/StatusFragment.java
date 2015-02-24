@@ -42,6 +42,7 @@ public class StatusFragment extends Fragment {
     private List<StatusListItem> statusListItems;
     public String command;
     public ArrayList<StatusData> passThisData;
+    public ArrayList <String> loc;
     public Bundle bundle;
     public Bundle data;
     StatusListItem item;
@@ -53,6 +54,7 @@ public class StatusFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.friend_status, null, false);
         listView = (ListView) v.findViewById(R.id.list_frnd_status);
+        loc = new ArrayList<>();
         statusListItems = new ArrayList<StatusListItem>();
         statuslistAdapter = new StatusListAdapter(getActivity(), statusListItems);
         listView.setAdapter(statuslistAdapter);
@@ -140,8 +142,27 @@ public class StatusFragment extends Fragment {
 
             Double lat = Double.parseDouble(statusData.getLatitude());
             Double lng = Double.parseDouble(statusData.getLongitude());
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
+
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(i);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new LocationFinder(){
+                @Override
+                protected void onPostExecute(LocationFinderData result) {
+                    super.onPostExecute(result);
+                    StatusListItem fetchItem = statusListItems.get(result.getIndex());
+                    fetchItem.setLocation(result.getLocation());
+
+                    statusListItems.set(result.getIndex(), fetchItem);
+
+                    statuslistAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
+
 
             if (statusData.getStatusPhoto() != null) {
                 item.setImge(statusData.getStatusPhoto());
@@ -153,7 +174,6 @@ public class StatusFragment extends Fragment {
             }
 
             statusListItems.add(item);
-            //statuslistAdapter.notifyDataSetChanged();
         }
 
         statuslistAdapter.notifyDataSetChanged();
@@ -193,33 +213,4 @@ public class StatusFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private class LocationFinder extends AsyncTask<Double, Void, String> {
-
-        @Override
-        protected String doInBackground(Double... params) {
-
-            String loc="";
-            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
-            try {
-                loc=ll.GetLocation(params[0],params[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return loc;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            item.setLocation(s);
-            counter++;
-           // statuslistAdapter.notifyDataSetChanged();
-            if(counter==size) {
-                statuslistAdapter.notifyDataSetChanged();
-            }
-
-        }
-    }
-
 }
