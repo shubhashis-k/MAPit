@@ -28,6 +28,7 @@ import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.groupApi.model.Groups;
 import com.mapit.backend.groupApi.model.Search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -154,12 +155,17 @@ public class Groups_Fragment extends Fragment {
                 @Override
                 protected void onPostExecute(LocationFinderData result) throws IndexOutOfBoundsException{
                     super.onPostExecute(result);
-                    SearchListItem fetchItem = listItems.get(result.getIndex());
-                    fetchItem.setLocation(result.getLocation());
+                    try {
+                        SearchListItem fetchItem = listItems.get(result.getIndex());
+                        fetchItem.setLocation(result.getLocation());
 
-                    listItems.set(result.getIndex(), fetchItem);
+                        listItems.set(result.getIndex(), fetchItem);
 
-                    searchListAdapter.notifyDataSetChanged();
+                        searchListAdapter.notifyDataSetChanged();
+                    }
+                    catch(Exception io){
+
+                    }
                 }
             }.execute(lfd);
 
@@ -258,7 +264,7 @@ public class Groups_Fragment extends Fragment {
             case R.id.create_group:
                 fragment = new OnlyGoogleMap();
                 Bundle d = new Bundle();
-                d.putString(Commands.SearchAndADD.getCommand(),Commands.Group_Create.getCommand());
+                d.putString(Commands.SearchAndADD.getCommand(), Commands.Group_Create.getCommand());
                 fragment.setArguments(d);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);

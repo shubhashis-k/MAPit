@@ -124,6 +124,8 @@ public class GroupsEndpoint {
         Key GroupKey = null;
 
         ArrayList <Search> searchResult = new ArrayList<>();
+        ArrayList <Search> JoinedGroupList = getJoinedGroups(mail);
+
         for (Entity result : queryResult.asIterable()) {
 
             GroupKey = result.getKey();
@@ -132,6 +134,8 @@ public class GroupsEndpoint {
             searchResult.add(s);
 
         }
+
+        searchResult.addAll(JoinedGroupList);
 
         return searchResult;
     }

@@ -62,21 +62,19 @@ public class AddStatus extends Fragment {
         final String command = data.getString(Commands.Status_Job.getCommand());
         final String latitude = data.getString(PropertyNames.Status_latitude.getProperty());
         final String longitude = data.getString(PropertyNames.Status_longitude.getProperty());
-
+        final String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
 
 
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                    if(command.equals(Commands.Called_From_Group.getCommand())){
-
-                    }
                     Bundle dataBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
                     String mail = dataBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
                     String username = dataBundle.getString(PropertyNames.Userinfo_Username.getProperty());
 
                     StatusData status = new StatusData();
+                    status.setGroupKey(groupKey);
                     status.setPersonMail(mail);
                     status.setLatitude(latitude);
                     status.setLongitude(longitude);
@@ -88,6 +86,9 @@ public class AddStatus extends Fragment {
 
                     if(command.equals(Commands.Status_Job_Type_Individual.getCommand())) {
                         status.setKind(DatastoreKindNames.StatusbyIndividual.getKind());
+                    }
+                    else if(command.equals(Commands.Status_Job_Type_Group.getCommand())){
+                        status.setKind(DatastoreKindNames.StatusInGroup.getKind());
                     }
 
                     postStatus(status);

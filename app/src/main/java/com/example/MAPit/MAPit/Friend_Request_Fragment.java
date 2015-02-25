@@ -118,12 +118,9 @@ public class Friend_Request_Fragment extends Fragment {
             item.setUser_Name(s.getData());
             item.setButton_type(request_Type);
 
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
             item.setUsermail(s.getExtra());
             item.setStringKey(s.getKey());
+            item.setUser_location(s.getExtra1());
 
             if (s.getPicData() != null) {
                 item.setUser_Imge(s.getPicData());
