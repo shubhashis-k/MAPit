@@ -59,8 +59,10 @@ public enum Commands {
 
     SearchAndADD("searchandadd"),
     ShowInMap("showinmap"),
-    ForMarkerView("markerView")
+    ForMarkerView("markerView"),
 
+    Information_set("set"),
+    Information_get("get")
     ;
 
     private String command;
