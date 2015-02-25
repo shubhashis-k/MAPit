@@ -188,7 +188,7 @@ public class Groups_Fragment extends Fragment {
 
         new GroupsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(GroupsEndpointReturnData result){
+            protected void onPostExecute(GroupsEndpointReturnData result) {
 
                 super.onPostExecute(result);
 
@@ -221,7 +221,7 @@ public class Groups_Fragment extends Fragment {
 
             new LocationFinder(){
                 @Override
-                protected void onPostExecute(LocationFinderData result) {
+                protected void onPostExecute(LocationFinderData result)throws  NullPointerException{
                     super.onPostExecute(result);
                     SearchListItem fetchItem = listItems.get(result.getIndex());
                     fetchItem.setLocation(result.getLocation());

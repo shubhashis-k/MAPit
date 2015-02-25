@@ -101,7 +101,11 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
 
         // Here need my current location
-        LatLng ll = new LatLng(53.558, 9.927);
+        Bundle mydata = ((SlidingDrawerActivity)getActivity()).getEmail();
+        Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
+        Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
+        LatLng ll = new LatLng(myLat, myLng);
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
 
 

@@ -54,13 +54,14 @@ public class Friend_Location_Fragment extends Fragment {
         directionMap.getUiSettings().setMyLocationButtonEnabled(true);
         directionMap.getUiSettings().setAllGesturesEnabled(true);
         directionMap.setTrafficEnabled(true);
-        //directionMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
         markerOptions = new MarkerOptions();
         Bundle data = getArguments();
         Double lat = data.getDouble("latitude");
         Double lng = data.getDouble("longitude");
 
         Bundle mydata = ((SlidingDrawerActivity)getActivity()).getEmail();
+
         Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
         Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
         fromPosition = new LatLng(lat, lng);
@@ -108,7 +109,7 @@ public class Friend_Location_Fragment extends Fragment {
                 directionMap.addPolyline(rectLine);
                 markerOptions.position(toPosition);
                 markerOptions.position(fromPosition);
-                markerOptions.draggable(true);
+                //markerOptions.draggable(true);
                 directionMap.addMarker(markerOptions);
             }
             dialog.dismiss();

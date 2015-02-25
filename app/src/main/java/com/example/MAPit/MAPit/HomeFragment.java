@@ -62,17 +62,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
 
-        /*if (v != null) {
-            ViewGroup parent = (ViewGroup) v.getParent();
-            if (parent != null){
-               parent.removeView(v);
-                }
-        }
-        try {
-             v = inflater.inflate(R.layout.home_map_activity, null, false);
-        } catch (InflateException e) {
-
-        }*/
         View v = inflater.inflate(R.layout.home_map_activity, null, false);
 
         mapFrag = (MapFragment) getFragmentManager()

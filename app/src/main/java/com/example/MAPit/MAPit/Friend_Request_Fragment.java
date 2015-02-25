@@ -16,6 +16,7 @@ import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.Volley.adapter.Friend_RequestList_Adapter;
 import com.example.MAPit.Volley.data.Friend_Request_ListItem;
+import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.Search;
 import com.mapit.backend.groupApi.model.Groups;
@@ -67,7 +68,7 @@ public class Friend_Request_Fragment extends Fragment {
 
         new GroupsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(GroupsEndpointReturnData result){
+            protected void onPostExecute(GroupsEndpointReturnData result)throws NullPointerException{
 
                 super.onPostExecute(result);
 
@@ -92,7 +93,7 @@ public class Friend_Request_Fragment extends Fragment {
 
         new FriendsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result)throws NullPointerException{
 
                 super.onPostExecute(result);
 
@@ -117,11 +118,7 @@ public class Friend_Request_Fragment extends Fragment {
             item = new Friend_Request_ListItem();
             item.setUser_Name(s.getData());
             item.setButton_type(request_Type);
-
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
+            //item.setUser_location(s); // here group_name needs to be added
             item.setUsermail(s.getExtra());
             item.setStringKey(s.getKey());
 
@@ -150,8 +147,27 @@ public class Friend_Request_Fragment extends Fragment {
             item.setButton_type(request_Type);
             Double lat = Double.parseDouble(s.getLatitude());
             Double lng = Double.parseDouble(s.getLongitude());
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
+
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(i);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new LocationFinder(){
+                @Override
+                protected void onPostExecute(LocationFinderData result) {
+                    super.onPostExecute(result);
+                    Friend_Request_ListItem fetchItem = listItems.get(result.getIndex());
+                    fetchItem.setUser_location(result.getLocation());
+
+                    listItems.set(result.getIndex(), fetchItem);
+
+                    listAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
+
             item.setUsermail(s.getExtra());
             if (s.getPicData() != null) {
                 item.setUser_Imge(s.getPicData());
@@ -171,27 +187,8 @@ public class Friend_Request_Fragment extends Fragment {
         return mail;
     }
 
-    private class LocationFinder extends AsyncTask<Double, Void, String> {
-        @Override
-        protected String doInBackground(Double... params) {
 
-            String loc="";
-            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
-            try {
-                loc=ll.GetLocation(params[0],params[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return loc;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            item.setUser_location(s);
-            listAdapter.notifyDataSetChanged();
 
-        }
-    }
 
 }

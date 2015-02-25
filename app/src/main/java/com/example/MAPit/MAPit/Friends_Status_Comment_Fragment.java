@@ -28,6 +28,7 @@ import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
+import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.statusApi.model.StatusData;
 
 import org.json.JSONArray;
@@ -85,8 +86,25 @@ public class Friends_Status_Comment_Fragment extends Fragment {
             lat = Double.parseDouble(data.getLatitude());
             lng = Double.parseDouble(data.getLongitude());
 
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(0);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new com.example.MAPit.MAPit.LocationFinder(){
+                @Override
+                protected void onPostExecute(LocationFinderData result) {
+                    super.onPostExecute(result);
+                    Comment_Item fetchItem = commentItems.get(result.getIndex());
+                    fetchItem.setComment_TimeStamp(result.getLocation());
+
+                    commentItems.set(result.getIndex(), fetchItem);
+
+                    listAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
 
             if (data.getProfilePic() != null) {
                 profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getProfilePic()));

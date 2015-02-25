@@ -25,6 +25,7 @@ import com.example.MAPit.Data_and_Return_Data.FriendsEndpointReturnData;
 import com.example.MAPit.Volley.adapter.SearchListAdapter;
 
 import com.example.MAPit.Volley.data.SearchListItem;
+import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.friendsApi.model.Friends;
 import com.mapit.backend.friendsApi.model.Search;
 
@@ -40,7 +41,7 @@ public class Friend_Search_Fragment extends Fragment {
     SearchListItem item;
     private SearchListAdapter searchListAdapter;
     private List<SearchListItem> listItems;
-    String loc=null;
+    String loc = null;
 
 
     //added this for adding fragment menu
@@ -73,7 +74,7 @@ public class Friend_Search_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String pattern = searchBox.getText().toString().toLowerCase(Locale.getDefault());
-                if(pattern.length() != 0)
+                if (pattern.length() != 0)
                     searchUser(pattern);
                 else
                     showFriends();
@@ -83,13 +84,13 @@ public class Friend_Search_Fragment extends Fragment {
         return v;
     }
 
-    public String getmail(){
-        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+    public String getmail() {
+        Bundle mailBundle = ((SlidingDrawerActivity) getActivity()).getEmail();
         String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
         return mail;
     }
 
-    public void showFriends(){
+    public void showFriends() {
         Data info = new Data();
         info.setContext(getActivity());
         info.setCommand(Commands.Friends_fetch.getCommand());
@@ -97,13 +98,13 @@ public class Friend_Search_Fragment extends Fragment {
 
         Friends f = new Friends();
 
-        new FriendsEndpointCommunicator(){
+        new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result) throws NullPointerException {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+                ArrayList<Search> res = result.getDataList();
                 PopulateFriends(res);
 
             }
@@ -115,14 +116,32 @@ public class Friend_Search_Fragment extends Fragment {
         searchListAdapter.notifyDataSetChanged();
 
         for (int i = 0; i < a.size(); i++) {
-             Search s = a.get(i);
+            Search s = a.get(i);
 
             item = new SearchListItem();
             item.setName(s.getData());
             Double lat = Double.parseDouble(s.getLatitude());
             Double lng = Double.parseDouble(s.getLongitude());
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(i);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new com.example.MAPit.MAPit.LocationFinder() {
+                @Override
+                protected void onPostExecute(LocationFinderData result) {
+                    super.onPostExecute(result);
+                    SearchListItem fetchItem = listItems.get(result.getIndex());
+                    fetchItem.setLocation(result.getLocation());
+
+                    listItems.set(result.getIndex(), fetchItem);
+
+                    searchListAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
+
 
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
@@ -138,7 +157,7 @@ public class Friend_Search_Fragment extends Fragment {
 
     }
 
-    public void searchUser(String pattern){
+    public void searchUser(String pattern) {
         Search searchProperty = new Search();
         searchProperty.setData(pattern);
 
@@ -150,20 +169,20 @@ public class Friend_Search_Fragment extends Fragment {
 
         Friends f = new Friends();
 
-        new FriendsEndpointCommunicator(){
+        new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result) throws NullPointerException {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+                ArrayList<Search> res = result.getDataList();
                 PopulateNotFriends(res);
 
             }
         }.execute(new Pair<Data, Friends>(info, f));
     }
 
-    public void PopulateNotFriends(ArrayList<Search> a){
+    public void PopulateNotFriends(ArrayList<Search> a) {
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
 
@@ -174,8 +193,26 @@ public class Friend_Search_Fragment extends Fragment {
             item.setName(s.getData());
             Double lat = Double.parseDouble(s.getLatitude());
             Double lng = Double.parseDouble(s.getLongitude());
-            Double[] dd = new Double[]{lat,lng};
-            new LocationFinder().execute(dd);
+
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(i);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new com.example.MAPit.MAPit.LocationFinder() {
+                @Override
+                protected void onPostExecute(LocationFinderData result) {
+                    super.onPostExecute(result);
+                    SearchListItem fetchItem = listItems.get(result.getIndex());
+                    fetchItem.setLocation(result.getLocation());
+
+                    listItems.set(result.getIndex(), fetchItem);
+
+                    searchListAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
             item.setButton(Commands.Button_addFriend.getCommand());
             item.setKey(s.getKey());
             item.setExtra(s.getExtra());
@@ -193,26 +230,4 @@ public class Friend_Search_Fragment extends Fragment {
     }
 
 
-    private class LocationFinder extends AsyncTask<Double, Void, String>{
-        @Override
-        protected String doInBackground(Double... params) {
-
-            String loc="";
-            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
-            try {
-                loc=ll.GetLocation(params[0],params[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return loc;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            item.setLocation(s);
-            searchListAdapter.notifyDataSetChanged();
-
-        }
-    }
 }

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,6 +75,7 @@ public class AddStatus extends Fragment {
                     String mail = dataBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
                     String username = dataBundle.getString(PropertyNames.Userinfo_Username.getProperty());
 
+
                     StatusData status = new StatusData();
                     status.setPersonMail(mail);
                     status.setLatitude(latitude);
@@ -105,7 +105,7 @@ public class AddStatus extends Fragment {
 
         new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList<StatusData> result) {
+            protected void onPostExecute(ArrayList<StatusData> result) throws NullPointerException{
 
                 super.onPostExecute(result);
 
