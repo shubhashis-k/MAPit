@@ -102,6 +102,11 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         }
 
+        if (command.equals(Commands.Called_From_Status.getCommand())) {
+
+
+        }
+
 
         listView = (ListView) v.findViewById(R.id.comment_single_status);
         commentItems = new ArrayList<Comment_Item>();

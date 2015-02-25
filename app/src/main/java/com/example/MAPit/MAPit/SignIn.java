@@ -16,7 +16,7 @@ import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 /**
  * Created by SETU on 12/27/2014.
  */
-public class SignIn extends Activity implements SignIn_Endpoint_Communicator.manipulate_Signin{
+public class SignIn extends Activity implements SignIn_Endpoint_Communicator.manipulate_Signin {
 
     private String retrieved_pass;
     private String input_pass;
@@ -39,14 +39,12 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
         });
     }
 
-    public void getInformation()
-    {
+    public void getInformation() {
         input_mail = ((EditText) findViewById(R.id.signin_email)).getText().toString();
         input_pass = ((EditText) findViewById(R.id.signin_password)).getText().toString();
     }
 
-    public void getPassfromDatstore()
-    {
+    public void getPassfromDatstore() {
         UserinfoModel userdata = new UserinfoModel();
         userdata.setMail(input_mail);
 
@@ -58,7 +56,7 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
 
         retrieved_pass = logininfo.getPassword();
 
-        if(retrieved_pass != null) {
+        if (retrieved_pass != null) {
             if (retrieved_pass.equals(input_pass)) {
                 Intent signin_intent = new Intent(SignIn.this, SlidingDrawerActivity.class);
                 signin_intent.putExtra(PropertyNames.Userinfo_Mail.getProperty(), input_mail);
@@ -74,8 +72,8 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
             } else {
                 Toast.makeText(this, "Login Failed! Wrong Password", Toast.LENGTH_LONG).show();
             }
-        }
-        else{
+        } else {
+
             Toast.makeText(this, "Login Failed! User does not exist", Toast.LENGTH_LONG).show();
         }
 
@@ -84,7 +82,7 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(SignIn.this,MainActivity.class);
+        Intent intent = new Intent(SignIn.this, MainActivity.class);
         startActivity(intent);
     }
 }

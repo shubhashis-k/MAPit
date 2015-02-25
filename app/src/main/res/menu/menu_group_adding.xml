@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/my_groups"
-        android:title="My Groups"/>
+        android:id="@+id/see_in_map"
+        android:title="See in Map"/>
     <item
         android:id="@+id/create_group"
         android:title="Create Group"/>

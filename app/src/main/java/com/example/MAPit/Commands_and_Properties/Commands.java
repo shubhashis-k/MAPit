@@ -35,6 +35,7 @@ public enum Commands {
     Request_Group ("Request"),
     Accept_Group ("Accept"),
     Leave_Group ("Leave"),
+    Group_Key("grpKey"),
 
 
     Status_add ("addsttus"),
@@ -55,6 +56,10 @@ public enum Commands {
 
 
     Arraylist_Values ("data"),
+
+    SearchAndADD("searchandadd"),
+    ShowInMap("showinmap"),
+    ForMarkerView("markerView")
 
     ;
 

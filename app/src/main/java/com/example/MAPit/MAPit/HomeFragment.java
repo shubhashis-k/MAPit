@@ -140,6 +140,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 switch (which) {
                                     case 0:
                                         fragment = new AddStatus();
+                                        dataToAddStatus.putString(Commands.Status_add.getCommand(),Commands.Called_From_Home.getCommand());
                                         fragment.setArguments(dataToAddStatus);
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);

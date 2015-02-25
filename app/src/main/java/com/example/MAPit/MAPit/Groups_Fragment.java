@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -23,6 +24,7 @@ import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.Volley.adapter.SearchListAdapter;
 import com.example.MAPit.Volley.data.SearchListItem;
+import com.example.MAPit.Volley.data.StatusListItem;
 import com.mapit.backend.groupApi.model.Groups;
 import com.mapit.backend.groupApi.model.Search;
 
@@ -54,6 +56,7 @@ public class Groups_Fragment extends Fragment {
         listItems = new ArrayList<SearchListItem>();
         searchListAdapter = new SearchListAdapter(getActivity(), listItems);
         listview.setAdapter(searchListAdapter);
+        listview.setItemsCanFocus(true);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,7 +65,6 @@ public class Groups_Fragment extends Fragment {
                 Search s = res.get(position);
                 data.putString(PropertyNames.Status_groupKey.getProperty(), s.getKey());
                 data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Group.getCommand());
-
                 Fragment fragment = new StatusFragment();
                 fragment.setArguments(data);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -117,7 +119,7 @@ public class Groups_Fragment extends Fragment {
 
         new GroupsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(GroupsEndpointReturnData result){
+            protected void onPostExecute(GroupsEndpointReturnData result) throws  NullPointerException{
 
                 super.onPostExecute(result);
 
@@ -137,7 +139,30 @@ public class Groups_Fragment extends Fragment {
 
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
-            item.setLocation("Khulna");
+            //item.setLocation("Khulna");
+            Double lat = Double.parseDouble(s.getLatitude());
+            Double lng = Double.parseDouble(s.getLongitude());
+
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(i);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new LocationFinder(){
+                @Override
+                protected void onPostExecute(LocationFinderData result) throws IndexOutOfBoundsException{
+                    super.onPostExecute(result);
+                    SearchListItem fetchItem = listItems.get(result.getIndex());
+                    fetchItem.setLocation(result.getLocation());
+
+                    listItems.set(result.getIndex(), fetchItem);
+
+                    searchListAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
+
             item.setKey(s.getKey());
             item.setButton(Commands.Group_Remove.getCommand());
             item.setExtra(getmail());
@@ -183,7 +208,30 @@ public class Groups_Fragment extends Fragment {
 
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
-            item.setLocation("Khulna");
+
+            Double lat = Double.parseDouble(s.getLatitude());
+            Double lng = Double.parseDouble(s.getLongitude());
+
+            LocationFinderData lfd = new LocationFinderData();
+
+            lfd.setIndex(i);
+            lfd.setLatitude(lat);
+            lfd.setLongitude(lng);
+            lfd.setContext(getActivity());
+
+            new LocationFinder(){
+                @Override
+                protected void onPostExecute(LocationFinderData result) {
+                    super.onPostExecute(result);
+                    SearchListItem fetchItem = listItems.get(result.getIndex());
+                    fetchItem.setLocation(result.getLocation());
+
+                    listItems.set(result.getIndex(), fetchItem);
+
+                    searchListAdapter.notifyDataSetChanged();
+                }
+            }.execute(lfd);
+
             item.setButton(Commands.Group_Join_Group.getCommand());
             item.setKey(s.getKey());
             item.setExtra(getmail());
@@ -209,15 +257,22 @@ public class Groups_Fragment extends Fragment {
         switch (item.getItemId()){
             case R.id.create_group:
                 fragment = new OnlyGoogleMap();
+                Bundle d = new Bundle();
+                d.putString(Commands.SearchAndADD.getCommand(),Commands.Group_Create.getCommand());
+                fragment.setArguments(d);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container,fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 
                 return true;
-            case R.id.my_groups:
+            case R.id.see_in_map:
 
-                fragment = new MyOwnGroupsFragment();
+                fragment = new Marker_MapView();
+                Bundle data = new Bundle();
+                data.putString(Commands.ForMarkerView.getCommand(),Commands.Called_From_Group.getCommand());
+                data.putSerializable(Commands.Arraylist_Values.getCommand(), res);
+                fragment.setArguments(data);
                 FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
                 transaction1.replace(R.id.frame_container,fragment);
                 transaction1.addToBackStack(null);

@@ -99,10 +99,11 @@ public class StatusFragment extends Fragment {
 
         StatusData s= new StatusData();
         s.setKind(DatastoreKindNames.StatusInGroup.getKind());
+        s.setGroupKey(groupKey);
 
         new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList<StatusData> result) {
+            protected void onPostExecute(ArrayList<StatusData> result) throws NullPointerException{
 
                 super.onPostExecute(result);
                 passThisData = result;
@@ -210,7 +211,13 @@ public class StatusFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_home_fragment, menu);
-        menu.findItem(R.id.switch_view_to_list).setTitle("Switch Back to Map");
+        if(command.equals(Commands.Called_From_Group.getCommand())) {
+             menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
+        }
+        else {
+
+            menu.findItem(R.id.switch_view_to_list).setTitle("Switch Back to Map");
+        }
     }
 
     @Override
@@ -218,22 +225,31 @@ public class StatusFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.switch_view_to_list:
+                Fragment fragment = null;
                 if (command.equals(Commands.Called_From_Home.getCommand())) {
-                    Fragment fragment = new HomeFragment();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    fragment = new HomeFragment();
+
                 } else if (command.equals(Commands.Called_From_Info.getCommand())) {
                     bundle = new Bundle();
+                    bundle.putString(Commands.ForMarkerView.getCommand(),Commands.Called_From_Status.getCommand());
                     bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
-                    Fragment fragment = new Marker_MapView();
+                    fragment = new Marker_MapView();
                     fragment.setArguments(bundle);
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+
                 }
+                else if(command.equals(Commands.Called_From_Group.getCommand())){
+                    fragment = new OnlyGoogleMap();
+                    Bundle d = new Bundle();
+                    String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+                    d.putString(Commands.Group_Key.getCommand(),groupKey);
+                    d.putString(Commands.SearchAndADD.getCommand(),Commands.Status_add.getCommand());
+                    fragment.setArguments(d);
+
+                }
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
                 return true;
         }

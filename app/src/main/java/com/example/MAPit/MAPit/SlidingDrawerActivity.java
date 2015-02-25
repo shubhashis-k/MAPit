@@ -97,6 +97,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, ""));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
 
 
         // Recycle the typed array
@@ -237,10 +238,16 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 6:
+                fragment = new OnlyGoogleMap();
+                Bundle data = new Bundle();
+                data.putString(Commands.SearchAndADD.getCommand(),Commands.ShowInMap.getCommand());
+                fragment.setArguments(data);
+                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                break;
+            case 7:
                 Intent intent = new Intent(SlidingDrawerActivity.this,SignIn.class);
                 startActivity(intent);
                 break;
-
             default:
                 break;
         }

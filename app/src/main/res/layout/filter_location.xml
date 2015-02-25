@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/tv_new__name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#000000"
+        android:text="Choose Category : "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#E8E8E8"
+        android:textStyle="bold"
+        android:typeface="sans" />
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sp_choose_type"
+        android:spinnerMode="dialog"
+        />
+    <TextView
+        android:id="@+id/tv_new_group_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#000000"
+        android:text="Within Your Location(km) : "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#E8E8E8"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <EditText
+        android:id="@+id/et_search_radius"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        >
+    </EditText>
+
+    <Button
+        android:id="@+id/bt_find_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        android:textStyle="bold"
+        android:text="Filter" />
+
+</LinearLayout>

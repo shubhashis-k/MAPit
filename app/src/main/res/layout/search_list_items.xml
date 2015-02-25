@@ -56,7 +56,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="3dp"
-                    android:text="Button"/>
+                    android:text="Button"
+                    android:focusable="false"/>
             </LinearLayout>
 
         </LinearLayout>

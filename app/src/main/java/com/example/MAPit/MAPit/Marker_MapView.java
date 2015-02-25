@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.mapit.backend.groupApi.model.Search;
 import com.mapit.backend.statusApi.model.StatusData;
 
 import java.io.IOException;
@@ -44,7 +45,9 @@ public class Marker_MapView extends Fragment {
     private GoogleMap map;
     MapFragment mapFrag;
     ArrayList <StatusData> result;
-    Bundle data;
+    ArrayList <Search> resultFromGroup;
+    Bundle data,sendData;
+    String command;
 
 
     // public static View v;
@@ -52,22 +55,16 @@ public class Marker_MapView extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        /*if (v != null) {
-            ViewGroup parent = (ViewGroup) v.getParent();
-            if (parent != null){
-               parent.removeView(v);
-                }
-        }
-        try {
-             v = inflater.inflate(R.layout.home_map_activity, null, false);
-        } catch (InflateException e) {
 
-        }*/
         View v = inflater.inflate(R.layout.route_direction_frnd_location, null, false);
 
         mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.route_frnd_location_map);
         map = mapFrag.getMap();
+
+        data=getArguments();
+        sendData=new Bundle();
+        command = data.getString(Commands.ForMarkerView.getCommand());
 
         map.setMyLocationEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -93,15 +90,27 @@ public class Marker_MapView extends Fragment {
                     TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
                     String status = marker.getTitle();
                     String actual_status = status.substring(0, status.indexOf('/'));
-                    String email = status.substring(status.lastIndexOf('/') + 1);
-                    String pos = status.substring(status.lastIndexOf('&')+1);
-                    int position = Integer.parseInt(pos);
-                    StatusData st = result.get(position);
-                    data = new Bundle();
-                    ArrayList <StatusData> passData = new ArrayList<StatusData>();
-                    passData.add(st);
-                    data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
-                    data.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
+
+
+                    if(command.equals(Commands.Called_From_Status.getCommand())) {
+
+                        String email = status.substring(status.lastIndexOf('/') + 1);
+                        String pos = status.substring(status.lastIndexOf('&')+1);
+                        int position = Integer.parseInt(pos);
+                        StatusData st = result.get(position);
+                        ArrayList<StatusData> passData = new ArrayList<StatusData>();
+                        passData.add(st);
+                        sendData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
+                        sendData.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
+                    }
+
+                    else if(command.equals(Commands.Called_From_Group.getCommand())){
+
+                        String key=status.substring(status.lastIndexOf('/')+1);
+                        sendData.putString(PropertyNames.Status_groupKey.getProperty(),key);
+                        sendData.putString(Commands.Fragment_Caller.getCommand(),Commands.Called_From_Group.getCommand());
+                    }
+
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
                     return v;
@@ -115,8 +124,14 @@ public class Marker_MapView extends Fragment {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new Friends_Status_Comment_Fragment();
-                fragment.setArguments(data);
+                Fragment fragment=null;
+                if(command.equals(Commands.Called_From_Status.getCommand())) {
+                     fragment = new Friends_Status_Comment_Fragment();
+                }
+                else if(command.equals(Commands.Called_From_Group.getCommand())){
+                    fragment=new StatusFragment();
+                }
+                fragment.setArguments(sendData);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
@@ -127,12 +142,49 @@ public class Marker_MapView extends Fragment {
         //getting the bundle value
 
         Bundle data = getArguments();
-         result = (ArrayList <StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+        if(command.equals(Commands.Called_From_Status.getCommand())) {
 
-        drawMarkerAndLine(result);
+            result = (ArrayList<StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+            drawMarkerAndLine(result);
+        }
+        else if(command.equals(Commands.Called_From_Group.getCommand())){
+
+           resultFromGroup =(ArrayList<Search>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+            drawMarkerAndLineForGroup(resultFromGroup);
+        }
+
+
         return v;
     }
 
+    private void drawMarkerAndLineForGroup(ArrayList<Search> result) {
+
+        PolygonOptions options = new PolygonOptions()
+                .fillColor(0x330000FF)
+                .strokeColor(Color.BLUE)
+                .strokeWidth(3);
+        if (result.size() != 0) {
+            for (int i = 0; i < result.size(); i++) {
+                String status = result.get(i).getExtra();
+                String name = result.get(i).getData();
+                String key = result.get(i).getKey();
+                name += "/" + key;
+                Double lat = Double.parseDouble(result.get(i).getLatitude());
+                Double lng = Double.parseDouble(result.get(i).getLongitude());
+                if (status.length() > 20) {
+                    status = status.substring(0, 20);
+                    status += "...";
+                }
+                LatLng ll = new LatLng(lat, lng);
+                options.add(ll);
+                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                if (i == 0) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                }
+            }
+            map.addPolygon(options);
+        }
+    }
 
 
     private void drawMarkerAndLine(ArrayList<StatusData> result) {
@@ -140,27 +192,28 @@ public class Marker_MapView extends Fragment {
                 .fillColor(0x330000FF)
                 .strokeColor(Color.BLUE)
                 .strokeWidth(3);
-        for (int i = 0; i < result.size(); i++) {
-            String status = result.get(i).getStatus();
-            String name = result.get(i).getPersonName();
-            String email = result.get(i).getPersonMail();
-            name += "/" + email;
-            name +="&" + String.valueOf(i);
-            Double lat = Double.parseDouble(result.get(i).getLatitude());
-            Double lng = Double.parseDouble(result.get(i).getLongitude());
-            if (status.length() > 20) {
-                status = status.substring(0, 20);
-                status += "...";
+        if (result.size() != 0) {
+            for (int i = 0; i < result.size(); i++) {
+                String status = result.get(i).getStatus();
+                String name = result.get(i).getPersonName();
+                String email = result.get(i).getPersonMail();
+                name += "/" + email;
+                name += "&" + String.valueOf(i);
+                Double lat = Double.parseDouble(result.get(i).getLatitude());
+                Double lng = Double.parseDouble(result.get(i).getLongitude());
+                if (status.length() > 20) {
+                    status = status.substring(0, 20);
+                    status += "...";
+                }
+                LatLng ll = new LatLng(lat, lng);
+                options.add(ll);
+                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                if (i == 0) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                }
             }
-            LatLng ll = new LatLng(lat, lng);
-            options.add(ll);
-            map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-            if (i == 0) {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-            }
+            map.addPolygon(options);
         }
-        map.addPolygon(options);
-
 
     }
 

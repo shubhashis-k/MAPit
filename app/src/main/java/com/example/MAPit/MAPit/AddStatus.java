@@ -64,11 +64,14 @@ public class AddStatus extends Fragment {
         final String longitude = data.getString(PropertyNames.Status_longitude.getProperty());
 
 
+
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                    if(command.equals(Commands.Called_From_Group.getCommand())){
 
+                    }
                     Bundle dataBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
                     String mail = dataBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
                     String username = dataBundle.getString(PropertyNames.Userinfo_Username.getProperty());

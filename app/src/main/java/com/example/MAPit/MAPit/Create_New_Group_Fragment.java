@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +31,8 @@ import java.io.InputStream;
  * Created by SETU on 1/25/2015.
  */
 public class Create_New_Group_Fragment extends Fragment {
+    public Create_New_Group_Fragment(){setHasOptionsMenu(true);}
+
     private EditText groupName, groupDescription;
     private Button chooseGroupPic, createGroup;
     private ImageView groupImage;
@@ -122,4 +126,8 @@ public class Create_New_Group_Fragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
 }
