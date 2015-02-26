@@ -16,6 +16,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,15 +35,18 @@ import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.mapit.backend.informationApi.model.Information;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CheckedOutputStream;
 
@@ -118,8 +122,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
             @Override
             public void onMapLongClick(LatLng latLng) {
 
-                Double lat = latLng.latitude;
-                Double lng = latLng.longitude;
+                final Double lat = latLng.latitude;
+                final Double lng = latLng.longitude;
 
                 if (command.equals(Commands.ShowInMap.getCommand())) {
 
@@ -143,13 +147,13 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                         }
                     });
 
-                    locImage = (ImageView) v.findViewById(R.id.add_new_location_pic);
+                    locImage = (ImageView) dialog.findViewById(R.id.add_new_location_pic);
                     EditText loc_name = (EditText) dialog.findViewById(R.id.et_new_location_name);
                     EditText loc_desc = (EditText) dialog.findViewById(R.id.et_new_location_desc);
                     Button add = (Button) dialog.findViewById(R.id.bt_add_location);
                     Button chooseImg = (Button) dialog.findViewById(R.id.choose_location_pic);
-                    String name = loc_name.getText().toString();
-                    String desc = loc_desc.getText().toString();
+                    final String name = loc_name.getText().toString();
+                    final String desc = loc_desc.getText().toString();
 
                     chooseImg.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -162,7 +166,27 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                     add.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //I have to add the location to datastore and also have to check that every field present
+                            Data d = new Data();
+                            d.setCommand(Commands.Information_set.getCommand());
+
+                            Information i = new Information();
+                            i.setKindName(op_name);
+                            i.setInfoName(name);
+                            i.setInfoDescription(desc);
+                            i.setLatitude(String.valueOf(lat));
+                            i.setLongitude(String.valueOf(lng));
+
+                            if(stringLocImage != null)
+                                i.setInformationPic(stringLocImage);
+
+                            new InformationEndpointCommunicator(){
+                                @Override
+                                protected void onPostExecute(ArrayList<Information> result) {
+
+                                    super.onPostExecute(result);
+
+                                }
+                            }.execute(new Pair<Data, Information>(d,i));
                         }
                     });
 
@@ -205,8 +229,24 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
     //here the info of all the markers of locations will be shown
     private void populateInfoOfLocation() {
+        Data d = new Data();
+        d.setExtra(op_name);
 
+        Information i = new Information();
+        new InformationEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(ArrayList<Information> result) {
 
+                super.onPostExecute(result);
+
+                try{
+
+                }
+                catch(Exception e){
+
+                }
+            }
+        }.execute(new Pair<Data, Information>(d,i));
     }
 
 
