@@ -100,7 +100,7 @@ public class Friend_Search_Fragment extends Fragment {
 
         new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result) throws NullPointerException {
+            protected void onPostExecute(FriendsEndpointReturnData result){
 
                 super.onPostExecute(result);
 
@@ -171,7 +171,7 @@ public class Friend_Search_Fragment extends Fragment {
 
         new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result) throws NullPointerException {
+            protected void onPostExecute(FriendsEndpointReturnData result){
 
                 super.onPostExecute(result);
 

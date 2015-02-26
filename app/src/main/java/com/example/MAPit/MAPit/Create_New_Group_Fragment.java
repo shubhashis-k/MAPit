@@ -86,7 +86,7 @@ public class Create_New_Group_Fragment extends Fragment {
 
                     new GroupsEndpointCommunicator() {
                         @Override
-                        protected void onPostExecute(GroupsEndpointReturnData result) throws NullPointerException{
+                        protected void onPostExecute(GroupsEndpointReturnData result){
 
                             super.onPostExecute(result);
 

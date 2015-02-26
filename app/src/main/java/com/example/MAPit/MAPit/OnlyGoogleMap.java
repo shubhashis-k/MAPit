@@ -184,10 +184,10 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                 else if(command.equals(Commands.Status_add.getCommand())){
                     Bundle d = new Bundle();
                     String groupKey = data.getString(Commands.Group_Key.getCommand());
-                    d.putString(Commands.Group_Key.getCommand(),groupKey);
-                    d.putDouble("latitude", lat);
-                    d.putDouble("longitude", lng);
-                    d.putString(Commands.Status_add.getCommand(),Commands.Called_From_Group.getCommand());
+                    d.putString(PropertyNames.Status_groupKey.getProperty(), groupKey);
+                    d.putString(PropertyNames.Status_latitude.getProperty(), String.valueOf(lat));
+                    d.putString(PropertyNames.Status_longitude.getProperty(),String.valueOf(lng));
+                    d.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Group.getCommand());
                     Fragment fragment = new AddStatus();
                     fragment.setArguments(d);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();

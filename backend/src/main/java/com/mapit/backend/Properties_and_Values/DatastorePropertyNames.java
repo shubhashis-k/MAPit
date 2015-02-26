@@ -36,7 +36,15 @@ public enum DatastorePropertyNames {
     Status_longitude ("longitude"),
     Status_text ("text"),
     Status_time ("time"),
-    Status_image ("sttusimg")
+    Status_image ("sttusimg"),
+
+    Information_Kind ("infoKind"),
+    Information_name ("name"),
+    Information_description ("desc"),
+    Information_latitude ("lat"),
+    Information_longitude ("lng"),
+    Information_infoPic ("infoPic"),
+    Information_location ("loc")
     ;
 
     private String Property;

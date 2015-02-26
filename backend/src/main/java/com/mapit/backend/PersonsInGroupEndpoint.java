@@ -196,6 +196,9 @@ public class PersonsInGroupEndpoint {
 
             Key gk = KeyFactory.stringToKey(groupKey);
 
+            Entity groupInfo = datastore.get(gk);
+            String GroupName = groupInfo.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString();
+
             Search s = new Search();
             s.setData(username);
             s.setKey(gk);
@@ -203,6 +206,7 @@ public class PersonsInGroupEndpoint {
             s.setLatitude(latitude);
             s.setPicData(picData);
             s.setExtra(personMail);
+            s.setExtra1(GroupName);
 
             personList.add(s);
 

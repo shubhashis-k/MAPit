@@ -61,7 +61,6 @@ public class Friend_Location_Fragment extends Fragment {
         Double lng = data.getDouble("longitude");
 
         Bundle mydata = ((SlidingDrawerActivity)getActivity()).getEmail();
-
         Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
         Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
         fromPosition = new LatLng(lat, lng);

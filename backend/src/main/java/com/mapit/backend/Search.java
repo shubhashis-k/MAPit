@@ -11,7 +11,15 @@ public class Search {
     private String key;
     private String latitude, longitude;
     private String picData;
-    private String extra;
+    private String extra, extra1;
+
+    public String getExtra1() {
+        return extra1;
+    }
+
+    public void setExtra1(String extra1) {
+        this.extra1 = extra1;
+    }
 
     public String getExtra() {
         return extra;

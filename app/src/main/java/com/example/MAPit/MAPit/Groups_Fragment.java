@@ -154,12 +154,17 @@ public class Groups_Fragment extends Fragment {
                 @Override
                 protected void onPostExecute(LocationFinderData result) throws IndexOutOfBoundsException{
                     super.onPostExecute(result);
-                    SearchListItem fetchItem = listItems.get(result.getIndex());
-                    fetchItem.setLocation(result.getLocation());
+                    try {
+                        SearchListItem fetchItem = listItems.get(result.getIndex());
+                        fetchItem.setLocation(result.getLocation());
 
-                    listItems.set(result.getIndex(), fetchItem);
+                        listItems.set(result.getIndex(), fetchItem);
 
-                    searchListAdapter.notifyDataSetChanged();
+                        searchListAdapter.notifyDataSetChanged();
+                    }
+                    catch(Exception io){
+
+                    }
                 }
             }.execute(lfd);
 
@@ -188,7 +193,7 @@ public class Groups_Fragment extends Fragment {
 
         new GroupsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(GroupsEndpointReturnData result) {
+            protected void onPostExecute(GroupsEndpointReturnData result){
 
                 super.onPostExecute(result);
 
@@ -221,7 +226,7 @@ public class Groups_Fragment extends Fragment {
 
             new LocationFinder(){
                 @Override
-                protected void onPostExecute(LocationFinderData result)throws  NullPointerException{
+                protected void onPostExecute(LocationFinderData result) {
                     super.onPostExecute(result);
                     SearchListItem fetchItem = listItems.get(result.getIndex());
                     fetchItem.setLocation(result.getLocation());

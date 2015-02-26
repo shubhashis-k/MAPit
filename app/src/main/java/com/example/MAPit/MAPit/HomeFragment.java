@@ -112,12 +112,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String lat = String.valueOf(latLng.latitude);
-                String lng = String.valueOf(latLng.longitude);
-                final Bundle dataToAddStatus = new Bundle();
-                dataToAddStatus.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Individual.getCommand());
-                dataToAddStatus.putString(PropertyNames.Status_latitude.getProperty(), lat);
-                dataToAddStatus.putString(PropertyNames.Status_longitude.getProperty(), lng);
+                final String lat = String.valueOf(latLng.latitude);
+                final String lng = String.valueOf(latLng.longitude);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Pick Up Your Choice")
@@ -129,7 +125,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 switch (which) {
                                     case 0:
                                         fragment = new AddStatus();
-                                        dataToAddStatus.putString(Commands.Status_add.getCommand(),Commands.Called_From_Home.getCommand());
+                                        Bundle dataToAddStatus = new Bundle();
+                                        dataToAddStatus.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Individual.getCommand());
+                                        dataToAddStatus.putString(PropertyNames.Status_latitude.getProperty(), lat);
+                                        dataToAddStatus.putString(PropertyNames.Status_longitude.getProperty(), lng);
                                         fragment.setArguments(dataToAddStatus);
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);
@@ -137,7 +136,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                         break;
                                     case 1:
                                         fragment = new Create_New_Group_Fragment();
-                                        fragment.setArguments(dataToAddStatus);
+                                        Bundle createGroup = new Bundle();
+                                        createGroup.putString(PropertyNames.Status_latitude.getProperty(), lat);
+                                        createGroup.putString(PropertyNames.Status_longitude.getProperty(), lng);
+                                        fragment.setArguments(createGroup);
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);
                                         transaction.commit();

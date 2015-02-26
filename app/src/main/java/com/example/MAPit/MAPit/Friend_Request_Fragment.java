@@ -68,7 +68,7 @@ public class Friend_Request_Fragment extends Fragment {
 
         new GroupsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(GroupsEndpointReturnData result)throws NullPointerException{
+            protected void onPostExecute(GroupsEndpointReturnData result){
 
                 super.onPostExecute(result);
 
@@ -93,7 +93,7 @@ public class Friend_Request_Fragment extends Fragment {
 
         new FriendsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result)throws NullPointerException{
+            protected void onPostExecute(FriendsEndpointReturnData result){
 
                 super.onPostExecute(result);
 
@@ -118,9 +118,9 @@ public class Friend_Request_Fragment extends Fragment {
             item = new Friend_Request_ListItem();
             item.setUser_Name(s.getData());
             item.setButton_type(request_Type);
-            //item.setUser_location(s); // here group_name needs to be added
             item.setUsermail(s.getExtra());
             item.setStringKey(s.getKey());
+            item.setUser_location(s.getExtra1());
 
             if (s.getPicData() != null) {
                 item.setUser_Imge(s.getPicData());
