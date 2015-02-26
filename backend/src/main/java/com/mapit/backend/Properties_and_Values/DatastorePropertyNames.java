@@ -38,6 +38,7 @@ public enum DatastorePropertyNames {
     Status_time ("time"),
     Status_image ("sttusimg"),
 
+    Information_All ("All"),
     Information_Kind ("infoKind"),
     Information_name ("name"),
     Information_description ("desc"),

@@ -10,11 +10,13 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Text;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
+import com.mapit.backend.Properties_and_Values.Values;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
+import javax.sound.midi.MidiDevice;
 
 /**
  * An endpoint class we are exposing
@@ -59,27 +61,47 @@ public class InformationEndpoint {
     public ArrayList <Information> getInformation(@Named("Category") String Category) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query statusQuery = new Query(Category);
+        ArrayList <String> Categories = new ArrayList<>();
 
-        PreparedQuery queryResult = datastore.prepare(statusQuery);
+        if(Category.equals(DatastorePropertyNames.Information_All.getProperty()))
+        {
+            Categories.add(Values.Information_Food.getValue());
+            Categories.add(Values.Information_Education.getValue());
+            Categories.add(Values.Information_Accomodation.getValue());
+            Categories.add(Values.Information_Market.getValue());
+            Categories.add(Values.Information_Religion.getValue());
+            Categories.add(Values.Information_Transport.getValue());
+        }
+        else
+        {
+            Categories.add(Category);
+        }
 
         ArrayList<Information> informationList = new ArrayList<>();
 
-        for (Entity result : queryResult.asIterable()) {
-            Information info = new Information();
+        for(int i = 0 ; i < Categories.size() ; i++) {
+            Query statusQuery = new Query(Categories.get(i));
 
-            info.setInfoName(result.getProperty(DatastorePropertyNames.Information_name.getProperty()).toString());
-            info.setInfoDescription(result.getProperty(DatastorePropertyNames.Information_description.getProperty()).toString());
-            info.setLatitude(result.getProperty(DatastorePropertyNames.Information_latitude.getProperty()).toString());
-            info.setLongitude(result.getProperty(DatastorePropertyNames.Information_longitude.getProperty()).toString());
+            PreparedQuery queryResult = datastore.prepare(statusQuery);
 
-            Text imageText = (Text) result.getProperty(DatastorePropertyNames.Information_infoPic.getProperty());
-            String ImageData = imageText.getValue();
-            if (ImageData.length() > 0)
-                info.setInformationPic(ImageData);
+            for (Entity result : queryResult.asIterable()) {
+                Information info = new Information();
 
-            informationList.add(info);
+                info.setInfoName(result.getProperty(DatastorePropertyNames.Information_name.getProperty()).toString());
+                info.setInfoDescription(result.getProperty(DatastorePropertyNames.Information_description.getProperty()).toString());
+                info.setLatitude(result.getProperty(DatastorePropertyNames.Information_latitude.getProperty()).toString());
+                info.setLongitude(result.getProperty(DatastorePropertyNames.Information_longitude.getProperty()).toString());
+
+                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Information_infoPic.getProperty());
+                String ImageData = imageText.getValue();
+                if (ImageData.length() > 0)
+                    info.setInformationPic(ImageData);
+
+                informationList.add(info);
+            }
+
         }
+
         return informationList;
     }
 }

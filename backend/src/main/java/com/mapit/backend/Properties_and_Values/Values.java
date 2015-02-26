@@ -8,7 +8,15 @@ public enum Values {
     Friends_Pending ("0"),
 
     Group_Request_Pending ("0"),
-    Group_Request_Accepted ("1")
+    Group_Request_Accepted ("1"),
+
+    Information_Food ("Food"),
+    Information_Education ("Education"),
+    Information_Transport ("Transport"),
+    Information_Religion ("Religion"),
+    Information_Market ("Market"),
+    Information_Accomodation ("Accomodation"),
+
     ;
     private String value;
 
