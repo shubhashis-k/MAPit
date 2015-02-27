@@ -7,7 +7,15 @@ public class UserinfoModel {
     private String name, mail, password;
     private String mobilephone;
     private String imagedata;
-    private String latitude, longitude;
+    private String latitude, longitude, location;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getName() {
         return name;

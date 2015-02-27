@@ -8,9 +8,16 @@ public class Groups {
     private String GroupName;
     private String GroupDescription;
     private String GroupPic;
-    private String latitude;
-    private String longitude;
+    private String latitude, longitude, location;
     private String permission;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getPermission() {
         return permission;

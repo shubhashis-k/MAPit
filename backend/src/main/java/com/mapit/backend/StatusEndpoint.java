@@ -52,6 +52,7 @@ public class StatusEndpoint {
         e.setProperty(DatastorePropertyNames.Status_latitude.getProperty(), status.getLatitude());
         e.setProperty(DatastorePropertyNames.Status_longitude.getProperty(), status.getLongitude());
         e.setProperty(DatastorePropertyNames.Status_text.getProperty(), status.getStatus());
+        e.setProperty(DatastorePropertyNames.Status_location.getProperty(), status.getLocation());
 
         Date now = new Date();
         e.setProperty(DatastorePropertyNames.Status_time.getProperty(), now);
@@ -119,6 +120,9 @@ public class StatusEndpoint {
             String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
             s.setLongitude(longitude);
 
+            String location = result.getProperty(DatastorePropertyNames.Status_location.getProperty()).toString();
+            s.setLocation(location);
+
             Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
             s.setPublishDate(publishDate);
 
@@ -171,6 +175,9 @@ public class StatusEndpoint {
 
                 String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
                 latestStatus.setLongitude(longitude);
+
+                String location = result.getProperty(DatastorePropertyNames.Status_location.getProperty()).toString();
+                latestStatus.setLocation(location);
 
                 Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
                 String ImageData = imageText.getValue();

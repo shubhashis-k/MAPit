@@ -9,12 +9,20 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class Search {
     private String data;
     private String key;
-    private String latitude, longitude;
+    private String latitude, longitude, location;
     private String picData;
     private String extra, extra1;
 
     public String getExtra1() {
         return extra1;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public void setExtra1(String extra1) {

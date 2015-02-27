@@ -214,6 +214,7 @@ public class FriendsEndpoint {
 
         info.setLatitude(userinfo.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()).toString());
         info.setLongitude(userinfo.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()).toString());
+        info.setLocation(userinfo.getProperty(DatastorePropertyNames.Userinfo_location.getProperty()).toString());
 
         return info;
     }

@@ -13,6 +13,7 @@ public enum DatastorePropertyNames {
     Userinfo_Profilepic ("Profilepic"),
     Userinfo_latitude ("Latitude"),
     Userinfo_longitude ("Longitude"),
+    Userinfo_location ("location"),
 
     Friends_mail1 ("Mail1"),
     Friends_mail2 ("Mail2"),
@@ -25,6 +26,7 @@ public enum DatastorePropertyNames {
     Groups_Description ("description"),
     Groups_Picture ("GroupPic"),
     Groups_Permission ("permission"),
+    Groups_location ("group_loc"),
     
     PersonsInGroup_personMail ("PersonMail"),
     PersonsInGroup_groupKey ("GroupKey"),
@@ -38,6 +40,7 @@ public enum DatastorePropertyNames {
     Status_text ("text"),
     Status_time ("time"),
     Status_image ("sttusimg"),
+    Status_location ("statloc"),
 
     Information_All ("All"),
     Information_Kind ("infoKind"),

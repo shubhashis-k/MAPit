@@ -54,7 +54,8 @@ public class infoCollectorEndpoint {
             groupdata.setGroupDescription(data.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());
             groupdata.setLatitude(data.getProperty(DatastorePropertyNames.Groups_latitude.getProperty()).toString());
             groupdata.setLongitude(data.getProperty(DatastorePropertyNames.Groups_longitude.getProperty()).toString());
-
+            groupdata.setLocation(data.getProperty(DatastorePropertyNames.Groups_location.getProperty()).toString());
+            groupdata.setPermission(data.getProperty(DatastorePropertyNames.Groups_Permission.getProperty()).toString());
             info.setGroupdata(groupdata);
         }
         return info;

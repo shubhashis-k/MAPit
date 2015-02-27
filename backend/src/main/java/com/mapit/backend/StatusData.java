@@ -9,11 +9,19 @@ import java.util.Date;
  * Created by shubhashis on 1/29/2015.
  */
 public class StatusData {
-    private String groupKey, status, personMail, latitude, longitude, kind, statusKey;
+    private String groupKey, status, personMail, latitude, longitude, kind, statusKey, location;
     private String personName;
     private String statusPhoto;
     private String profilePic;
     private Date publishDate;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getProfilePic() {
         return profilePic;

@@ -129,10 +129,16 @@ public class PersonsInGroupEndpoint {
             Groups grpinfo = info.getGroupdata();
 
             Search s = new Search();
-            s.setData(grpinfo.getGroupName());
-            s.setLongitude(grpinfo.getLongitude());
-            s.setLatitude(grpinfo.getLatitude());
+
             s.setKey(key);
+            s.setPicData(grpinfo.getGroupPic());
+            s.setData(grpinfo.getGroupName());
+            s.setLatitude(grpinfo.getLatitude());
+            s.setLongitude(grpinfo.getLongitude());
+            s.setLocation(grpinfo.getLocation());
+            s.setExtra(grpinfo.getGroupDescription());
+            s.setExtra1(grpinfo.getPermission());
+
 
             groupList.add(s);
         }
@@ -190,6 +196,7 @@ public class PersonsInGroupEndpoint {
             String username = user.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
             String latitude = user.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()).toString();
             String longitude = user.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()).toString();
+            String location = user.getProperty(DatastorePropertyNames.Userinfo_location.getProperty()).toString();
 
             Text picText = (Text) user.getProperty(DatastorePropertyNames.Userinfo_Profilepic.getProperty());
             String picData = picText.getValue();
@@ -204,6 +211,7 @@ public class PersonsInGroupEndpoint {
             s.setKey(gk);
             s.setLongitude(longitude);
             s.setLatitude(latitude);
+            s.setLocation(location);
             s.setPicData(picData);
             s.setExtra(personMail);
             s.setExtra1(GroupName);

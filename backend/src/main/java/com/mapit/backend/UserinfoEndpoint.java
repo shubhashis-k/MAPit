@@ -45,6 +45,7 @@ public class UserinfoEndpoint {
         Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_Password.getProperty(), userinformation.getPassword());
         Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_latitude.getProperty(), userinformation.getLatitude());
         Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_longitude.getProperty(), userinformation.getLongitude());
+        Userinfo_Kind.setUnindexedProperty(DatastorePropertyNames.Userinfo_location.getProperty(), userinformation.getLocation());
 
         if(userinformation.getMobilephone() != null)
         {
@@ -110,6 +111,11 @@ public class UserinfoEndpoint {
             if(userinformation.getMobilephone() != null && userinformation.getMobilephone().length() > 0)
             {
                 updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_Mobile.getProperty(), userinformation.getMobilephone());
+            }
+
+            if(userinformation.getLocation() != null && userinformation.getLocation().length() > 0)
+            {
+                updatedinfo.setUnindexedProperty(DatastorePropertyNames.Userinfo_location.getProperty(), userinformation.getLocation());
             }
 
             response_messages = new ResponseMessages();
@@ -187,6 +193,7 @@ public class UserinfoEndpoint {
 
                 um.setLatitude((String) result.getProperty(DatastorePropertyNames.Userinfo_latitude.getProperty()));
                 um.setLongitude((String) result.getProperty(DatastorePropertyNames.Userinfo_longitude.getProperty()));
+                um.setLocation((String) result.getProperty(DatastorePropertyNames.Userinfo_location.getProperty()));
 
                 Userinfo_Result.add(um);
             }
