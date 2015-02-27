@@ -193,13 +193,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 super.onPostExecute(result);
                 passThisData = result;
-                drawMarkerAndLine(result);
+                try {
+                    drawMarkerAndLine(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         }.execute(new Pair<Data, StatusData>(d, statusData));
     }
 
-    private void drawMarkerAndLine(ArrayList<StatusData> result) {
+    private void drawMarkerAndLine(ArrayList<StatusData> result) throws Exception{
 
         if (result.size() != 0) {
             PolygonOptions options = new PolygonOptions()

@@ -166,29 +166,7 @@ public class StatusFragment extends Fragment {
             item = new StatusListItem();
             item.setName(statusData.getPersonName());
             item.setStatus(statusData.getStatus());
-
-            Double lat = Double.parseDouble(statusData.getLatitude());
-            Double lng = Double.parseDouble(statusData.getLongitude());
-
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(i);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new LocationFinder(){
-                @Override
-                protected void onPostExecute(LocationFinderData result) {
-                    super.onPostExecute(result);
-                    StatusListItem fetchItem = statusListItems.get(result.getIndex());
-                    fetchItem.setLocation(result.getLocation());
-
-                    statusListItems.set(result.getIndex(), fetchItem);
-
-                    statuslistAdapter.notifyDataSetChanged();
-                }
-            }.execute(lfd);
+            item.setLocation(statusData.getLocation());
 
 
             if (statusData.getStatusPhoto() != null) {

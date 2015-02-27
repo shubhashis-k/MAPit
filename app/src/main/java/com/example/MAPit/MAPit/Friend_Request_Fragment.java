@@ -145,28 +145,7 @@ public class Friend_Request_Fragment extends Fragment {
             item = new Friend_Request_ListItem();
             item.setUser_Name(s.getData());
             item.setButton_type(request_Type);
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(i);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new LocationFinder(){
-                @Override
-                protected void onPostExecute(LocationFinderData result) {
-                    super.onPostExecute(result);
-                    Friend_Request_ListItem fetchItem = listItems.get(result.getIndex());
-                    fetchItem.setUser_location(result.getLocation());
-
-                    listItems.set(result.getIndex(), fetchItem);
-
-                    listAdapter.notifyDataSetChanged();
-                }
-            }.execute(lfd);
+            item.setUser_location(s.getLocation());
 
             item.setUsermail(s.getExtra());
             if (s.getPicData() != null) {

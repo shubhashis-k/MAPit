@@ -120,29 +120,7 @@ public class Friend_Search_Fragment extends Fragment {
 
             item = new SearchListItem();
             item.setName(s.getData());
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(i);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new com.example.MAPit.MAPit.LocationFinder() {
-                @Override
-                protected void onPostExecute(LocationFinderData result) {
-                    super.onPostExecute(result);
-                    SearchListItem fetchItem = listItems.get(result.getIndex());
-                    fetchItem.setLocation(result.getLocation());
-
-                    listItems.set(result.getIndex(), fetchItem);
-
-                    searchListAdapter.notifyDataSetChanged();
-                }
-            }.execute(lfd);
-
-
+            item.setLocation(s.getLocation());
             item.setKey(s.getKey());
             item.setButton(Commands.Button_removeFriend.getCommand());
             item.setExtra(s.getExtra());
@@ -191,28 +169,7 @@ public class Friend_Search_Fragment extends Fragment {
 
             item = new SearchListItem();
             item.setName(s.getData());
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(i);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new com.example.MAPit.MAPit.LocationFinder() {
-                @Override
-                protected void onPostExecute(LocationFinderData result) {
-                    super.onPostExecute(result);
-                    SearchListItem fetchItem = listItems.get(result.getIndex());
-                    fetchItem.setLocation(result.getLocation());
-
-                    listItems.set(result.getIndex(), fetchItem);
-
-                    searchListAdapter.notifyDataSetChanged();
-                }
-            }.execute(lfd);
+            item.setLocation(s.getLocation());
             item.setButton(Commands.Button_addFriend.getCommand());
             item.setKey(s.getKey());
             item.setExtra(s.getExtra());

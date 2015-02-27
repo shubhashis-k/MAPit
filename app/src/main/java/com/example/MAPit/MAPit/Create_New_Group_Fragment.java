@@ -71,34 +71,56 @@ public class Create_New_Group_Fragment extends Fragment {
                     String lat = String.valueOf(getArguments().getDouble("latitude"));
                     String lng = String.valueOf(getArguments().getDouble("longitude"));
 
-                    Groups g = new Groups();
+                    final Groups g = new Groups();
                     g.setCreatorMail(getmail());
                     g.setGroupName(groupName.getText().toString());
                     g.setLongitude(lng);
                     g.setLatitude(lat);
                     g.setGroupDescription(groupDescription.getText().toString());
 
+
                     if(stringGroupImage != null)
                         g.setGroupPic(stringGroupImage);
 
-                    Data d = new Data();
+                    final Data d = new Data();
                     d.setCommand(Commands.Group_Create.getCommand());
 
-                    new GroupsEndpointCommunicator() {
+
+                    LocationFinderData lfd = new LocationFinderData();
+                    lfd.setContext(getActivity());
+                    lfd.setLatitude(Double.parseDouble(lat));
+                    lfd.setLongitude(Double.parseDouble(lng));
+
+                    new LocationFinder(){
                         @Override
-                        protected void onPostExecute(GroupsEndpointReturnData result){
+                        protected void onPostExecute(LocationFinderData locationFinderData) {
+                            super.onPostExecute(locationFinderData);
 
-                            super.onPostExecute(result);
+                            String location = locationFinderData.getLocation();
+                            g.setLocation(location);
 
-                            String response = result.getResponseMessages();
+                            addGroup(d,g);
 
                         }
-                    }.execute(new Pair<Data, Groups>(d, g));
+                    }.execute(lfd);
                 }
             }
         });
 
         return v;
+    }
+
+    public void addGroup(Data d, Groups g){
+        new GroupsEndpointCommunicator() {
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                String response = result.getResponseMessages();
+
+            }
+        }.execute(new Pair<Data, Groups>(d, g));
     }
 
     public String getmail() {

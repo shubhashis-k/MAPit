@@ -72,7 +72,7 @@ public class AddStatus extends Fragment {
                 String mail = dataBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
                 String username = dataBundle.getString(PropertyNames.Userinfo_Username.getProperty());
 
-                StatusData status = new StatusData();
+                final StatusData status = new StatusData();
                 status.setGroupKey(groupKey);
                 status.setPersonMail(mail);
                 status.setLatitude(latitude);
@@ -90,8 +90,23 @@ public class AddStatus extends Fragment {
                     status.setKind(DatastoreKindNames.StatusInGroup.getKind());
                 }
 
-                postStatus(status);
+                LocationFinderData lfd = new LocationFinderData();
+                lfd.setContext(getActivity());
+                lfd.setLatitude(Double.parseDouble(latitude));
+                lfd.setLongitude(Double.parseDouble(longitude));
 
+                new LocationFinder(){
+                    @Override
+                    protected void onPostExecute(LocationFinderData locationFinderData) {
+                        super.onPostExecute(locationFinderData);
+
+                        String location = locationFinderData.getLocation();
+                        status.setLocation(location);
+
+                        postStatus(status);
+
+                    }
+                }.execute(lfd);
             }
         });
 

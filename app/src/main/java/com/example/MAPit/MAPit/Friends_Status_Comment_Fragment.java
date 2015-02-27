@@ -98,25 +98,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
             lat = Double.parseDouble(data.getLatitude());
             lng = Double.parseDouble(data.getLongitude());
 
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(0);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new com.example.MAPit.MAPit.LocationFinder(){
-                @Override
-                protected void onPostExecute(LocationFinderData result) {
-                    super.onPostExecute(result);
-                    Comment_Item fetchItem = commentItems.get(result.getIndex());
-                    fetchItem.setComment_TimeStamp(result.getLocation());
-
-                    commentItems.set(result.getIndex(), fetchItem);
-
-                    listAdapter.notifyDataSetChanged();
-                }
-            }.execute(lfd);
+            location.setText(data.getLocation());
 
             if (data.getProfilePic() != null) {
                 profilePic.setImageBitmap(ImageConverter.stringToimageConverter(data.getProfilePic()));
@@ -217,28 +199,6 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    private class LocationFinder extends AsyncTask<Double, Void, String> {
-        @Override
-        protected String doInBackground(Double... params) {
-
-            String loc="";
-            LatitudeToLocation ll = new LatitudeToLocation(getActivity());
-            try {
-                loc=ll.GetLocation(params[0],params[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return loc;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            location.setText(s);
-
-        }
     }
 
 }

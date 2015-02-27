@@ -152,33 +152,7 @@ public class Groups_Fragment extends Fragment {
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
             //item.setLocation("Khulna");
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(i);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new LocationFinder(){
-                @Override
-                protected void onPostExecute(LocationFinderData result) throws IndexOutOfBoundsException{
-                    super.onPostExecute(result);
-                    try {
-                        SearchListItem fetchItem = listItems.get(result.getIndex());
-                        fetchItem.setLocation(result.getLocation());
-
-                        listItems.set(result.getIndex(), fetchItem);
-
-                        searchListAdapter.notifyDataSetChanged();
-                    }
-                    catch(Exception io){
-
-                    }
-                }
-            }.execute(lfd);
+            item.setLocation(s.getLocation());
 
             item.setKey(s.getKey());
             item.setButton(Commands.Group_Remove.getCommand());
@@ -226,29 +200,7 @@ public class Groups_Fragment extends Fragment {
 
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
-
-            Double lat = Double.parseDouble(s.getLatitude());
-            Double lng = Double.parseDouble(s.getLongitude());
-
-            LocationFinderData lfd = new LocationFinderData();
-
-            lfd.setIndex(i);
-            lfd.setLatitude(lat);
-            lfd.setLongitude(lng);
-            lfd.setContext(getActivity());
-
-            new LocationFinder(){
-                @Override
-                protected void onPostExecute(LocationFinderData result) {
-                    super.onPostExecute(result);
-                    SearchListItem fetchItem = listItems.get(result.getIndex());
-                    fetchItem.setLocation(result.getLocation());
-
-                    listItems.set(result.getIndex(), fetchItem);
-
-                    searchListAdapter.notifyDataSetChanged();
-                }
-            }.execute(lfd);
+            item.setLocation(s.getLocation());
 
             item.setButton(Commands.Group_Join_Group.getCommand());
             item.setKey(s.getKey());
