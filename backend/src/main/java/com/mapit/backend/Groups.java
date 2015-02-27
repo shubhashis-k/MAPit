@@ -10,6 +10,15 @@ public class Groups {
     private String GroupPic;
     private String latitude;
     private String longitude;
+    private String permission;
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
 
     public String getGroupPic() {
         return GroupPic;

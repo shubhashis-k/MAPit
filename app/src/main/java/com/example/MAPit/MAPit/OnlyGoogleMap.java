@@ -270,19 +270,26 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                     transaction.replace(R.id.frame_container, fragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-                } else if (command.equals(Commands.Status_add.getCommand())) {
-                    Bundle d = new Bundle();
+                }     else if(command.equals(Commands.Status_add.getCommand())){
                     String groupKey = data.getString(Commands.Group_Key.getCommand());
-                    d.putString(PropertyNames.Status_groupKey.getProperty(), groupKey);
-                    d.putString(PropertyNames.Status_latitude.getProperty(), String.valueOf(lat));
-                    d.putString(PropertyNames.Status_longitude.getProperty(), String.valueOf(lng));
-                    d.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Group.getCommand());
-                    Fragment fragment = new AddStatus();
-                    fragment.setArguments(d);
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
+                    if(logged) {
+                        Bundle d = new Bundle();
+                        d.putString(PropertyNames.Status_groupKey.getProperty(), groupKey);
+                        d.putString(PropertyNames.Status_latitude.getProperty(), String.valueOf(lat));
+                        d.putString(PropertyNames.Status_longitude.getProperty(), String.valueOf(lng));
+                        d.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Group.getCommand());
+                        Fragment fragment = new AddStatus();
+                        fragment.setArguments(d);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
 

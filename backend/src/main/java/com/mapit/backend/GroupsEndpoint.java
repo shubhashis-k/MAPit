@@ -50,6 +50,7 @@ public class GroupsEndpoint {
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_latitude.getProperty(), group.getLatitude());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_longitude.getProperty(), group.getLongitude());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Description.getProperty(), group.getGroupDescription());
+            groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Permission.getProperty(), group.getPermission());
 
             if(group.getGroupPic() != null)
             {
@@ -230,6 +231,8 @@ public class GroupsEndpoint {
         s.setLatitude(GroupData.getProperty(DatastorePropertyNames.Groups_latitude.getProperty()).toString());
         s.setLongitude(GroupData.getProperty(DatastorePropertyNames.Groups_longitude.getProperty()).toString());
         s.setExtra(GroupData.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());
+        s.setExtra1(GroupData.getProperty(DatastorePropertyNames.Groups_Permission.getProperty()).toString());
+
         return s;
 
     }

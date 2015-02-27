@@ -9,13 +9,15 @@ public enum Values {
 
     Group_Request_Pending ("0"),
     Group_Request_Accepted ("1"),
+    Group_Public ("public"),
+    Group_Private ("private"),
 
     Information_Food ("Food"),
     Information_Education ("Education"),
     Information_Transport ("Transport"),
     Information_Religion ("Religion"),
     Information_Market ("Market"),
-    Information_Accomodation ("Accommodation"),
+    Information_Accomodation ("Accomodation"),
 
     ;
     private String value;

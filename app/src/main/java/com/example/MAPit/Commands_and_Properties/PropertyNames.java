@@ -42,7 +42,12 @@ public enum PropertyNames {
     Information_Religion ("Religion"),
     Information_Market ("Market"),
     Information_Accomodation ("Accomodation"),
-    Marker_Position("pos")
+    Marker_Position("pos"),
+
+    Group_Public ("public"),
+    Group_Private ("private"),
+    Group_Permission ("perm"),
+    Group_logged ("log"),
     ;
 
     private String Property;
