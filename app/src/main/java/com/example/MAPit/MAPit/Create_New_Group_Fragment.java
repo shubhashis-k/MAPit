@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
@@ -38,18 +41,26 @@ public class Create_New_Group_Fragment extends Fragment {
     private ImageView groupImage;
     private String stringGroupImage;
     private final int SELECT_PHOTO = 1;
+    private RadioGroup radioPermissionGroup;
+    private RadioButton permissionBt;
+    int pos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.create_new_group, null, false);
+        final View v = inflater.inflate(R.layout.create_new_group, null, false);
 
         groupName = (EditText) v.findViewById(R.id.et_new_group_name);
         groupDescription = (EditText) v.findViewById(R.id.et_new_group_desc);
         groupImage = (ImageView) v.findViewById(R.id.add_new_group_pic);
         chooseGroupPic = (Button) v.findViewById(R.id.choosenewgrppic);
         createGroup = (Button) v.findViewById(R.id.bt_create_group);
-
-
+        radioPermissionGroup = (RadioGroup) v.findViewById(R.id.radiogrpPermission);
+        radioPermissionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                pos=radioPermissionGroup.indexOfChild(v.findViewById(checkedId));
+            }
+        });
         chooseGroupPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,8 +79,8 @@ public class Create_New_Group_Fragment extends Fragment {
                     Toast.makeText(getActivity(), "Fill All the Info", Toast.LENGTH_LONG).show();
                 } else {
                     //getting latitude and longitude
-                    String lat = String.valueOf(getArguments().getDouble("latitude"));
-                    String lng = String.valueOf(getArguments().getDouble("longitude"));
+                    String lat = String.valueOf(getArguments().getString(PropertyNames.Status_latitude.getProperty()));
+                    String lng = String.valueOf(getArguments().getString(PropertyNames.Status_longitude.getProperty()));
 
                     Groups g = new Groups();
                     g.setCreatorMail(getmail());
@@ -77,6 +88,14 @@ public class Create_New_Group_Fragment extends Fragment {
                     g.setLongitude(lng);
                     g.setLatitude(lat);
                     g.setGroupDescription(groupDescription.getText().toString());
+
+
+                    if(pos==1){
+                        g.setPermission(PropertyNames.Group_Public.getProperty());
+
+                    }else{
+                       g.setPermission(PropertyNames.Group_Private.getProperty());
+                    }
 
                     if(stringGroupImage != null)
                         g.setGroupPic(stringGroupImage);
@@ -94,6 +113,12 @@ public class Create_New_Group_Fragment extends Fragment {
 
                         }
                     }.execute(new Pair<Data, Groups>(d, g));
+
+                    Fragment fragment = new HomeFragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 }
             }
         });
