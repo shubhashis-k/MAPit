@@ -1,12 +1,9 @@
 package com.example.MAPit.MAPit;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,9 +11,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,24 +31,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.model.GmapV2Direction;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.mapit.backend.informationApi.model.Information;
+
+import org.w3c.dom.Document;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.CheckedOutputStream;
+
 
 /**
  * Created by SETU on 2/13/2015.
@@ -63,6 +73,14 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
     String command, op_name;
     ImageView locImage;
     private String stringLocImage;
+    ArrayList<Information> markerInfo;
+    LatLng fromPosition;
+    ArrayList<LatLng> routeData;
+    GmapV2Direction route;
+    Document document;
+    Boolean Filter = false;
+    Bundle info_data;
+    ArrayList<Information> singleMarkerInfo;
 
     public OnlyGoogleMap() {
         setHasOptionsMenu(true);
@@ -99,24 +117,67 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
         command = data.getString(Commands.SearchAndADD.getCommand());
         if (command.equals(Commands.ShowInMap.getCommand())) {
-            populateInfoOfLocation();
+            populateInfoOfLocation("All", -1);
         }
 
-
+        routeData = new ArrayList<LatLng>();
+        route = new GmapV2Direction();
 
         // Here need my current location
-        Bundle mydata = ((SlidingDrawerActivity)getActivity()).getEmail();
+        Bundle mydata = ((SlidingDrawerActivity) getActivity()).getEmail();
         Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
-        Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
-        LatLng ll = new LatLng(myLat, myLng);
+        Double myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+        fromPosition = new LatLng(myLat, myLng);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
 
 
         et = (EditText) v.findViewById(R.id.editText1);
         //added the go button listener
         Button go = (Button) v.findViewById(R.id.go);
         go.setOnClickListener(this);
+
+        singleMarkerInfo = new ArrayList<Information>();
+        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                // creating my own info for latest frnd status
+                View v = getActivity().getLayoutInflater().inflate(R.layout.map_info_listview, null);
+                TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
+                TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
+                String status = marker.getTitle();
+                String actual_status = status.substring(0, status.indexOf('/'));
+                String position = status.substring(status.lastIndexOf('/') + 1);
+                tvFrndname.setText(actual_status);
+                tvFrndStatus.setText(marker.getSnippet());
+                Information singleMarker = markerInfo.get(Integer.parseInt(position));
+                singleMarkerInfo.add(singleMarker);
+                info_data = new Bundle();
+                info_data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Location.getCommand());
+                info_data.putSerializable(PropertyNames.Marker_Position.getProperty(), singleMarkerInfo);
+                return v;
+            }
+        });
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Fragment fragment = new Friends_Status_Comment_Fragment();
+                fragment.setArguments(info_data);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -148,12 +209,10 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                     });
 
                     locImage = (ImageView) dialog.findViewById(R.id.add_new_location_pic);
-                    EditText loc_name = (EditText) dialog.findViewById(R.id.et_new_location_name);
-                    EditText loc_desc = (EditText) dialog.findViewById(R.id.et_new_location_desc);
+                    final EditText loc_name = (EditText) dialog.findViewById(R.id.et_new_location_name);
+                    final EditText loc_desc = (EditText) dialog.findViewById(R.id.et_new_location_desc);
                     Button add = (Button) dialog.findViewById(R.id.bt_add_location);
                     Button chooseImg = (Button) dialog.findViewById(R.id.choose_location_pic);
-                    final String name = loc_name.getText().toString();
-                    final String desc = loc_desc.getText().toString();
 
                     chooseImg.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -163,9 +222,12 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                             startActivityForResult(imagepicking, SELECT_PHOTO);
                         }
                     });
+
                     add.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            String name = loc_name.getText().toString();
+                            final String desc = loc_desc.getText().toString();
                             Data d = new Data();
                             d.setCommand(Commands.Information_set.getCommand());
 
@@ -176,17 +238,21 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                             i.setLatitude(String.valueOf(lat));
                             i.setLongitude(String.valueOf(lng));
 
-                            if(stringLocImage != null)
+                            if (stringLocImage != null)
                                 i.setInformationPic(stringLocImage);
 
-                            new InformationEndpointCommunicator(){
+                            new InformationEndpointCommunicator() {
                                 @Override
                                 protected void onPostExecute(ArrayList<Information> result) {
 
                                     super.onPostExecute(result);
 
+
                                 }
-                            }.execute(new Pair<Data, Information>(d,i));
+                            }.execute(new Pair<Data, Information>(d, i));
+
+                            dialog.dismiss();
+                            populateInfoOfLocation("All", -1);
                         }
                     });
 
@@ -204,13 +270,12 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                     transaction.replace(R.id.frame_container, fragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-                }
-                else if(command.equals(Commands.Status_add.getCommand())){
+                } else if (command.equals(Commands.Status_add.getCommand())) {
                     Bundle d = new Bundle();
                     String groupKey = data.getString(Commands.Group_Key.getCommand());
                     d.putString(PropertyNames.Status_groupKey.getProperty(), groupKey);
                     d.putString(PropertyNames.Status_latitude.getProperty(), String.valueOf(lat));
-                    d.putString(PropertyNames.Status_longitude.getProperty(),String.valueOf(lng));
+                    d.putString(PropertyNames.Status_longitude.getProperty(), String.valueOf(lng));
                     d.putString(Commands.Status_Job.getCommand(), Commands.Status_Job_Type_Group.getCommand());
                     Fragment fragment = new AddStatus();
                     fragment.setArguments(d);
@@ -228,25 +293,26 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
     }
 
     //here the info of all the markers of locations will be shown
-    private void populateInfoOfLocation() {
+    private void populateInfoOfLocation(String cat, final int radius) {
         Data d = new Data();
-        d.setExtra(op_name);
-
+        d.setExtra(cat);
+        d.setCommand(Commands.Information_get.getCommand());
         Information i = new Information();
-        new InformationEndpointCommunicator(){
+        new InformationEndpointCommunicator() {
             @Override
             protected void onPostExecute(ArrayList<Information> result) {
 
                 super.onPostExecute(result);
 
-                try{
+                try {
+                    markerInfo = result;
+
+                } catch (Exception e) {
 
                 }
-                catch(Exception e){
-
-                }
+                drawMarkerAndLine(radius);
             }
-        }.execute(new Pair<Data, Information>(d,i));
+        }.execute(new Pair<Data, Information>(d, i));
     }
 
 
@@ -366,13 +432,24 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                 });
 
                 Button search = (Button) dialog.findViewById(R.id.bt_find_location);
-                EditText rad = (EditText) dialog.findViewById(R.id.et_search_radius);
-                String search_radius = rad.getText().toString();
+                final EditText rad = (EditText) dialog.findViewById(R.id.et_search_radius);
+                // String search_radius = rad.getText().toString();
 
                 search.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //I have to search for the location and show it in the map with all the marker
+
+                        String search_radius = rad.getText().toString();
+                        if (search_radius.equals("")) {
+
+                            Toast.makeText(getActivity(), "Give Radius", Toast.LENGTH_LONG).show();
+
+                        } else {
+                            int radius = Integer.parseInt(search_radius);
+                            populateInfoOfLocation(op_name, radius);
+                            dialog.dismiss();
+                            Filter = true;
+                        }
                     }
                 });
 
@@ -381,5 +458,102 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void drawMarkerAndLine(int rad) {
+        map.clear();
+        if (markerInfo.size() != 0) {
+            for (int i = 0; i < markerInfo.size(); i++) {
+
+                Double lat = Double.parseDouble(markerInfo.get(i).getLatitude());
+                Double lng = Double.parseDouble(markerInfo.get(i).getLongitude());
+                String status = markerInfo.get(i).getInfoDescription();
+                String name = markerInfo.get(i).getInfoName();
+                name += "/" + String.valueOf(i);
+                LatLng ll = new LatLng(lat, lng);
+                if (status.length() > 20) {
+                    status = status.substring(0, 20);
+                    status += "...";
+                }
+
+                if (rad != -1) {
+                    boolean ret = checkForArea(rad,fromPosition,ll);
+                    if (ret) {
+                        routeData.add(ll);
+                        map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    }
+                } else {
+                    map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                }
+
+
+                //String email = markerInfo.get(i).getPers();
+                // name += "/" + email;
+
+            }
+
+            if (rad != -1) {
+                for (int i = 0; i < routeData.size(); i++) {
+
+                    LatLng toPosition = new LatLng(routeData.get(i).latitude, routeData.get(i).longitude);
+                    new GetRouteTask() {
+                        @Override
+                        protected void onPostExecute(String s) {
+                            super.onPostExecute(s);
+                        }
+                    }.execute((LatLng) toPosition);
+                }
+
+
+                map.addMarker(new MarkerOptions().position(fromPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+            }
+        }
+    }
+
+    private boolean checkForArea(int rad,LatLng fromPosition,LatLng toPosition) {
+        Location locationA = new Location("point A");
+        locationA.setLatitude(fromPosition.latitude);
+        locationA.setLongitude(fromPosition.longitude);
+        Location locationB = new Location("point B");
+        locationB.setLatitude(toPosition.latitude);
+        locationB.setLongitude(toPosition.longitude);
+        int  distance = (int) locationA.distanceTo(locationB) ;
+        if(distance/1000 <= rad)
+        return true;
+        else
+            return false;
+    }
+
+
+    private class GetRouteTask extends AsyncTask<LatLng, Void, String> {
+
+        String response = "";
+
+        @Override
+        protected String doInBackground(LatLng... params) {
+            document = route.getDocument(fromPosition, params[0], GmapV2Direction.MODE_WALKING);
+            response = "Success";
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            // directionMap.clear();
+
+            if (response.equalsIgnoreCase("Success")) {
+                Log.v("Map", "got here");
+                ArrayList<LatLng> directionPoint = route.getDirection(document);
+                PolylineOptions rectLine = new PolylineOptions().width(10).color(
+                        Color.RED);
+
+                for (int i = 0; i < directionPoint.size(); i++) {
+                    rectLine.add(directionPoint.get(i));
+                }
+                // Adding route on the map
+                map.addPolyline(rectLine);
+            }
+
+        }
     }
 }

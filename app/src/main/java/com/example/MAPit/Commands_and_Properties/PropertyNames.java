@@ -34,7 +34,15 @@ public enum PropertyNames {
     Status_longitude ("longitude"),
     Status_text ("text"),
     Status_time ("time"),
-    Status_image ("sttusimg")
+    Status_image ("sttusimg"),
+
+    Information_Food ("Food"),
+    Information_Education ("Education"),
+    Information_Transport ("Transport"),
+    Information_Religion ("Religion"),
+    Information_Market ("Market"),
+    Information_Accomodation ("Accomodation"),
+    Marker_Position("pos")
     ;
 
     private String Property;

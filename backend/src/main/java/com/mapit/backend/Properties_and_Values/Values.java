@@ -15,7 +15,7 @@ public enum Values {
     Information_Transport ("Transport"),
     Information_Religion ("Religion"),
     Information_Market ("Market"),
-    Information_Accomodation ("Accomodation"),
+    Information_Accomodation ("Accommodation"),
 
     ;
     private String value;

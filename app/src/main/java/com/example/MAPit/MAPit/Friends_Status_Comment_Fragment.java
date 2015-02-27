@@ -25,10 +25,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
 import com.example.MAPit.Volley.data.StatusListItem;
+import com.mapit.backend.informationApi.model.Information;
 import com.mapit.backend.statusApi.model.StatusData;
 
 import org.json.JSONArray;
@@ -54,6 +56,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     Bundle bundle;
     public String command;
     private ArrayList<StatusData> dataReceived;
+
     String locname;
     Double lat, lng;
     StatusData data;
@@ -76,6 +79,15 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         bundle = getArguments();
         command = bundle.getString(Commands.Fragment_Caller.getCommand());
+        if(command.equals(Commands.Called_From_Location.getCommand())){
+            ArrayList<Information> data = (ArrayList<Information>) bundle.getSerializable(PropertyNames.Marker_Position.getProperty());
+            Information markerInfo = data.get(0);
+            name.setText(markerInfo.getInfoName());
+            status.setText(markerInfo.getInfoDescription());
+            if (markerInfo.getInformationPic() != null) {
+                profilePic.setImageBitmap(ImageConverter.stringToimageConverter(markerInfo.getInformationPic()));
+            }
+        }
 
         if (command.equals(Commands.Called_From_Status.getCommand())) {
             dataReceived = (ArrayList<StatusData>) bundle.getSerializable(Commands.Arraylist_Values.getCommand());
@@ -130,14 +142,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         commentItems = new ArrayList<Comment_Item>();
         listAdapter = new CommentListAdapter(getActivity(), commentItems);
         listView.setAdapter(listAdapter);
-        //listener for each listitem of friend status
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-        });
-        // We first check for cached request
 
         return v;
     }
@@ -148,7 +153,11 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //must clear menu here to get fragment own menu option
         menu.clear();
-        inflater.inflate(R.menu.menu_add_comment, menu);
+        if(command.equals(Commands.Called_From_Location.getCommand())){
+
+        }else {
+            inflater.inflate(R.menu.menu_add_comment, menu);
+        }
         //super.onCreateOptionsMenu(menu, inflater);
 
     }

@@ -39,8 +39,10 @@
     <string-array name="location_category">
         <item>Food</item>
         <item>Education</item>
-        <item>Games</item>
-        <item>Hotel</item>
+        <item>Transport</item>
+        <item>Religion</item>
+        <item>Market</item>
+        <item>Accommodation</item>
     </string-array>
 
     <!-- Content Description -->
