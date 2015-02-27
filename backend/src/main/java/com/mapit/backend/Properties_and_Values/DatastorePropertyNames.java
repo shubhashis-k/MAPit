@@ -24,6 +24,7 @@ public enum DatastorePropertyNames {
     Groups_longitude ("longitude"),
     Groups_Description ("description"),
     Groups_Picture ("GroupPic"),
+    Groups_Permission ("permission"),
     
     PersonsInGroup_personMail ("PersonMail"),
     PersonsInGroup_groupKey ("GroupKey"),

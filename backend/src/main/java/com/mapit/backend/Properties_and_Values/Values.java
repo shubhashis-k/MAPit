@@ -9,6 +9,8 @@ public enum Values {
 
     Group_Request_Pending ("0"),
     Group_Request_Accepted ("1"),
+    Group_Public ("public"),
+    Group_Private ("private"),
 
     Information_Food ("Food"),
     Information_Education ("Education"),

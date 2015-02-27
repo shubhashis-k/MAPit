@@ -34,7 +34,12 @@ public enum PropertyNames {
     Status_longitude ("longitude"),
     Status_text ("text"),
     Status_time ("time"),
-    Status_image ("sttusimg")
+    Status_image ("sttusimg"),
+
+    Group_Public ("public"),
+    Group_Private ("private"),
+    Group_Permission ("perm"),
+    Group_logged ("log"),
     ;
 
     private String Property;

@@ -237,20 +237,24 @@ public class StatusFragment extends Fragment {
                     fragment.setArguments(bundle);
 
                 }
-                else if(command.equals(Commands.Called_From_Group.getCommand())){
-                    fragment = new OnlyGoogleMap();
-                    Bundle d = new Bundle();
-                    String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
-                    d.putString(Commands.Group_Key.getCommand(),groupKey);
-                    d.putString(Commands.SearchAndADD.getCommand(),Commands.Status_add.getCommand());
-                    fragment.setArguments(d);
-
+                else if(command.equals(Commands.Called_From_Group.getCommand())) {
+                    Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
+                    if (logged) {
+                        fragment = new OnlyGoogleMap();
+                        Bundle d = new Bundle();
+                        String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+                        d.putString(Commands.Group_Key.getCommand(), groupKey);
+                        d.putString(Commands.SearchAndADD.getCommand(), Commands.Status_add.getCommand());
+                        d.putBoolean(PropertyNames.Group_logged.getProperty(), true);
+                        fragment.setArguments(d);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else {
+                        Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet!", Toast.LENGTH_LONG).show();
+                    }
                 }
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
                 return true;
         }
         return super.onOptionsItemSelected(item);

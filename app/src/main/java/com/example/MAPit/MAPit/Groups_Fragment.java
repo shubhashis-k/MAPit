@@ -42,6 +42,7 @@ public class Groups_Fragment extends Fragment {
     private ArrayList <Search> res;
     private SearchListAdapter searchListAdapter;
     private List<SearchListItem> listItems;
+    private boolean ShowingMyGroups = false;
 
     public Groups_Fragment() {
         setHasOptionsMenu(true);
@@ -61,16 +62,26 @@ public class Groups_Fragment extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle data = new Bundle();
                 Search s = res.get(position);
-                data.putString(PropertyNames.Status_groupKey.getProperty(), s.getKey());
-                data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Group.getCommand());
-                Fragment fragment = new StatusFragment();
-                fragment.setArguments(data);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                if(s.getExtra1().equals(PropertyNames.Group_Private.getProperty()) && ShowingMyGroups == false)
+                {
+                    Toast.makeText(getActivity(), "Sorry, The Group is Private!", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Bundle data = new Bundle();
+                    data.putString(PropertyNames.Status_groupKey.getProperty(), s.getKey());
+                    data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Group.getCommand());
+                    data.putBoolean(PropertyNames.Group_logged.getProperty(), ShowingMyGroups);
+
+                    Fragment fragment = new StatusFragment();
+                    fragment.setArguments(data);
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
 
             }
         });
@@ -110,6 +121,7 @@ public class Groups_Fragment extends Fragment {
 
 
     public void showMyGroups(){
+        ShowingMyGroups = true;
         Data info = new Data();
         info.setContext(getActivity());
         info.setCommand(Commands.Group_fetch_myGroups.getCommand());
@@ -180,6 +192,7 @@ public class Groups_Fragment extends Fragment {
     }
 
     public void searchGroups(String pattern){
+        ShowingMyGroups = false;
         Search searchProperty = new Search();
         searchProperty.setData(pattern);
 
