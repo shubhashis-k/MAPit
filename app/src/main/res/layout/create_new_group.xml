@@ -60,6 +60,25 @@
         android:src="@drawable/slide_profile"
         android:scaleType="fitCenter" />
 
+    <RadioGroup
+        android:id="@+id/radiogrpPermission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/radioPrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_private"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioPublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_public" />
+
+    </RadioGroup>
 
     <Button
         android:id="@+id/bt_create_group"
