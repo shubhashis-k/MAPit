@@ -266,7 +266,14 @@ public class Groups_Fragment extends Fragment {
                 return true;
 
             case 2:
-
+                fragment = new OnlyGoogleMap();
+                Bundle d1 = new Bundle();
+                d1.putString(Commands.SearchAndADD.getCommand(),Commands.All_Group_Show.getCommand());
+                fragment.setArguments(d1);
+                FragmentTransaction transaction2 = getFragmentManager().beginTransaction();
+                transaction2.replace(R.id.frame_container,fragment);
+                transaction2.addToBackStack(null);
+                transaction2.commit();
 
                 return true;
         }

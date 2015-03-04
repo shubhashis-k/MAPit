@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.model.GmapV2Direction;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +50,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.mapit.backend.groupApi.model.Groups;
+import com.mapit.backend.groupApi.model.Search;
 import com.mapit.backend.informationApi.model.Information;
 
 import org.w3c.dom.Document;
@@ -116,10 +119,12 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         data = getArguments();
 
         command = data.getString(Commands.SearchAndADD.getCommand());
+
         if (command.equals(Commands.ShowInMap.getCommand())) {
             populateInfoOfLocation("All", -1);
+        } else if (command.equals(Commands.All_Group_Show.getCommand())) {
+            PopulateAllGroups();
         }
-
         routeData = new ArrayList<LatLng>();
         route = new GmapV2Direction();
 
@@ -167,15 +172,20 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
             }
         });
 
+
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new Friends_Status_Comment_Fragment();
-                fragment.setArguments(info_data);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                if (command.equals(Commands.All_Group_Show.getCommand())) {
+                    //nothing to do
+                } else {
+                    Fragment fragment = new Friends_Status_Comment_Fragment();
+                    fragment.setArguments(info_data);
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
@@ -299,6 +309,36 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         return v;
     }
 
+    public void PopulateAllGroups(){
+        Data info = new Data();
+        info.setContext(getActivity());
+        info.setCommand(Commands.Groups_fetch_all.getCommand());
+        info.setUsermail(getmail());
+
+        Groups g = new Groups();
+
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+
+                super.onPostExecute(result);
+                try {
+                    ArrayList <Search> AllGroups = result.getDataList();
+                    int x = 0;
+
+                }
+                catch (Exception e){
+
+                }
+            }
+        }.execute(new Pair<Data, Groups>(info, g));
+    }
+
+    public String getmail() {
+        Bundle mailBundle = ((SlidingDrawerActivity) getActivity()).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
+    }
     //here the info of all the markers of locations will be shown
     private void populateInfoOfLocation(String cat, final int radius) {
         Data d = new Data();
