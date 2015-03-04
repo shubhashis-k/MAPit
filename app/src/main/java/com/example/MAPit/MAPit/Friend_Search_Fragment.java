@@ -105,8 +105,12 @@ public class Friend_Search_Fragment extends Fragment {
                 super.onPostExecute(result);
 
                 ArrayList<Search> res = result.getDataList();
-                PopulateFriends(res);
+                try {
+                    PopulateFriends(res);
+                }
+                catch(Exception e){
 
+                }
             }
         }.execute(new Pair<Data, Friends>(info, f));
     }
@@ -154,8 +158,12 @@ public class Friend_Search_Fragment extends Fragment {
                 super.onPostExecute(result);
 
                 ArrayList<Search> res = result.getDataList();
-                PopulateNotFriends(res);
+                try {
+                    PopulateNotFriends(res);
+                }
+                catch(Exception e){
 
+                }
             }
         }.execute(new Pair<Data, Friends>(info, f));
     }

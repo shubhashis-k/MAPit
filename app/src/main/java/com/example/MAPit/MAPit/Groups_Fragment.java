@@ -131,13 +131,16 @@ public class Groups_Fragment extends Fragment {
 
         new GroupsEndpointCommunicator(){
             @Override
-            protected void onPostExecute(GroupsEndpointReturnData result) throws  NullPointerException{
+            protected void onPostExecute(GroupsEndpointReturnData result){
 
                 super.onPostExecute(result);
+                try {
+                    res = result.getDataList();
+                    PopulateMyGroups(res);
+                }
+                catch (Exception e){
 
-                res = result.getDataList();
-                PopulateMyGroups(res);
-
+                }
             }
         }.execute(new Pair<Data, Groups>(info, g));
     }
@@ -181,11 +184,15 @@ public class Groups_Fragment extends Fragment {
         new GroupsEndpointCommunicator(){
             @Override
             protected void onPostExecute(GroupsEndpointReturnData result){
+                try {
+                    super.onPostExecute(result);
 
-                super.onPostExecute(result);
+                    res = result.getDataList();
+                    PopulateSearchGroup(res);
+                }
+                catch (Exception e){
 
-                res = result.getDataList();
-                PopulateSearchGroup(res);
+                }
 
             }
         }.execute(new Pair<Data, Groups>(info, g));

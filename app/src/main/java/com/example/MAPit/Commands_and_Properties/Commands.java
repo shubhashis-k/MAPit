@@ -50,6 +50,7 @@ public enum Commands {
     Called_From_Status("Status"),
     Called_From_Group ("Group"),
     Called_From_Location("Location"),
+    Called_From_MyWall ("MyWall"),
 
     Status_Job ("Job"),
     Status_Job_Type_Individual ("Individual"),

@@ -234,7 +234,11 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 fragment.setArguments(groupdata);
                 break;
             case 5:
-                fragment = new MyWallFragment();
+                fragment = new StatusFragment();
+                Bundle myWallData = new Bundle();
+                myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
+                myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getEmail().getString(PropertyNames.Userinfo_Mail.getProperty()));
+                fragment.setArguments(myWallData);
                 getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 6:

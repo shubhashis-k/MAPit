@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -55,14 +56,18 @@ public class SignIn_Endpoint_Communicator extends AsyncTask<Pair<Context, Userin
     protected void onPostExecute(UserinfoModelCollection result){
 
         manipulator = (manipulate_Signin) ((Activity) maincontext);
+        try {
+            ArrayList<UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();
+            UserinfoModel logininfo = new UserinfoModel();
 
-        ArrayList <UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();
-        UserinfoModel logininfo = new UserinfoModel();
+            if (result_list.size() > 0)
+                logininfo = result_list.get(0);
 
-        if(result_list.size() > 0)
-            logininfo = result_list.get(0);
-
-        manipulator.setResponseMessage(logininfo);
+            manipulator.setResponseMessage(logininfo);
+        }
+        catch (Exception e){
+            Toast.makeText(maincontext, "Something went wrong with internet, Try again!", Toast.LENGTH_LONG).show();
+        }
     }
 
     public interface manipulate_Signin{

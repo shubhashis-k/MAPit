@@ -65,6 +65,9 @@ public class StatusFragment extends Fragment {
             populatePersonStatus();
         else if (command.equals(Commands.Called_From_Group.getCommand()))
             populateGroupStatus();
+        else if(command.equals(Commands.Called_From_MyWall.getCommand()))
+            populatePersonStatus();
+
 
         //listener for each listitem of friend status
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -118,6 +121,7 @@ public class StatusFragment extends Fragment {
 
     public void populatePersonStatus() {
         data = getArguments();
+
         String personMail = data.getString(PropertyNames.Userinfo_Mail.getProperty());
 
         Data d = new Data();
@@ -216,22 +220,22 @@ public class StatusFragment extends Fragment {
 
                 }
                  else if(command.equals(Commands.Called_From_Group.getCommand())) {
-                Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
-                if (logged) {
-                    fragment = new OnlyGoogleMap();
-                    Bundle d = new Bundle();
-                    String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
-                    d.putString(Commands.Group_Key.getCommand(), groupKey);
-                    d.putString(Commands.SearchAndADD.getCommand(), Commands.Status_add.getCommand());
-                    d.putBoolean(PropertyNames.Group_logged.getProperty(), true);
-                    fragment.setArguments(d);
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                } else {
-                    Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet!", Toast.LENGTH_LONG).show();
-                }
+                    Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
+                    if (logged) {
+                        fragment = new OnlyGoogleMap();
+                        Bundle d = new Bundle();
+                        String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+                        d.putString(Commands.Group_Key.getCommand(), groupKey);
+                        d.putString(Commands.SearchAndADD.getCommand(), Commands.Status_add.getCommand());
+                        d.putBoolean(PropertyNames.Group_logged.getProperty(), true);
+                        fragment.setArguments(d);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else {
+                        Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet!", Toast.LENGTH_LONG).show();
+                    }
             }
 
                 return true;
