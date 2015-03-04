@@ -230,6 +230,7 @@ public class Groups_Fragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_group_adding, menu);
+        menu.add(0,2,2,"See All Groups");
     }
 
     @Override
@@ -261,6 +262,11 @@ public class Groups_Fragment extends Fragment {
                 transaction1.replace(R.id.frame_container,fragment);
                 transaction1.addToBackStack(null);
                 transaction1.commit();
+
+                return true;
+
+            case 2:
+
 
                 return true;
         }

@@ -262,8 +262,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
                 } else if (command.equals(Commands.Group_Create.getCommand())) {
                     Bundle ll = new Bundle();
-                    ll.putDouble("latitude", lat);
-                    ll.putDouble("longitude", lng);
+                    ll.putDouble(PropertyNames.Status_latitude.getProperty(), lat);
+                    ll.putDouble(PropertyNames.Status_longitude.getProperty(), lng);
                     Fragment fragment = new Create_New_Group_Fragment();
                     fragment.setArguments(ll);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -469,7 +469,12 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
 
     private void drawMarkerAndLine(int rad) {
-        map.clear();
+        if (map == null) {
+            map = mapFrag.getMap();
+        } else {
+            map.clear();
+        }
+
         if (markerInfo.size() != 0) {
             for (int i = 0; i < markerInfo.size(); i++) {
 
