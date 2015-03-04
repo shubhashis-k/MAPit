@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Volley.adapter.CommentListAdapter;
 import com.example.MAPit.Volley.app.AppController;
 import com.example.MAPit.Volley.data.Comment_Item;
@@ -114,11 +116,6 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         }
 
-        if (command.equals(Commands.Called_From_Status.getCommand())) {
-
-
-        }
-
 
         listView = (ListView) v.findViewById(R.id.comment_single_status);
         commentItems = new ArrayList<Comment_Item>();
@@ -130,32 +127,55 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //must clear menu here to get fragment own menu option
         menu.clear();
-        if(command.equals(Commands.Called_From_Location.getCommand())){
+        if (command.equals(Commands.Called_From_Location.getCommand())) {
 
-        }else {
+        } else if (command.equals(Commands.Called_From_Status.getCommand())) {
+            inflater.inflate(R.menu.menu_add_comment, menu);
+            menu.findItem(R.id.go_to_frnd_location).setTitle("Delete Status");
+        } else {
             inflater.inflate(R.menu.menu_add_comment, menu);
         }
-        //super.onCreateOptionsMenu(menu, inflater);
+
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_comment_single_status:
-                addcommentdialog();
-                return true;
             case R.id.go_to_frnd_location:
-                Fragment fragment = new Friend_Location_Fragment();
-                Bundle data = new Bundle();
-                data.putDouble("latitude", lat);
-                data.putDouble("longitude", lng);
-                fragment.setArguments(data);
+                Fragment fragment = null;
+                if (command.equals(Commands.Called_From_Status.getCommand())) {
+
+                    Data d = new Data();
+                    d.setStringKey(data.getStatusKey());
+                    d.setCommand(Commands.Status_Remove.getCommand());
+
+                    StatusData s = new StatusData();
+
+                   new StatusEndpointCommunicator(){
+                       @Override
+                       protected void onPostExecute(ArrayList<StatusData> result) {
+                           super.onPostExecute(result);
+                       }
+                   }.execute(new Pair<Data, StatusData>(d,s));
+
+                    fragment = new StatusFragment();
+                    Bundle myWallData = new Bundle();
+                    myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
+                    myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
+                    fragment.setArguments(myWallData);
+
+                } else {
+                    fragment = new Friend_Location_Fragment();
+                    Bundle data = new Bundle();
+                    data.putDouble("latitude", lat);
+                    data.putDouble("longitude", lng);
+                    fragment.setArguments(data);
+                }
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
@@ -163,6 +183,12 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String getmail(){
+        Bundle mailBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+        String mail = mailBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
+        return mail;
     }
 
     private void addcommentdialog() {

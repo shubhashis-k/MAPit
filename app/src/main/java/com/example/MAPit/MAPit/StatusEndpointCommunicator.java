@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 public class StatusEndpointCommunicator extends AsyncTask <Pair<Data, StatusData>, Void, ArrayList <StatusData> > {
     private StatusApi statusApi;
-    private String usermail, command;
+    private String usermail, command, statusKey;
     @Override
     protected ArrayList <StatusData> doInBackground(Pair<Data, StatusData>... params) {
             if(statusApi == null){
@@ -44,6 +44,7 @@ public class StatusEndpointCommunicator extends AsyncTask <Pair<Data, StatusData
 
     command = params[0].first.getCommand();
     usermail = params[0].first.getUsermail();
+    statusKey = params[0].first.getStringKey();
 
     StatusData statusData = params[0].second;
     if(command.equals(Commands.Status_add.getCommand())){
@@ -81,6 +82,14 @@ public class StatusEndpointCommunicator extends AsyncTask <Pair<Data, StatusData
         {
             e.printStackTrace();
             return null;
+        }
+    }
+    else if(command.equals(Commands.Status_Remove.getCommand())){
+        try{
+            statusApi.removeStatus(statusKey).execute();
+        }
+        catch (Exception e){
+
         }
     }
 

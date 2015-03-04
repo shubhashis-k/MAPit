@@ -35,6 +35,7 @@ public enum Commands {
     Request_Group ("Request"),
     Accept_Group ("Accept"),
     Leave_Group ("Leave"),
+    Groups_fetch_all ("grpall"),
     Group_Key("grpKey"),
 
 
@@ -42,6 +43,7 @@ public enum Commands {
     Status_showGroupStatus ("groupStatus"),
     Status_showIndividualStatus ("individualStatus"),
     Status_fetchFriendsStatus ("friendStatus"),
+    Status_Remove("rmsttus"),
 
 
     Fragment_Caller ("Caller"),
