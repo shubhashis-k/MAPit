@@ -245,9 +245,11 @@ public class Groups_Fragment extends Fragment {
                 return true;
             case R.id.see_in_map:
 
+
                 fragment = new Marker_MapView();
                 Bundle data = new Bundle();
                 data.putString(Commands.ForMarkerView.getCommand(),Commands.Called_From_Group.getCommand());
+                data.putBoolean(PropertyNames.Group_logged.getProperty(), ShowingMyGroups);
                 data.putSerializable(Commands.Arraylist_Values.getCommand(), res);
                 fragment.setArguments(data);
                 FragmentTransaction transaction1 = getFragmentManager().beginTransaction();

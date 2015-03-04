@@ -212,11 +212,11 @@ public class StatusFragment extends Fragment {
                     fragment = new HomeFragment();
 
                 } else if (command.equals(Commands.Called_From_Info.getCommand())) {
-                    bundle = new Bundle();
-                    bundle.putString(Commands.ForMarkerView.getCommand(),Commands.Called_From_Status.getCommand());
-                    bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
-                    fragment = new Marker_MapView();
-                    fragment.setArguments(bundle);
+                        bundle = new Bundle();
+                        bundle.putString(Commands.ForMarkerView.getCommand(), Commands.Called_From_Status.getCommand());
+                        bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
+                        fragment = new Marker_MapView();
+                        fragment.setArguments(bundle);
 
                 }
                  else if(command.equals(Commands.Called_From_Group.getCommand())) {
@@ -229,14 +229,17 @@ public class StatusFragment extends Fragment {
                         d.putString(Commands.SearchAndADD.getCommand(), Commands.Status_add.getCommand());
                         d.putBoolean(PropertyNames.Group_logged.getProperty(), true);
                         fragment.setArguments(d);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.frame_container, fragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
+
                     } else {
                         Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet!", Toast.LENGTH_LONG).show();
+                        return true;
                     }
-            }
+
+                 }
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
                 return true;
         }

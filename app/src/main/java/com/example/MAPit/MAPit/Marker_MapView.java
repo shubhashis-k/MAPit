@@ -48,6 +48,7 @@ public class Marker_MapView extends Fragment {
     ArrayList <Search> resultFromGroup;
     Bundle data,sendData;
     String command;
+    String permission;
 
 
     // public static View v;
@@ -107,6 +108,7 @@ public class Marker_MapView extends Fragment {
                     else if(command.equals(Commands.Called_From_Group.getCommand())){
 
                         String key=status.substring(status.lastIndexOf('/')+1);
+                        permission = status.substring(status.lastIndexOf('~') + 1);
                         sendData.putString(PropertyNames.Status_groupKey.getProperty(),key);
                         sendData.putString(Commands.Fragment_Caller.getCommand(),Commands.Called_From_Group.getCommand());
                     }
@@ -124,18 +126,30 @@ public class Marker_MapView extends Fragment {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
+
+                Bundle logged = getArguments();
+                Boolean loginStatus = false;
+
                 Fragment fragment=null;
                 if(command.equals(Commands.Called_From_Status.getCommand())) {
                      fragment = new Friends_Status_Comment_Fragment();
                 }
                 else if(command.equals(Commands.Called_From_Group.getCommand())){
-                    fragment=new StatusFragment();
+                    loginStatus = logged.getBoolean(PropertyNames.Group_logged.getProperty());
+                    fragment=  new StatusFragment();
+                    sendData.putBoolean(PropertyNames.Group_logged.getProperty(), loginStatus);
                 }
-                fragment.setArguments(sendData);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                if(command.equals(Commands.Called_From_Group.getCommand()) && loginStatus == false && permission.equals(PropertyNames.Group_Private.getProperty()))
+                        Toast.makeText(getActivity(), "Sorry! The Group is Private!", Toast.LENGTH_LONG).show();
+                else {
+
+                    fragment.setArguments(sendData);
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
@@ -169,6 +183,8 @@ public class Marker_MapView extends Fragment {
                 String name = result.get(i).getData();
                 String key = result.get(i).getKey();
                 name += "/" + key;
+                String permission = result.get(i).getExtra1();
+                name += "~" + permission;
                 Double lat = Double.parseDouble(result.get(i).getLatitude());
                 Double lng = Double.parseDouble(result.get(i).getLongitude());
                 if (status.length() > 20) {
