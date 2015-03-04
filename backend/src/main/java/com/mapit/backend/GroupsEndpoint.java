@@ -241,6 +241,7 @@ public class GroupsEndpoint {
         s.setLocation(GroupData.getProperty(DatastorePropertyNames.Groups_location.getProperty()).toString());
         s.setExtra(GroupData.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());
         s.setExtra1(GroupData.getProperty(DatastorePropertyNames.Groups_Permission.getProperty()).toString());
+        s.setExtra2(GroupData.getProperty(DatastorePropertyNames.Groups_creatormail.getProperty()).toString());
 
         return s;
 

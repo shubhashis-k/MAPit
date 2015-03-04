@@ -158,8 +158,13 @@ public class Groups_Fragment extends Fragment {
             item.setLocation(s.getLocation());
 
             item.setKey(s.getKey());
-            item.setButton(Commands.Group_Remove.getCommand());
-            item.setExtra(getmail());
+
+            if(s.getExtra2().equals(getmail()))
+                item.setButton(Commands.Group_Remove.getCommand());
+            else
+                item.setButton(Commands.Leave_Group.getCommand());
+
+            item.setExtra(s.getExtra2());
             listItems.add(item);
         }
 

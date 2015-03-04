@@ -138,7 +138,7 @@ public class PersonsInGroupEndpoint {
             s.setLocation(grpinfo.getLocation());
             s.setExtra(grpinfo.getGroupDescription());
             s.setExtra1(grpinfo.getPermission());
-
+            s.setExtra2(grpinfo.getCreatorMail());
 
             groupList.add(s);
         }

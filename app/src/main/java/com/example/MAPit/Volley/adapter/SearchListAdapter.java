@@ -105,6 +105,8 @@ public class SearchListAdapter extends BaseAdapter {
                     removeGroup(stringKey);
                 else if(buttonText.equals(Commands.Group_Join_Group.getCommand()))
                     JoinGroup(stringKey, getmail());
+                else if(buttonText.equals(Commands.Leave_Group.getCommand()))
+                    LeaveGroup(stringKey, getmail());
 
                 listItems.remove(position);
                 notifyDataSetChanged();
@@ -112,6 +114,23 @@ public class SearchListAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+    public void LeaveGroup(String stringKey, String mail){
+        Groups g = new Groups();
+        Data d = new Data();
+        d.setCommand(Commands.Leave_Group.getCommand());
+        d.setStringKey(stringKey);
+        d.setUsermail(mail);
+
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+
+                super.onPostExecute(result);
+
+                String response = result.getResponseMessages();
+            }
+        }.execute(new Pair<Data, Groups>(d, g));
     }
 
     public void JoinGroup(String stringKey, String mail){
