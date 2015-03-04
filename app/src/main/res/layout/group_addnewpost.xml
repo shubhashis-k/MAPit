@@ -29,24 +29,6 @@
         android:lines="6"
         android:gravity="top" />
 
-    <TextView
-        android:id="@+id/textViewPhoneNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#000000"
-        android:text="Type Url : "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#E8E8E8"
-        android:textStyle="bold"
-        android:typeface="sans" />
-
-    <EditText
-        android:id="@+id/et_grouppost_url"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:lines="1">
-    </EditText>
 
     <Button
         android:id="@+id/choosepostpic"
