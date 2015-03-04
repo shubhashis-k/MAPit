@@ -4,6 +4,8 @@ package com.example.MAPit.MAPit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.View;
@@ -36,11 +38,31 @@ public class SignUp extends Activity implements SignUp_Endpoint_Communicator.man
 
                     Toast.makeText(getApplication(),"Enter all the Info",Toast.LENGTH_LONG).show();
                 }
+                else if(!checkForInternet()){
+                    Toast.makeText(SignUp.this, "Check Your Internet Connection", Toast.LENGTH_LONG).show();
+                }
                 else {
                     registerInformation();
                 }
             }
         });
+    }
+
+
+
+    private boolean checkForInternet() {
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
+        } else if (!ni.isConnected())
+            return false;
+        else if (!ni.isAvailable())
+            return false;
+        else
+            return true;
     }
 
     public void getInformation()
