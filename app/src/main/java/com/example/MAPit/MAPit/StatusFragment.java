@@ -196,6 +196,9 @@ public class StatusFragment extends Fragment {
         if(command.equals(Commands.Called_From_Group.getCommand())) {
              menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
         }
+        else if(command.equals(Commands.Called_From_MyWall.getCommand())){
+            menu.clear();
+        }
         else {
 
             menu.findItem(R.id.switch_view_to_list).setTitle("Switch Back to Map");

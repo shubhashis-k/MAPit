@@ -43,7 +43,6 @@ public class AddStatus extends Fragment {
         View v=inflater.inflate(R.layout.group_addnewpost,null,false);
 
         mainMessage = (EditText)v.findViewById(R.id.et_group_statuspost);
-        postUrl = (EditText)v.findViewById(R.id.et_grouppost_url);
         postImage = (ImageView)v.findViewById(R.id.add_post_pic);
         addPost = (Button)v.findViewById(R.id.group_post_status);
         choosePic = (Button)v.findViewById(R.id.choosepostpic);

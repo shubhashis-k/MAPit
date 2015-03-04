@@ -79,7 +79,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         bundle = getArguments();
         command = bundle.getString(Commands.Fragment_Caller.getCommand());
-        if(command.equals(Commands.Called_From_Location.getCommand())){
+        if (command.equals(Commands.Called_From_Location.getCommand())) {
             ArrayList<Information> data = (ArrayList<Information>) bundle.getSerializable(PropertyNames.Marker_Position.getProperty());
             Information markerInfo = data.get(0);
             name.setText(markerInfo.getInfoName());
@@ -114,11 +114,6 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         }
 
-        if (command.equals(Commands.Called_From_Status.getCommand())) {
-
-
-        }
-
 
         listView = (ListView) v.findViewById(R.id.comment_single_status);
         commentItems = new ArrayList<Comment_Item>();
@@ -130,32 +125,37 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //must clear menu here to get fragment own menu option
         menu.clear();
-        if(command.equals(Commands.Called_From_Location.getCommand())){
+        if (command.equals(Commands.Called_From_Location.getCommand())) {
 
-        }else {
+        } else if (command.equals(Commands.Called_From_Status.getCommand())) {
+            inflater.inflate(R.menu.menu_add_comment, menu);
+            menu.findItem(R.id.go_to_frnd_location).setTitle("Delete Status");
+        } else {
             inflater.inflate(R.menu.menu_add_comment, menu);
         }
-        //super.onCreateOptionsMenu(menu, inflater);
+
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_comment_single_status:
-                addcommentdialog();
-                return true;
             case R.id.go_to_frnd_location:
-                Fragment fragment = new Friend_Location_Fragment();
-                Bundle data = new Bundle();
-                data.putDouble("latitude", lat);
-                data.putDouble("longitude", lng);
-                fragment.setArguments(data);
+                Fragment fragment = null;
+                if (command.equals(Commands.Called_From_Status.getCommand())) {
+                    //we have to delete the status and notify adapter changed.
+
+                } else {
+                    fragment = new Friend_Location_Fragment();
+                    Bundle data = new Bundle();
+                    data.putDouble("latitude", lat);
+                    data.putDouble("longitude", lng);
+                    fragment.setArguments(data);
+                }
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
