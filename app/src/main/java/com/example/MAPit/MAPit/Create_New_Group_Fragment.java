@@ -79,8 +79,8 @@ public class Create_New_Group_Fragment extends Fragment {
                     Toast.makeText(getActivity(), "Fill All the Info", Toast.LENGTH_LONG).show();
                 } else {
                     //getting latitude and longitude
-                    String lat = String.valueOf(getArguments().getString(PropertyNames.Status_latitude.getProperty()));
-                    String lng = String.valueOf(getArguments().getString(PropertyNames.Status_longitude.getProperty()));
+                    String lat = String.valueOf(getArguments().getDouble(PropertyNames.Status_latitude.getProperty()));
+                    String lng = String.valueOf(getArguments().getDouble(PropertyNames.Status_longitude.getProperty()));
 
                     final Groups g = new Groups();
                     g.setCreatorMail(getmail());

@@ -42,7 +42,7 @@ public class StatusFragment extends Fragment {
     private List<StatusListItem> statusListItems;
     public String command;
     public ArrayList<StatusData> passThisData;
-    public ArrayList <String> loc;
+    public ArrayList<String> loc;
     public Bundle bundle;
     public Bundle data;
     StatusListItem item;
@@ -90,20 +90,20 @@ public class StatusFragment extends Fragment {
         return v;
     }
 
-    public void populateGroupStatus(){
+    public void populateGroupStatus() {
         data = getArguments();
         String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
 
         Data d = new Data();
         d.setCommand(Commands.Status_showGroupStatus.getCommand());
 
-        StatusData s= new StatusData();
+        StatusData s = new StatusData();
         s.setKind(DatastoreKindNames.StatusInGroup.getKind());
         s.setGroupKey(groupKey);
 
         new StatusEndpointCommunicator() {
             @Override
-            protected void onPostExecute(ArrayList<StatusData> result) throws NullPointerException{
+            protected void onPostExecute(ArrayList<StatusData> result) throws NullPointerException {
 
                 super.onPostExecute(result);
                 passThisData = result;
@@ -189,10 +189,9 @@ public class StatusFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_home_fragment, menu);
-        if(command.equals(Commands.Called_From_Group.getCommand())) {
-             menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
-        }
-        else {
+        if (command.equals(Commands.Called_From_Group.getCommand())) {
+            menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
+        } else {
 
             menu.findItem(R.id.switch_view_to_list).setTitle("Switch Back to Map");
         }
@@ -202,6 +201,7 @@ public class StatusFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+
             case R.id.switch_view_to_list:
                 Fragment fragment = null;
                 if (command.equals(Commands.Called_From_Home.getCommand())) {
@@ -209,30 +209,30 @@ public class StatusFragment extends Fragment {
 
                 } else if (command.equals(Commands.Called_From_Info.getCommand())) {
                     bundle = new Bundle();
-                    bundle.putString(Commands.ForMarkerView.getCommand(),Commands.Called_From_Status.getCommand());
+                    bundle.putString(Commands.ForMarkerView.getCommand(), Commands.Called_From_Status.getCommand());
                     bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
                     fragment = new Marker_MapView();
                     fragment.setArguments(bundle);
 
+                } else if (command.equals(Commands.Called_From_Group.getCommand())) {
+                    Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
+                    if (logged) {
+                        fragment = new OnlyGoogleMap();
+                        Bundle d = new Bundle();
+                        String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+                        d.putString(Commands.Group_Key.getCommand(), groupKey);
+                        d.putString(Commands.SearchAndADD.getCommand(), Commands.Status_add.getCommand());
+                        d.putBoolean(PropertyNames.Group_logged.getProperty(), true);
+                        fragment.setArguments(d);
+                    } else {
+                        Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet!", Toast.LENGTH_LONG).show();
+                    }
                 }
-                 else if(command.equals(Commands.Called_From_Group.getCommand())) {
-                Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
-                if (logged) {
-                    fragment = new OnlyGoogleMap();
-                    Bundle d = new Bundle();
-                    String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
-                    d.putString(Commands.Group_Key.getCommand(), groupKey);
-                    d.putString(Commands.SearchAndADD.getCommand(), Commands.Status_add.getCommand());
-                    d.putBoolean(PropertyNames.Group_logged.getProperty(), true);
-                    fragment.setArguments(d);
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                } else {
-                    Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet!", Toast.LENGTH_LONG).show();
-                }
-            }
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
                 return true;
         }

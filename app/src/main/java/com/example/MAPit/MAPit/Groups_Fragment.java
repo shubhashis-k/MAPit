@@ -74,7 +74,6 @@ public class Groups_Fragment extends Fragment {
                     data.putString(PropertyNames.Status_groupKey.getProperty(), s.getKey());
                     data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Group.getCommand());
                     data.putBoolean(PropertyNames.Group_logged.getProperty(), ShowingMyGroups);
-
                     Fragment fragment = new StatusFragment();
                     fragment.setArguments(data);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -218,6 +217,7 @@ public class Groups_Fragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_group_adding, menu);
+        menu.add(0,2,2,"See All Groups");
     }
 
     @Override
@@ -237,7 +237,6 @@ public class Groups_Fragment extends Fragment {
 
                 return true;
             case R.id.see_in_map:
-
                 fragment = new Marker_MapView();
                 Bundle data = new Bundle();
                 data.putString(Commands.ForMarkerView.getCommand(),Commands.Called_From_Group.getCommand());
@@ -247,6 +246,11 @@ public class Groups_Fragment extends Fragment {
                 transaction1.replace(R.id.frame_container,fragment);
                 transaction1.addToBackStack(null);
                 transaction1.commit();
+
+                return true;
+
+            case 2:
+
 
                 return true;
         }

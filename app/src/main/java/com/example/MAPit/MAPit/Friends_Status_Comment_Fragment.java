@@ -139,8 +139,9 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         }else {
             inflater.inflate(R.menu.menu_add_comment, menu);
+            //menu.add(0,2,2,"Dela");
         }
-        //super.onCreateOptionsMenu(menu, inflater);
+
 
     }
 

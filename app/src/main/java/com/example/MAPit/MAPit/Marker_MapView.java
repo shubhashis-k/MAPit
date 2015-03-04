@@ -171,10 +171,15 @@ public class Marker_MapView extends Fragment {
                 name += "/" + key;
                 Double lat = Double.parseDouble(result.get(i).getLatitude());
                 Double lng = Double.parseDouble(result.get(i).getLongitude());
-                if (status.length() > 20) {
-                    status = status.substring(0, 20);
-                    status += "...";
+
+                if(command.equals(Commands.Called_From_Status.getCommand())) {
+                    if (status.length() > 20) {
+                        status = status.substring(0, 20);
+                        status += "...";
+                    }
                 }
+
+
                 LatLng ll = new LatLng(lat, lng);
                 options.add(ll);
                 map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));

@@ -137,8 +137,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     case 1:
                                         fragment = new Create_New_Group_Fragment();
                                         Bundle createGroup = new Bundle();
-                                        createGroup.putString(PropertyNames.Status_latitude.getProperty(), lat);
-                                        createGroup.putString(PropertyNames.Status_longitude.getProperty(), lng);
+                                        createGroup.putDouble(PropertyNames.Status_latitude.getProperty(), Double.parseDouble(lat));
+                                        createGroup.putDouble(PropertyNames.Status_longitude.getProperty(), Double.parseDouble(lng));
                                         fragment.setArguments(createGroup);
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);

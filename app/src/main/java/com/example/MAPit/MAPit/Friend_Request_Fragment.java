@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -38,7 +40,7 @@ public class Friend_Request_Fragment extends Fragment {
 
     //added this for adding fragment menu
     public Friend_Request_Fragment() {
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -166,8 +168,8 @@ public class Friend_Request_Fragment extends Fragment {
         return mail;
     }
 
-
-
-
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
 }
