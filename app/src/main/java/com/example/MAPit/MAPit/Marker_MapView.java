@@ -107,7 +107,7 @@ public class Marker_MapView extends Fragment {
 
                     else if(command.equals(Commands.Called_From_Group.getCommand())){
 
-                        String key=status.substring(status.lastIndexOf('/')+1);
+                        String key=status.substring(status.indexOf('/')+1, status.indexOf('~'));
                         permission = status.substring(status.lastIndexOf('~') + 1);
                         sendData.putString(PropertyNames.Status_groupKey.getProperty(),key);
                         sendData.putString(Commands.Fragment_Caller.getCommand(),Commands.Called_From_Group.getCommand());
@@ -185,6 +185,7 @@ public class Marker_MapView extends Fragment {
                 name += "/" + key;
                 String permission = result.get(i).getExtra1();
                 name += "~" + permission;
+
                 Double lat = Double.parseDouble(result.get(i).getLatitude());
                 Double lng = Double.parseDouble(result.get(i).getLongitude());
                 if (status.length() > 20) {
