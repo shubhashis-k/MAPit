@@ -105,8 +105,8 @@ public class GroupsEndpoint {
         ResponseMessages rm = new ResponseMessages();
         for (Entity result : pq.asIterable()) {
 
-           rm.setMessage(rm.Duplicate_Group);
-           return rm;
+            rm.setMessage(rm.Duplicate_Group);
+            return rm;
         }
 
         rm.setMessage(rm.Group_Available);
@@ -221,12 +221,6 @@ public class GroupsEndpoint {
 
         Search s = new Search();
 
-        Text imageText = (Text) GroupData.getProperty(DatastorePropertyNames.Groups_Picture.getProperty());
-        String ImageData = imageText.getValue();
-        if(ImageData.length() > 0)
-            s.setPicData(ImageData);
-
-
         s.setKey(groupKey);
         s.setData(groupName);
 
@@ -262,6 +256,47 @@ public class GroupsEndpoint {
         }
 
         return personInfo;
+    }
+
+    @ApiMethod(name = "getAllGroups", path = "getAllGroupsPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> getAllGroups(@Named("Mail") String mail) throws EntityNotFoundException {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        ArrayList <Search> searchResult = new ArrayList<>();
+        ArrayList <Search> MyGroups = getMyGroups(mail);
+
+        Query Group_Query = new Query(DatastoreKindNames.Groups.getKind());
+
+        PreparedQuery queryResult = datastore.prepare(Group_Query);
+
+        for (Entity result : queryResult.asIterable()) {
+            String groupName = result.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString();
+
+            Key groupKey = result.getKey();
+            Search s = new Search();
+
+            s.setKey(groupKey);
+            s.setData(groupName);
+
+            Text picText = (Text) result.getProperty(DatastorePropertyNames.Groups_Picture.getProperty());
+            String picData = picText.getValue();
+
+            if(picData.length() > 0)
+                s.setPicData(picData);
+
+            s.setLatitude(result.getProperty(DatastorePropertyNames.Groups_latitude.getProperty()).toString());
+            s.setLongitude(result.getProperty(DatastorePropertyNames.Groups_longitude.getProperty()).toString());
+            s.setLocation(result.getProperty(DatastorePropertyNames.Groups_location.getProperty()).toString());
+            s.setExtra(result.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());
+            s.setExtra1(result.getProperty(DatastorePropertyNames.Groups_Permission.getProperty()).toString());
+            s.setExtra2(result.getProperty(DatastorePropertyNames.Groups_creatormail.getProperty()).toString());
+
+            if(!MyGroups.contains(s))
+                searchResult.add(s);
+        }
+
+
+        return searchResult;
     }
 
 }

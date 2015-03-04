@@ -116,10 +116,12 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         data = getArguments();
 
         command = data.getString(Commands.SearchAndADD.getCommand());
+
         if (command.equals(Commands.ShowInMap.getCommand())) {
             populateInfoOfLocation("All", -1);
+        } else if (command.equals(Commands.All_Group_Show.getCommand())) {
+            //here to populate all the groups
         }
-
         routeData = new ArrayList<LatLng>();
         route = new GmapV2Direction();
 
@@ -170,12 +172,16 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new Friends_Status_Comment_Fragment();
-                fragment.setArguments(info_data);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                if (command.equals(Commands.All_Group_Show.getCommand())) {
+                    //nothing to do
+                } else {
+                    Fragment fragment = new Friends_Status_Comment_Fragment();
+                    fragment.setArguments(info_data);
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
@@ -270,10 +276,10 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                     transaction.replace(R.id.frame_container, fragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-                }     else if(command.equals(Commands.Status_add.getCommand())){
+                } else if (command.equals(Commands.Status_add.getCommand())) {
                     String groupKey = data.getString(Commands.Group_Key.getCommand());
                     Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
-                    if(logged) {
+                    if (logged) {
                         Bundle d = new Bundle();
                         d.putString(PropertyNames.Status_groupKey.getProperty(), groupKey);
                         d.putString(PropertyNames.Status_latitude.getProperty(), String.valueOf(lat));
@@ -285,9 +291,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                         transaction.replace(R.id.frame_container, fragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(getActivity(), "Sorry, You haven't joined this group yet.", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -490,7 +494,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                 }
 
                 if (rad != -1) {
-                    boolean ret = checkForArea(rad,fromPosition,ll);
+                    boolean ret = checkForArea(rad, fromPosition, ll);
                     if (ret) {
                         routeData.add(ll);
                         map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
@@ -523,16 +527,16 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         }
     }
 
-    private boolean checkForArea(int rad,LatLng fromPosition,LatLng toPosition) {
+    private boolean checkForArea(int rad, LatLng fromPosition, LatLng toPosition) {
         Location locationA = new Location("point A");
         locationA.setLatitude(fromPosition.latitude);
         locationA.setLongitude(fromPosition.longitude);
         Location locationB = new Location("point B");
         locationB.setLatitude(toPosition.latitude);
         locationB.setLongitude(toPosition.longitude);
-        int  distance = (int) locationA.distanceTo(locationB) ;
-        if(distance/1000 <= rad)
-        return true;
+        int distance = (int) locationA.distanceTo(locationB);
+        if (distance / 1000 <= rad)
+            return true;
         else
             return false;
     }

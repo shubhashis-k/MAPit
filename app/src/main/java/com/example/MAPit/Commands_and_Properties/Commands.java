@@ -51,6 +51,7 @@ public enum Commands {
     Called_From_Group ("Group"),
     Called_From_Location("Location"),
     Called_From_MyWall ("MyWall"),
+    All_Group_Show("all group"),
 
     Status_Job ("Job"),
     Status_Job_Type_Individual ("Individual"),

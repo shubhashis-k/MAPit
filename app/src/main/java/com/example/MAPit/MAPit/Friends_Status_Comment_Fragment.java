@@ -155,17 +155,19 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                     data.putDouble("latitude", lat);
                     data.putDouble("longitude", lng);
                     fragment.setArguments(data);
+
                 }
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void addcommentdialog() {
+    /*private void addcommentdialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Your Comment");
         final EditText input = new EditText(getActivity());
@@ -199,6 +201,6 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         });
         AlertDialog alert = builder.create();
         alert.show();
-    }
+    }*/
 
 }
