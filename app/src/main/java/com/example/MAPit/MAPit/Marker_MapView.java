@@ -93,7 +93,7 @@ public class Marker_MapView extends Fragment {
                     String actual_status = status.substring(0, status.indexOf('/'));
 
 
-                    if(command.equals(Commands.Called_From_Status.getCommand())) {
+                    if(command.equals(Commands.Called_From_Status.getCommand()) || command.equals(Commands.Grp_Status_Info.getCommand())) {
 
                         String email = status.substring(status.lastIndexOf('/') + 1);
                         String pos = status.substring(status.lastIndexOf('&')+1);
@@ -113,6 +113,7 @@ public class Marker_MapView extends Fragment {
                         sendData.putString(Commands.Fragment_Caller.getCommand(),Commands.Called_From_Group.getCommand());
                     }
 
+
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
                     return v;
@@ -131,7 +132,7 @@ public class Marker_MapView extends Fragment {
                 Boolean loginStatus = false;
 
                 Fragment fragment=null;
-                if(command.equals(Commands.Called_From_Status.getCommand())) {
+                if(command.equals(Commands.Called_From_Status.getCommand()) || command.equals(Commands.Grp_Status_Info.getCommand())) {
                      fragment = new Friends_Status_Comment_Fragment();
                 }
                 else if(command.equals(Commands.Called_From_Group.getCommand())){
@@ -166,9 +167,39 @@ public class Marker_MapView extends Fragment {
            resultFromGroup =(ArrayList<Search>) data.getSerializable(Commands.Arraylist_Values.getCommand());
             drawMarkerAndLineForGroup(resultFromGroup);
         }
+        else if(command.equals(Commands.Grp_Status_Info.getCommand())){
+            result = (ArrayList<StatusData>) data.getSerializable(Commands.Arraylist_Values.getCommand());
+            drawMarkerAndLineForGroupStatus(result);
+        }
 
 
         return v;
+    }
+
+    private void drawMarkerAndLineForGroupStatus(ArrayList<StatusData> result) {
+
+
+        if (result.size() != 0) {
+            for (int i = 0; i < result.size(); i++) {
+                String status = result.get(i).getStatus();
+                String name = result.get(i).getPersonName();
+                String email = result.get(i).getPersonMail();
+                name += "/" + email;
+                name += "&" + String.valueOf(i);
+                Double lat = Double.parseDouble(result.get(i).getLatitude());
+                Double lng = Double.parseDouble(result.get(i).getLongitude());
+                if (status.length() > 20) {
+                    status = status.substring(0, 20);
+                    status += "...";
+                }
+                LatLng ll = new LatLng(lat, lng);
+                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                if (i == 0) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                }
+            }
+
+        }
     }
 
     private void drawMarkerAndLineForGroup(ArrayList<Search> result) {

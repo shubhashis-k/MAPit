@@ -105,8 +105,8 @@ public class GroupsEndpoint {
         ResponseMessages rm = new ResponseMessages();
         for (Entity result : pq.asIterable()) {
 
-            rm.setMessage(rm.Duplicate_Group);
-            return rm;
+           rm.setMessage(rm.Duplicate_Group);
+           return rm;
         }
 
         rm.setMessage(rm.Group_Available);

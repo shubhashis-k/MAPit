@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,21 +32,25 @@ import java.util.ArrayList;
  */
 public class AddStatus extends Fragment {
 
-    private EditText mainMessage,postUrl;
+    private EditText mainMessage, postUrl;
     private ImageView postImage;
-    private Button addPost,choosePic;
+    private Button addPost, choosePic;
     private String statusImage = "";
     private final int SELECT_PHOTO = 1;
+    String command;
 
-    public AddStatus(){setHasOptionsMenu(true);}
+    public AddStatus() {
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.group_addnewpost,null,false);
+        View v = inflater.inflate(R.layout.group_addnewpost, null, false);
 
-        mainMessage = (EditText)v.findViewById(R.id.et_group_statuspost);
-        postImage = (ImageView)v.findViewById(R.id.add_post_pic);
-        addPost = (Button)v.findViewById(R.id.group_post_status);
-        choosePic = (Button)v.findViewById(R.id.choosepostpic);
+        mainMessage = (EditText) v.findViewById(R.id.et_group_statuspost);
+        postImage = (ImageView) v.findViewById(R.id.add_post_pic);
+        addPost = (Button) v.findViewById(R.id.group_post_status);
+        choosePic = (Button) v.findViewById(R.id.choosepostpic);
 
         choosePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +62,7 @@ public class AddStatus extends Fragment {
         });
 
         Bundle data = getArguments();
-        final String command = data.getString(Commands.Status_Job.getCommand());
+        command = data.getString(Commands.Status_Job.getCommand());
         final String latitude = data.getString(PropertyNames.Status_latitude.getProperty());
         final String longitude = data.getString(PropertyNames.Status_longitude.getProperty());
         final String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
@@ -67,7 +72,7 @@ public class AddStatus extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Bundle dataBundle = ((SlidingDrawerActivity)getActivity()).getEmail();
+                Bundle dataBundle = ((SlidingDrawerActivity) getActivity()).getEmail();
                 String mail = dataBundle.getString(PropertyNames.Userinfo_Mail.getProperty());
                 String username = dataBundle.getString(PropertyNames.Userinfo_Username.getProperty());
 
@@ -79,13 +84,12 @@ public class AddStatus extends Fragment {
                 status.setStatus(mainMessage.getText().toString());
                 status.setPersonName(username);
 
-                if(statusImage.length() > 0)
+                if (statusImage.length() > 0)
                     status.setStatusPhoto(statusImage);
 
-                if(command.equals(Commands.Status_Job_Type_Individual.getCommand())) {
+                if (command.equals(Commands.Status_Job_Type_Individual.getCommand())) {
                     status.setKind(DatastoreKindNames.StatusbyIndividual.getKind());
-                }
-                else if(command.equals(Commands.Status_Job_Type_Group.getCommand())){
+                } else if (command.equals(Commands.Status_Job_Type_Group.getCommand())) {
                     status.setKind(DatastoreKindNames.StatusInGroup.getKind());
                 }
 
@@ -94,7 +98,7 @@ public class AddStatus extends Fragment {
                 lfd.setLatitude(Double.parseDouble(latitude));
                 lfd.setLongitude(Double.parseDouble(longitude));
 
-                new LocationFinder(){
+                new LocationFinder() {
                     @Override
                     protected void onPostExecute(LocationFinderData locationFinderData) {
                         super.onPostExecute(locationFinderData);
@@ -106,13 +110,27 @@ public class AddStatus extends Fragment {
 
                     }
                 }.execute(lfd);
+
+                if (command.equals(Commands.Status_Job_Type_Individual.getCommand())) {
+                    Fragment fragment = new HomeFragment();
+                    FragmentTransaction transaction2 = getFragmentManager().beginTransaction();
+                    transaction2.replace(R.id.frame_container, fragment);
+                    transaction2.addToBackStack(null);
+                    transaction2.commit();
+                } else if (command.equals(Commands.Status_Job_Type_Group.getCommand())) {
+                    if (getFragmentManager().getBackStackEntryCount() > 0) {
+                        getFragmentManager().popBackStack();
+                    }
+                }
             }
+
+
         });
 
         return v;
     }
 
-    public void postStatus(StatusData status){
+    public void postStatus(StatusData status) {
 
         Data d = new Data();
         d.setCommand(Commands.Status_add.getCommand());

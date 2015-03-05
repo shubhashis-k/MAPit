@@ -112,9 +112,10 @@ public class StatusFragment extends Fragment {
                 passThisData = result;
                 try {
                     populate(result);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
         }.execute(new Pair<Data, StatusData>(d, s));
     }
@@ -141,7 +142,7 @@ public class StatusFragment extends Fragment {
                 passThisData = result;
                 try {
                     populate(result);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -155,35 +156,37 @@ public class StatusFragment extends Fragment {
         passThisData = result;
         try {
             populate(result);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void populate(ArrayList<StatusData> result) throws IOException {
+    public void populate(ArrayList<StatusData> result) throws Exception {
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
 
-        for (int i = 0; i < result.size(); i++) {
-            StatusData statusData = result.get(i);
 
-            item = new StatusListItem();
-            item.setName(statusData.getPersonName());
-            item.setStatus(statusData.getStatus());
-            item.setLocation(statusData.getLocation());
+             for (int i = 0; i < result.size(); i++) {
+                 StatusData statusData = result.get(i);
+
+                 item = new StatusListItem();
+                 item.setName(statusData.getPersonName());
+                 item.setStatus(statusData.getStatus());
+                 item.setLocation(statusData.getLocation());
 
 
-            if (statusData.getStatusPhoto() != null) {
-                item.setImge(statusData.getStatusPhoto());
-            }
-            if (statusData.getProfilePic() != null) {
-                item.setProfilePic(statusData.getProfilePic());
-            } else {
+                 if (statusData.getStatusPhoto() != null) {
+                     item.setImge(statusData.getStatusPhoto());
+                 }
+                 if (statusData.getProfilePic() != null) {
+                     item.setProfilePic(statusData.getProfilePic());
+                 } else {
 
-            }
+                 }
 
-            statusListItems.add(item);
-        }
+                 statusListItems.add(item);
+
+         }
 
         statuslistAdapter.notifyDataSetChanged();
     }
@@ -195,6 +198,7 @@ public class StatusFragment extends Fragment {
         inflater.inflate(R.menu.menu_home_fragment, menu);
         if(command.equals(Commands.Called_From_Group.getCommand())) {
              menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
+             menu.add(0,1,1,"Switch to Map");
         }
         else if(command.equals(Commands.Called_From_MyWall.getCommand())){
             menu.clear();
@@ -243,6 +247,18 @@ public class StatusFragment extends Fragment {
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+
+                return true;
+            case 1:
+                Fragment fragment1 = new Marker_MapView();
+                bundle = new Bundle();
+                bundle.putString(Commands.ForMarkerView.getCommand(), Commands.Grp_Status_Info.getCommand());
+                bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
+                fragment1.setArguments(bundle);
+                FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+                transaction1.replace(R.id.frame_container, fragment1);
+                transaction1.addToBackStack(null);
+                transaction1.commit();
 
                 return true;
         }
