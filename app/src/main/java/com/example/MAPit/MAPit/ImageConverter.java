@@ -16,7 +16,7 @@ public class ImageConverter {
         image.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         String imageToString = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-
+        long lengthImg = imageToString.length();
         return imageToString;
     }
 

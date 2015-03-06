@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.DatastoreKindNames;
@@ -56,7 +57,7 @@ public class AddStatus extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent imagepicking = new Intent(Intent.ACTION_PICK);
-                imagepicking.setType("image/*");
+                imagepicking.setType("image/png");
                 startActivityForResult(imagepicking, SELECT_PHOTO);
             }
         });
@@ -136,6 +137,12 @@ public class AddStatus extends Fragment {
         d.setCommand(Commands.Status_add.getCommand());
 
         new StatusEndpointCommunicator() {
+
+            @Override
+            protected void onPreExecute() {
+                Toast.makeText(getActivity(),"working",Toast.LENGTH_LONG).show();
+            }
+
             @Override
             protected void onPostExecute(ArrayList<StatusData> result) {
 
@@ -157,21 +164,18 @@ public class AddStatus extends Fragment {
         switch (requestCode) {
             case SELECT_PHOTO:
 
+                final Uri imageUri = imageReturnedIntent.getData();
+                //final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
+                Bitmap selectedImage = null;
                 try {
-                    final Uri imageUri = imageReturnedIntent.getData();
-                    final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
-                    statusImage = ImageConverter.imageToStringConverter(selectedImage);
-
-                    postImage.setImageBitmap(selectedImage);
-
-
+                    selectedImage = sh.shrinkBitmap(imageUri,50,50);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
-
+                statusImage = ImageConverter.imageToStringConverter(selectedImage);
+                postImage.setImageBitmap(selectedImage);
         }
     }
 }
