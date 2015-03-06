@@ -56,7 +56,7 @@ public class AddStatus extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent imagepicking = new Intent(Intent.ACTION_PICK);
-                imagepicking.setType("image/*");
+                imagepicking.setType("image/png");
                 startActivityForResult(imagepicking, SELECT_PHOTO);
             }
         });
