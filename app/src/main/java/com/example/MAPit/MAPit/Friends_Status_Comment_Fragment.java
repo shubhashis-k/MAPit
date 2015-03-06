@@ -135,7 +135,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
         } else if (command.equals(Commands.Called_From_Status.getCommand())) {
             inflater.inflate(R.menu.menu_add_comment, menu);
-            menu.findItem(R.id.go_to_frnd_location).setTitle("Delete Status");
+
         } else {
             inflater.inflate(R.menu.menu_add_comment, menu);
         }
@@ -146,7 +146,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.go_to_frnd_location:
+            case R.id.delete_status:
                 Fragment fragment = null;
                 if (command.equals(Commands.Called_From_Status.getCommand())) {
 
@@ -169,17 +169,23 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                     myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
                     fragment.setArguments(myWallData);
 
-                } else {
-                    fragment = new Friend_Location_Fragment();
-                    Bundle data = new Bundle();
-                    data.putDouble("latitude", lat);
-                    data.putDouble("longitude", lng);
-                    fragment.setArguments(data);
                 }
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+                return true;
+            case R.id.go_to_frnd_location:
+                fragment = new Friend_Location_Fragment();
+                Bundle data = new Bundle();
+                data.putDouble("latitude", lat);
+                data.putDouble("longitude", lng);
+                fragment.setArguments(data);
+                FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+                transaction1.replace(R.id.frame_container, fragment);
+                transaction1.addToBackStack(null);
+                transaction1.commit();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

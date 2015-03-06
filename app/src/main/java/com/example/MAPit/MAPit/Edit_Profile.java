@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -56,6 +57,12 @@ public class Edit_Profile extends Fragment{
 
                 getData();
                 updateData();
+                Fragment fragment = new HomeFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
             }
         });
 
@@ -63,7 +70,7 @@ public class Edit_Profile extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent imagepicking = new Intent(Intent.ACTION_PICK);
-                imagepicking.setType("image/*");
+                imagepicking.setType("image/png");
                 startActivityForResult(imagepicking, SELECT_PHOTO);
             }
         });
@@ -78,16 +85,22 @@ public class Edit_Profile extends Fragment{
         switch (requestCode) {
             case SELECT_PHOTO:
 
+                final Uri imageUri = imageReturnedIntent.getData();
+                //final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
+                Bitmap selectedImage = null;
                 try {
-                    final Uri imageUri = imageReturnedIntent.getData();
-                    final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    profile_image.setImageBitmap(selectedImage);
-
-                    imageToString = ImageConverter.imageToStringConverter(selectedImage);
-
+                    selectedImage = sh.shrinkBitmap(imageUri,50,50);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                }
+                imageToString = ImageConverter.imageToStringConverter(selectedImage);
+                if(imageToString.length()>102400){
+                    Toast.makeText(getActivity(),"Image is too big",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    profile_image.setImageBitmap(selectedImage);
                 }
 
 

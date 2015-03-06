@@ -43,5 +43,9 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //this must have to give to quit application
+      moveTaskToBack(true);
+    }
 }
