@@ -160,20 +160,22 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                        @Override
                        protected void onPostExecute(ArrayList<StatusData> result) {
                            super.onPostExecute(result);
+
+                           Fragment sttus = new StatusFragment();
+                           Bundle myWallData = new Bundle();
+                           myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
+                           myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
+                           sttus.setArguments(myWallData);
+
+                           FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                           transaction.replace(R.id.frame_container, sttus);
+                           transaction.addToBackStack(null);
+                           transaction.commit();
                        }
                    }.execute(new Pair<Data, StatusData>(d,s));
 
-                    fragment = new StatusFragment();
-                    Bundle myWallData = new Bundle();
-                    myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
-                    myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
-                    fragment.setArguments(myWallData);
-
                 }
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
                 return true;
             case R.id.go_to_frnd_location:
                 fragment = new Friend_Location_Fragment();
