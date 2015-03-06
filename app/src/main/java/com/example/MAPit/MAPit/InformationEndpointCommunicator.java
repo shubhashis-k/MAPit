@@ -26,6 +26,12 @@ public class InformationEndpointCommunicator extends AsyncTask <Pair<Data,Inform
     private String command, category;
     @Override
     protected ArrayList<Information> doInBackground(Pair<Data, Information>... params) {
+        /*if(informationApi == null) {
+            InformationApi.Builder builder = new InformationApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+            informationApi = builder.build();
+        }*/
+
         if(informationApi == null){
             InformationApi.Builder builder = new InformationApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)

@@ -29,6 +29,13 @@ public class SearchEndpointCommunicator extends AsyncTask<Pair<Data, Search>, Vo
 
     @Override
     protected ArrayList<Search> doInBackground(Pair<Data, Search>... params) {
+        /*if(searchQueriesApi == null) {
+            SearchQueriesApi.Builder builder = new SearchQueriesApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+            searchQueriesApi = builder.build();
+        }*/
+
+
         if (searchQueriesApi == null) {
             SearchQueriesApi.Builder builder = new SearchQueriesApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)

@@ -14,8 +14,13 @@ import java.io.IOException;
  */
 public class OfflineInitializer {
     public UserinfoModelApi.Builder Initialize() {
+        /*
+        UserinfoModelApi.Builder builder = new UserinfoModelApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+        return builder;
+        }*/
 
-            UserinfoModelApi.Builder builder = new UserinfoModelApi.Builder(AndroidHttp.newCompatibleTransport(),
+        UserinfoModelApi.Builder builder = new UserinfoModelApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
@@ -31,6 +36,7 @@ public class OfflineInitializer {
 
             return builder;
         }
+
 
 }
 
