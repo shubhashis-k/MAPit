@@ -181,7 +181,7 @@ public class AddStatus extends Fragment {
                 ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
                 Bitmap selectedImage = null;
                 try {
-                    selectedImage = sh.shrinkBitmap(imageUri,400,250);
+                    selectedImage = sh.shrinkBitmap(imageUri,450,350);
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
                 }

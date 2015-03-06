@@ -157,8 +157,9 @@ public class Friend_Search_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList<Search> res = result.getDataList();
+
                 try {
+                    ArrayList<Search> res = result.getDataList();
                     PopulateNotFriends(res);
                 }
                 catch(Exception e){
@@ -179,6 +180,9 @@ public class Friend_Search_Fragment extends Fragment {
             item.setName(s.getData());
             item.setLocation(s.getLocation());
             item.setButton(Commands.Button_addFriend.getCommand());
+            if (s.getPicData() != null) {
+                item.setImage(s.getPicData());
+            }
             item.setKey(s.getKey());
             item.setExtra(s.getExtra());
             listItems.add(item);

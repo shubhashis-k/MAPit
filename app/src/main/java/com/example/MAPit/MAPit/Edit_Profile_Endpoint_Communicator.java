@@ -27,14 +27,14 @@ import java.io.IOException;
  */
 
 
-public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context, UserinfoModel>, Void, ResponseMessages> {
+public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context, UserinfoModel>, Void, UserinfoModel> {
     private Context maincontext;
     private UserinfoModelApi userinfo_api;
     private UserinfoModel userdata;
     private manipulate_Edit_Profile manipulator;
 
     @Override
-    protected ResponseMessages doInBackground(Pair<Context, UserinfoModel>... params) {
+    protected UserinfoModel doInBackground(Pair<Context, UserinfoModel>... params) {
         if(userinfo_api == null) {  // Only do this once
 
             OfflineInitializer intializer = new OfflineInitializer();
@@ -46,9 +46,9 @@ public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context,
         userdata = params[0].second;
 
         try {
-            ResponseMessages response = new ResponseMessages();
-            response = userinfo_api.setUserInfo(Commands.Userinfo_update.getCommand(), userdata).execute();
-            return response;
+                userinfo_api.setUserInfo(Commands.Userinfo_update.getCommand(), userdata).execute();
+                UserinfoModel EditedInfo = userdata;
+                return EditedInfo;
         }
         catch (IOException e)
         {
@@ -57,19 +57,15 @@ public class Edit_Profile_Endpoint_Communicator extends AsyncTask <Pair<Context,
         }
     }
 
-    protected void onPostExecute(ResponseMessages response){
-        Log.v("response", String.valueOf(maincontext));
+    protected void onPostExecute(UserinfoModel editedInfo){
 
-        //modification needed here
-        //modification needed here
         manipulator = (manipulate_Edit_Profile) maincontext;
-        manipulator.setResponseMessage(response);
-        //modification needed here
-        //modification needed here
+        manipulator.setInfo(editedInfo);
+
     }
 
     public interface manipulate_Edit_Profile {
-        public void setResponseMessage(ResponseMessages response);
+        public void setInfo(UserinfoModel editedInfo);
     }
 
 }

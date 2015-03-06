@@ -30,6 +30,8 @@ import com.example.MAPit.model.NavDrawerItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.mapit.backend.searchQueriesApi.model.Search;
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
+import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
+
 import java.util.ArrayList;
 
 
@@ -162,21 +164,25 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
     }
 
 
-
     @Override
-    public void setResponseMessage(ResponseMessages response) {
-        String res = response.getMessage();
+    public void setInfo(UserinfoModel editedInfo) {
+        String username = editedInfo.getName();
+        String imageText = editedInfo.getImagedata();
 
-        if(res.equals("Update OK"))
-        {
-            Toast.makeText(this, "update Successful!", Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_LONG).show();
-        }
+        if(imageText == null)
+            imageText = "";
+
+        if(username == null)
+            username = "";
+
+        if(username.length() > 0)
+            profile_name.setText(username);
+
+        if(imageText.length() > 0)
+            profilePic.setImageBitmap(ImageConverter.stringToimageConverter(imageText));
+
+        Toast.makeText(this, "Profile Updated!", Toast.LENGTH_LONG).show();
     }
-
 
 
     /**
