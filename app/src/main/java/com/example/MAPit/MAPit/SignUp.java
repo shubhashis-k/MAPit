@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.mapit.backend.userinfoModelApi.model.ResponseMessages;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
+import com.mapit.backend.userinfoModelApi.model.UserinfoModelCollection;
 
 /**
  * Created by SETU on 12/26/2014.
@@ -85,7 +86,7 @@ public class SignUp extends Activity implements SignUp_Endpoint_Communicator.man
         Bundle data = getIntent().getBundleExtra("From HomeMapActivity");
         String lat =String.valueOf(data.getDouble("latitude")) ;
         String lng = String.valueOf(data.getDouble("longitude"));
-        UserinfoModel userinformation = new UserinfoModel();
+        final UserinfoModel userinformation = new UserinfoModel();
         userinformation.setName(signup_name);
         userinformation.setMail(signup_email);
         userinformation.setMobilephone(signup_phonenumber);
@@ -93,9 +94,32 @@ public class SignUp extends Activity implements SignUp_Endpoint_Communicator.man
         userinformation.setLatitude(lat);
         userinformation.setLongitude(lng);
 
-        new SignUp_Endpoint_Communicator().execute(new Pair<Context, UserinfoModel>(this, userinformation));
+        LocationFinderData lfd = new LocationFinderData();
+        lfd.setContext(this);
+        lfd.setLatitude(Double.parseDouble(lat));
+        lfd.setLongitude(Double.parseDouble(lng));
+
+        new LocationFinder() {
+            @Override
+            protected void onPostExecute(LocationFinderData locationFinderData) {
+                super.onPostExecute(locationFinderData);
+
+                String location = locationFinderData.getLocation();
+                userinformation.setLocation(location);
+
+                SignUpUser(userinformation);
+
+            }
+        }.execute(lfd);
+
+
     }
 
+
+    public void SignUpUser(UserinfoModel userinformation){
+
+        new SignUp_Endpoint_Communicator().execute(new Pair<Context, UserinfoModel>(this, userinformation));
+    }
 
     @Override
     public void setResponseMessage(ResponseMessages response) {

@@ -25,6 +25,13 @@ public class StatusEndpointCommunicator extends AsyncTask <Pair<Data, StatusData
     private String usermail, command, statusKey;
     @Override
     protected ArrayList <StatusData> doInBackground(Pair<Data, StatusData>... params) {
+        /*if(statusApi == null) {
+            StatusApi.Builder builder = new StatusApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+            statusApi = builder.build();
+        }*/
+
+
             if(statusApi == null){
                 StatusApi.Builder builder = new StatusApi.Builder(AndroidHttp.newCompatibleTransport(),
                         new AndroidJsonFactory(), null)

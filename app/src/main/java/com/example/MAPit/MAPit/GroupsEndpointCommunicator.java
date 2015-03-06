@@ -27,6 +27,13 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
     private String usermail, command, pattern, StringKey;
     @Override
     protected GroupsEndpointReturnData doInBackground(Pair<Data, Groups>... params) {
+        /*if(groupApi == null) {
+            GroupApi.Builder builder = new GroupApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+            groupApi = builder.build();
+        }*/
+
+
         if(groupApi == null){
             GroupApi.Builder builder = new GroupApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)

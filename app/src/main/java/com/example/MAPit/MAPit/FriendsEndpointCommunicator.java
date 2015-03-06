@@ -29,6 +29,12 @@ public class FriendsEndpointCommunicator extends AsyncTask <Pair<Data, Friends>,
 
     @Override
     protected FriendsEndpointReturnData doInBackground(Pair<Data, Friends>... params) {
+        /*if(friendsApi == null) {
+            FriendsApi.Builder builder = new FriendsApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+            friendsApi = builder.build();
+        }*/
+
         if(friendsApi == null){
             FriendsApi.Builder builder = new FriendsApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)

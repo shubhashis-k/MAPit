@@ -26,6 +26,12 @@ public class infoCollectorEndpointCommunicator extends AsyncTask<String, Void, I
     private String key, command;
     @Override
     protected InfoCollector doInBackground(String... params) {
+        /*if(infoCollectorApi == null) {
+            InfoCollectorApi.Builder builder = new InfoCollectorApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://true-harmony-490.appspot.com/_ah/api/");
+            infoCollectorApi = builder.build();
+        }*/
+
         if(infoCollectorApi == null){
             InfoCollectorApi.Builder builder = new InfoCollectorApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
