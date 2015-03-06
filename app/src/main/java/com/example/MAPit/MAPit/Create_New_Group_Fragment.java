@@ -161,15 +161,28 @@ public class Create_New_Group_Fragment extends Fragment {
 
         switch (requestCode) {
             case SELECT_PHOTO:
+                Uri imageUri;
                 try {
-                    final Uri imageUri = imageReturnedIntent.getData();
-                    final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    groupImage.setImageBitmap(selectedImage);
+                    imageUri = imageReturnedIntent.getData();
+                }catch(Exception e){
+                    Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
+                Bitmap selectedImage = null;
+                try {
+                    selectedImage = sh.shrinkBitmap(imageUri,50,50);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
+                }
 
-                    stringGroupImage = ImageConverter.imageToStringConverter(selectedImage);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                stringGroupImage = ImageConverter.imageToStringConverter(selectedImage);
+                if(stringGroupImage.length()>102400){
+                    Toast.makeText(getActivity(),"Image is too big",Toast.LENGTH_LONG).show();
+                }else {
+                    groupImage.setImageBitmap(selectedImage);
                 }
         }
     }

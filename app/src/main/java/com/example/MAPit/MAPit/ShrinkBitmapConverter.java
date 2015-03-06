@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Base64;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -43,9 +44,9 @@ public class ShrinkBitmapConverter {
             bmpFactoryOptions.inJustDecodeBounds = false;
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri),null,bmpFactoryOptions);
 
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+
+            Toast.makeText(context,"Image Not Found",Toast.LENGTH_SHORT).show();
         }
 
         return bitmap;

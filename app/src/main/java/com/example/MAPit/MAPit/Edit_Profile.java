@@ -84,20 +84,25 @@ public class Edit_Profile extends Fragment{
 
         switch (requestCode) {
             case SELECT_PHOTO:
-
-                final Uri imageUri = imageReturnedIntent.getData();
+                 Uri imageUri = null;
+                try {
+                     imageUri = imageReturnedIntent.getData();
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
                 Bitmap selectedImage = null;
                 try {
                     selectedImage = sh.shrinkBitmap(imageUri,50,50);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                   Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
                 }
                 imageToString = ImageConverter.imageToStringConverter(selectedImage);
-                if(imageToString.length()>102400){
-                    Toast.makeText(getActivity(),"Image is too big",Toast.LENGTH_LONG).show();
+                if (imageToString.length() > 102400) {
+                    Toast.makeText(getActivity(), "Image is too big", Toast.LENGTH_LONG).show();
                 }
                 else {
                     profile_image.setImageBitmap(selectedImage);

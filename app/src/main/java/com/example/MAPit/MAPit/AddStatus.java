@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -138,15 +139,19 @@ public class AddStatus extends Fragment {
 
         new StatusEndpointCommunicator() {
 
+            private ProgressDialog dialog;
             @Override
             protected void onPreExecute() {
-                Toast.makeText(getActivity(),"working",Toast.LENGTH_LONG).show();
+                dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Posting...");
+                dialog.show();
             }
 
             @Override
             protected void onPostExecute(ArrayList<StatusData> result) {
 
                 super.onPostExecute(result);
+                dialog.dismiss();
 
             }
         }.execute(new Pair<Data, StatusData>(d, status));
@@ -162,20 +167,30 @@ public class AddStatus extends Fragment {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
         switch (requestCode) {
-            case SELECT_PHOTO:
 
-                final Uri imageUri = imageReturnedIntent.getData();
+            case SELECT_PHOTO:
+                Uri imageUri;
+                try {
+                     imageUri = imageReturnedIntent.getData();
+                }catch(Exception e){
+                    Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
                 Bitmap selectedImage = null;
                 try {
-                    selectedImage = sh.shrinkBitmap(imageUri,50,50);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    selectedImage = sh.shrinkBitmap(imageUri,400,250);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
                 }
                 statusImage = ImageConverter.imageToStringConverter(selectedImage);
-                postImage.setImageBitmap(selectedImage);
+                if(statusImage.length()>512000){
+                    Toast.makeText(getActivity(),"Image is too big",Toast.LENGTH_LONG).show();
+                }else {
+                    postImage.setImageBitmap(selectedImage);
+                }
         }
     }
 }

@@ -160,10 +160,9 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                 TextView tvFrndname = (TextView) v.findViewById(R.id.tv_frnd_name);
                 TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
                 String status = marker.getTitle();
-                if(command.equals(Commands.All_Group_Show.getCommand())){
+                if (command.equals(Commands.All_Group_Show.getCommand())) {
                     tvFrndname.setText(marker.getTitle());
-                }
-                else {
+                } else {
                     String actual_status = status.substring(0, status.indexOf('/'));
                     String position = status.substring(status.lastIndexOf('/') + 1);
                     tvFrndname.setText(actual_status);
@@ -235,7 +234,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                         @Override
                         public void onClick(View v) {
                             Intent imagepicking = new Intent(Intent.ACTION_PICK);
-                            imagepicking.setType("image/*");
+                            imagepicking.setType("image/png");
                             startActivityForResult(imagepicking, SELECT_PHOTO);
                         }
                     });
@@ -459,15 +458,28 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
         switch (requestCode) {
             case SELECT_PHOTO:
+                Uri imageUri;
                 try {
-                    final Uri imageUri = imageReturnedIntent.getData();
-                    final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    locImage.setImageBitmap(selectedImage);
+                    imageUri = imageReturnedIntent.getData();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "Image Not Found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
+                Bitmap selectedImage = null;
+                try {
+                    selectedImage = sh.shrinkBitmap(imageUri, 50, 50);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "Image Not Found", Toast.LENGTH_SHORT).show();
+                }
 
-                    stringLocImage = ImageConverter.imageToStringConverter(selectedImage);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                stringLocImage = ImageConverter.imageToStringConverter(selectedImage);
+                if (stringLocImage.length() > 102400) {
+                    Toast.makeText(getActivity(), "Image is too big", Toast.LENGTH_LONG).show();
+                } else {
+                    locImage.setImageBitmap(selectedImage);
                 }
         }
     }
