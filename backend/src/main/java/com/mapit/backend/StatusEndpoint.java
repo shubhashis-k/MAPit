@@ -47,7 +47,6 @@ public class StatusEndpoint {
             e.setProperty(DatastorePropertyNames.Status_groupKey.getProperty(), status.getGroupKey());
         }
 
-        e.setProperty(DatastorePropertyNames.Status_personName.getProperty(), status.getPersonName());
         e.setProperty(DatastorePropertyNames.Status_personMail.getProperty(), status.getPersonMail());
         e.setProperty(DatastorePropertyNames.Status_latitude.getProperty(), status.getLatitude());
         e.setProperty(DatastorePropertyNames.Status_longitude.getProperty(), status.getLongitude());
@@ -105,14 +104,19 @@ public class StatusEndpoint {
             Key k = result.getKey();
             s.setStatusKey(k);
 
-            String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
-            s.setPersonName(personName);
-
             String personMail = result.getProperty(DatastorePropertyNames.Status_personMail.getProperty()).toString();
             s.setPersonMail(personMail);
 
             String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
             s.setStatus(personStatus);
+
+            UserinfoEndpoint userinfoEndpoint = new UserinfoEndpoint();
+            Key userKey = userinfoEndpoint.getKeyfromMail(personMail);
+
+            Entity userInfo = datastore.get(userKey);
+
+            String personName = userInfo.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
+            s.setPersonName(personName);
 
             String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
             s.setLatitude(latitude);
@@ -159,44 +163,49 @@ public class StatusEndpoint {
         StatusData latestStatus = new StatusData();
         for (Entity result : queryResult.asList(FetchOptions.Builder.withLimit(1))) {
 
-                Key k = result.getKey();
-                latestStatus.setStatusKey(k);
+            Key k = result.getKey();
+            latestStatus.setStatusKey(k);
 
-                latestStatus.setPersonMail(personMail);
+            latestStatus.setPersonMail(personMail);
 
-                String personName = result.getProperty(DatastorePropertyNames.Status_personName.getProperty()).toString();
-                latestStatus.setPersonName(personName);
+            UserinfoEndpoint userinfoEndpoint = new UserinfoEndpoint();
+            Key userKey = userinfoEndpoint.getKeyfromMail(personMail);
 
-                String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
-                latestStatus.setStatus(personStatus);
+            Entity userInfo = datastore.get(userKey);
 
-                String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
-                latestStatus.setLatitude(latitude);
+            String personName = userInfo.getProperty(DatastorePropertyNames.Userinfo_Username.getProperty()).toString();
+            latestStatus.setPersonName(personName);
 
-                String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
-                latestStatus.setLongitude(longitude);
+            String personStatus = result.getProperty(DatastorePropertyNames.Status_text.getProperty()).toString();
+            latestStatus.setStatus(personStatus);
 
-                String location = result.getProperty(DatastorePropertyNames.Status_location.getProperty()).toString();
-                latestStatus.setLocation(location);
+            String latitude = result.getProperty(DatastorePropertyNames.Status_latitude.getProperty()).toString();
+            latestStatus.setLatitude(latitude);
 
-                Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
-                String ImageData = imageText.getValue();
-                if(ImageData.length() > 0)
-                    latestStatus.setStatusPhoto(ImageData);
+            String longitude = result.getProperty(DatastorePropertyNames.Status_longitude.getProperty()).toString();
+            latestStatus.setLongitude(longitude);
 
-                Text profilePicText = fetchProfilePic(personMail);
-                String profilePic = profilePicText.getValue();
-                if(profilePic.length() > 0)
-                    latestStatus.setProfilePic(profilePic);
+            String location = result.getProperty(DatastorePropertyNames.Status_location.getProperty()).toString();
+            latestStatus.setLocation(location);
+
+            Text imageText = (Text) result.getProperty(DatastorePropertyNames.Status_image.getProperty());
+            String ImageData = imageText.getValue();
+            if(ImageData.length() > 0)
+                latestStatus.setStatusPhoto(ImageData);
+
+            Text profilePicText = fetchProfilePic(personMail);
+            String profilePic = profilePicText.getValue();
+            if(profilePic.length() > 0)
+                latestStatus.setProfilePic(profilePic);
 
 
-                Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
-                latestStatus.setPublishDate(publishDate);
+            Date publishDate = (Date) result.getProperty(DatastorePropertyNames.Status_time.getProperty());
+            latestStatus.setPublishDate(publishDate);
 
 
-            }
-            return latestStatus;
         }
+        return latestStatus;
+    }
 
     @ApiMethod(name = "fetchFriendStatus", path = "fetchFriendStatusPath", httpMethod = ApiMethod.HttpMethod.POST)
     public ArrayList <StatusData> fetchFriendStatus(@Named("personMail") String personMail) throws EntityNotFoundException{
@@ -230,5 +239,6 @@ public class StatusEndpoint {
 
         return profilePic;
     }
+
 }
 
