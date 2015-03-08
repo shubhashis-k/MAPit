@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -150,29 +151,41 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                 Fragment fragment = null;
                 if (command.equals(Commands.Called_From_Status.getCommand())) {
 
-                    Data d = new Data();
-                    d.setStringKey(data.getStatusKey());
-                    d.setCommand(Commands.Status_Remove.getCommand());
+                    if(data.getPersonMail().equals(getmail())) {
+                        Data d = new Data();
+                        d.setStringKey(data.getStatusKey());
 
-                    StatusData s = new StatusData();
+                        d.setCommand(Commands.Status_Remove.getCommand());
 
-                   new StatusEndpointCommunicator(){
-                       @Override
-                       protected void onPostExecute(ArrayList<StatusData> result) {
-                           super.onPostExecute(result);
+                        final String GroupKey = data.getGroupKey();
+                        StatusData s = new StatusData();
 
-                           Fragment sttus = new StatusFragment();
-                           Bundle myWallData = new Bundle();
-                           myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
-                           myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
-                           sttus.setArguments(myWallData);
+                        new StatusEndpointCommunicator() {
+                            @Override
+                            protected void onPostExecute(ArrayList<StatusData> result) {
+                                super.onPostExecute(result);
 
-                           FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                           transaction.replace(R.id.frame_container, sttus);
-                           transaction.addToBackStack(null);
-                           transaction.commit();
-                       }
-                   }.execute(new Pair<Data, StatusData>(d,s));
+                                Fragment sttus = new StatusFragment();
+                                Bundle myWallData = new Bundle();
+                                if(GroupKey != null)
+                                    myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Group.getCommand());
+                                else
+                                    myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
+
+                                myWallData.putString(PropertyNames.Status_groupKey.getProperty(), GroupKey);
+                                myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
+                                
+                                sttus.setArguments(myWallData);
+
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame_container, sttus);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                        }.execute(new Pair<Data, StatusData>(d, s));
+                    }
+                    else
+                        Toast.makeText(getActivity(), "Sorry, Delete Your Post only!", Toast.LENGTH_LONG).show();
 
                 }
 

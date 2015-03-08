@@ -75,10 +75,17 @@ public class StatusFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment fragment = new Friends_Status_Comment_Fragment();
-                bundle = new Bundle();
                 StatusData st = passThisData.get(position);
+
+                bundle = new Bundle();
+                String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+                if(groupKey != null) {
+                    st.setGroupKey(groupKey);
+                }
+
                 ArrayList<StatusData> passData = new ArrayList<StatusData>();
                 passData.add(st);
+
                 bundle.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
                 bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
                 fragment.setArguments(bundle);

@@ -157,6 +157,9 @@ public class Groups_Fragment extends Fragment {
             //item.setLocation("Khulna");
             item.setLocation(s.getLocation());
 
+            if(s.getPicData() != null)
+                item.setImage(s.getPicData());
+
             item.setKey(s.getKey());
 
             if(s.getExtra2().equals(getmail()))
@@ -183,6 +186,7 @@ public class Groups_Fragment extends Fragment {
         info.setCommand(Commands.Group_fetch_GroupsnotMine.getCommand());
         info.setUsermail(getmail());
         info.setExtra(pattern);
+
 
         Groups g = new Groups();
 
@@ -213,7 +217,8 @@ public class Groups_Fragment extends Fragment {
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
             item.setLocation(s.getLocation());
-
+            if(s.getPicData() != null)
+                item.setImage(s.getPicData());
             item.setButton(Commands.Group_Join_Group.getCommand());
             item.setKey(s.getKey());
             item.setExtra(getmail());
