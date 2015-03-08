@@ -23,6 +23,7 @@ import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Volley.adapter.StatusListAdapter;
 import com.example.MAPit.Volley.data.StatusListItem;
+import com.google.android.gms.maps.model.LatLng;
 import com.mapit.backend.statusApi.model.StatusData;
 
 import java.io.IOException;
@@ -82,6 +83,8 @@ public class StatusFragment extends Fragment {
                 if(groupKey != null) {
                     st.setGroupKey(groupKey);
                 }
+
+
 
                 ArrayList<StatusData> passData = new ArrayList<StatusData>();
                 passData.add(st);

@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Text;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 
@@ -49,6 +50,10 @@ public class infoCollectorEndpoint {
 
         else if(kind.equals(DatastoreKindNames.Groups.getKind())){
             Groups groupdata = new Groups();
+            Text GroupPicText = (Text) data.getProperty(DatastorePropertyNames.Groups_Picture.getProperty());
+            String profilePic = GroupPicText.getValue();
+            if(profilePic.length() > 0)
+                groupdata.setGroupPic(profilePic);
             groupdata.setCreatorMail(data.getProperty(DatastorePropertyNames.Groups_creatormail.getProperty()).toString());
             groupdata.setGroupName(data.getProperty(DatastorePropertyNames.Groups_groupname.getProperty()).toString());
             groupdata.setGroupDescription(data.getProperty(DatastorePropertyNames.Groups_Description.getProperty()).toString());

@@ -31,10 +31,12 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
         signin.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Intent signinintent = new Intent(MainActivity.this,SignIn.class);
+                
                 startActivity(signinintent);
                 return false;
             }

@@ -426,7 +426,9 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
 
 
     private void gotoLocation(double lat, double lng, float zoom) {
-        populateInfoOfLocation("All", -1);
+        if (command.equals(Commands.ShowInMap.getCommand())) {
+            populateInfoOfLocation("All", -1);
+        }
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         map.moveCamera(update);

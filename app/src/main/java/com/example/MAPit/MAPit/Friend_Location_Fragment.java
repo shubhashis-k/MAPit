@@ -48,7 +48,7 @@ public class Friend_Location_Fragment extends Fragment implements  GoogleApiClie
     Document document;
     Location location;
     GoogleApiClient mgClient;
-    int dis=0;
+    float dis=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -228,7 +228,7 @@ public class Friend_Location_Fragment extends Fragment implements  GoogleApiClie
         return super.onOptionsItemSelected(item);
     }
 
-    private int checkForArea( LatLng fromPosition, LatLng toPosition) {
+    private float checkForArea( LatLng fromPosition, LatLng toPosition) {
         Location locationA = new Location("point A");
         locationA.setLatitude(fromPosition.latitude);
         locationA.setLongitude(fromPosition.longitude);
