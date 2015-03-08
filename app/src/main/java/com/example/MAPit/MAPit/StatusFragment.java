@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -162,6 +163,7 @@ public class StatusFragment extends Fragment {
     }
 
     public void populate(ArrayList<StatusData> result) throws Exception {
+
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
 
@@ -176,6 +178,7 @@ public class StatusFragment extends Fragment {
 
 
                  if (statusData.getStatusPhoto() != null) {
+                     Log.v("pop", "called");
                      item.setImge(statusData.getStatusPhoto());
                  }
                  if (statusData.getProfilePic() != null) {

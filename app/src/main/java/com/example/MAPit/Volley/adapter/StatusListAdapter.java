@@ -11,10 +11,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ public class StatusListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<StatusListItem> statusListItems;
+    ImageView feedImageView;
 
 
     public StatusListAdapter(Activity activity, List<StatusListItem> statusListItems) {
@@ -55,10 +58,10 @@ public class StatusListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (inflater == null)
+        //if (inflater == null)
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null)
+        //if (convertView == null)
             convertView = inflater.inflate(R.layout.feed_item, null);
 
 
@@ -67,7 +70,7 @@ public class StatusListAdapter extends BaseAdapter {
         TextView statusMsg = (TextView) convertView.findViewById(R.id.txtStatusMsg);
         TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
         ImageView profilePic = (ImageView) convertView.findViewById(R.id.profilePic);
-        ImageView feedImageView = (ImageView) convertView.findViewById(R.id.feedImage1);
+        feedImageView = (ImageView) convertView.findViewById(R.id.feedImage1);
 
         StatusListItem item = statusListItems.get(position);
         if(item.getProfilePic()!=null){
@@ -78,8 +81,14 @@ public class StatusListAdapter extends BaseAdapter {
         name.setText(item.getName());
         statusMsg.setText(item.getStatus());
         location.setText(item.getLocation());
-        if(item.getImge()!=null){
-            feedImageView.setImageBitmap(ImageConverter.stringToimageConverter(item.getImge()));
+
+        if(item.getImge()!=null) {
+            Log.v("image", "called");
+            cmplx c = new cmplx();
+            c.v = convertView;
+            c.imageText = item.getImge();
+
+            new ImageSetter().execute(c);
         }
         // Converting timestamp into x ago format
 
@@ -94,8 +103,35 @@ public class StatusListAdapter extends BaseAdapter {
         // user profile pic and converte the item.getProfilePic() to bitmap
 
         //profilePic.setImageBitmap(bp);
-
+        Log.v("call", "scrolled");
         return convertView;
     }
+    class cmplx{
+        View v;
+        String imageText;
+        Bitmap b;
+        int index;
+    }
 
+    public class ImageSetter extends AsyncTask <cmplx, Void, cmplx> {
+        private Context context;
+        @Override
+        protected cmplx doInBackground(cmplx... params) {
+
+            params[0].b = ImageConverter.stringToimageConverter(params[0].imageText);
+
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(cmplx c) {
+            super.onPostExecute(c);
+
+            View thisview = c.v;
+            Bitmap b = c.b;
+
+            ImageView thisImageView = (ImageView) thisview.findViewById(R.id.feedImage1);
+            thisImageView.setImageBitmap(b);
+        }
+    }
 }

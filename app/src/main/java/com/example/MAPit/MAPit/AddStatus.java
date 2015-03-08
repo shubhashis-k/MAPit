@@ -3,12 +3,14 @@ package com.example.MAPit.MAPit;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +42,7 @@ public class AddStatus extends Fragment {
     private String statusImage = "";
     private final int SELECT_PHOTO = 1;
     String command;
+    public Context c;
 
     public AddStatus() {
         setHasOptionsMenu(true);
@@ -48,7 +51,7 @@ public class AddStatus extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.group_addnewpost, null, false);
-
+        c=getActivity();
         mainMessage = (EditText) v.findViewById(R.id.et_group_statuspost);
         postImage = (ImageView) v.findViewById(R.id.add_post_pic);
         addPost = (Button) v.findViewById(R.id.group_post_status);
@@ -140,9 +143,10 @@ public class AddStatus extends Fragment {
         new StatusEndpointCommunicator() {
 
             private ProgressDialog dialog;
+
             @Override
             protected void onPreExecute() {
-                dialog = new ProgressDialog(getActivity());
+                dialog = new ProgressDialog(c);
                 dialog.setMessage("Posting...");
                 dialog.show();
             }

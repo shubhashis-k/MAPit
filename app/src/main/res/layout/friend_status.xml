@@ -7,7 +7,7 @@
     <ListView
         android:id="@+id/list_frnd_status"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:longClickable="true"
         android:divider="@null" />
 

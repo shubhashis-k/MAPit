@@ -6,15 +6,17 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.InflateException;
@@ -33,19 +35,26 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.model.GmapV2Direction;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.BaseImplementation;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.d;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,12 +70,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /**
  * Created by SETU on 2/13/2015.
  */
-public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
+public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,LocationListener{
     public static View v;
     private GoogleMap map;
     private final int SELECT_PHOTO = 1;
@@ -84,6 +94,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
     Boolean Filter = false;
     Bundle info_data;
     ArrayList<Information> singleMarkerInfo;
+    GoogleApiClient mgClient;
+    Location location;
 
     public OnlyGoogleMap() {
         setHasOptionsMenu(true);
@@ -134,9 +146,28 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
         Double myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
 
+        mgClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mgClient.connect();
+
         fromPosition = new LatLng(myLat, myLng);
 
+        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
+                fromPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+                return true;
+            }
+        });
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+
+
 
 
         et = (EditText) v.findViewById(R.id.editText1);
@@ -384,7 +415,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
                     markerInfo = result;
 
                 } catch (Exception e) {
-
+                   markerInfo= new ArrayList<Information>();
                 }
                 drawMarkerAndLine(radius);
             }
@@ -426,7 +457,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
 
         double lat = add.getLatitude();
         double lng = add.getLongitude();
-
+        fromPosition = new LatLng(lat,lng);
         gotoLocation(lat, lng, 15);
 
     }
@@ -450,6 +481,12 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         super.onPause();
         if (map != null)
             map = null;
+
+            if (mgClient.isConnected()) {
+                //LocationServices.FusedLocationApi.removeLocationUpdates(mgClient, (com.google.android.gms.location.LocationListener) this);
+                mgClient.disconnect();
+
+        }
     }
 
     @Override
@@ -616,6 +653,50 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener {
         else
             return false;
     }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
+        fromPosition = new LatLng(location.getLatitude(),location.getLongitude());
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    /*@Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(getActivity(),"here",Toast.LENGTH_SHORT).show();
+        fromPosition = new LatLng(location.getLatitude(),location.getLongitude());
+        return true;
+    }*/
 
 
     private class GetRouteTask extends AsyncTask<LatLng, Void, String> {

@@ -216,7 +216,7 @@ public class StatusEndpoint {
         ArrayList <StatusData> statusList = new ArrayList<>();
         for(int i = 0 ;i < friendList.size() ; i++){
 
-            String friendMail = friendList.get(i).getData();
+            String friendMail = friendList.get(i).getExtra();
             StatusData s = showLatestStatus(friendMail);
 
             if(s.getPersonMail() != null)
