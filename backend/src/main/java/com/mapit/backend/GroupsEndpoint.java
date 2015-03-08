@@ -84,6 +84,33 @@ public class GroupsEndpoint {
         Key key = KeyFactory.stringToKey(groupKey);
         datastore.delete(key);
 
+        Query removePersonQuery = new Query(DatastoreKindNames.PersonsInGroup.getKind());
+        Filter persongroupKeyFilter = new FilterPredicate(DatastorePropertyNames.PersonsInGroup_groupKey.getProperty(), FilterOperator.EQUAL, groupKey);
+
+        removePersonQuery.setFilter(persongroupKeyFilter);
+        PreparedQuery pq = datastore.prepare(removePersonQuery);
+
+        Key requestKey = null;
+
+        for (Entity result : pq.asIterable()) {
+            requestKey = result.getKey();
+            datastore.delete(requestKey);
+        }
+
+        Query removeStatusQuery = new Query(DatastoreKindNames.StatusInGroup.getKind());
+        Filter statusgroupKeyFilter = new FilterPredicate(DatastorePropertyNames.Status_groupKey.getProperty(), FilterOperator.EQUAL, groupKey);
+
+        removeStatusQuery.setFilter(statusgroupKeyFilter);
+        PreparedQuery pqstatus = datastore.prepare(removeStatusQuery);
+
+        Key groupKeyStatus = null;
+
+        for (Entity result : pqstatus.asIterable()) {
+            groupKeyStatus = result.getKey();
+            datastore.delete(groupKeyStatus);
+        }
+
+
         ResponseMessages rm = new ResponseMessages();
         rm.setMessage(rm.Group_Deleted);
         return rm;
@@ -137,7 +164,22 @@ public class GroupsEndpoint {
 
         }
 
-        searchResult.addAll(JoinedGroupList);
+        for(int i = 0 ; i < JoinedGroupList.size() ; i++)
+        {
+            PersonsInGroup p = new PersonsInGroup();
+            PersonsInGroupEndpoint personsInGroupEndpoint = new PersonsInGroupEndpoint();
+            p.setGroupKey(JoinedGroupList.get(i).getKey());
+            p.setPersonMail(mail);
+
+            Key k = personsInGroupEndpoint.getRequestKey(p);
+            Entity statusChecker = datastore.get(k);
+
+            String status = statusChecker.getProperty(DatastorePropertyNames.PersonsInGroup_status.getProperty()).toString();
+            if(!status.equals("0"))
+                searchResult.add(JoinedGroupList.get(i));
+
+        }
+
 
         return searchResult;
     }
@@ -249,6 +291,13 @@ public class GroupsEndpoint {
         for(int i = 0 ; i < MyGroups.size() ; i++){
             Search s = MyGroups.get(i);
             String groupKey = s.getKey();
+
+            DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+            Entity GroupInfo = datastore.get(KeyFactory.stringToKey(groupKey));
+            String creator = GroupInfo.getProperty(DatastorePropertyNames.Groups_creatormail.getProperty()).toString();
+
+            if(!creator.equals(usermail))
+                continue;
 
             PersonsInGroupEndpoint personsInGroupEndpoint = new PersonsInGroupEndpoint();
 

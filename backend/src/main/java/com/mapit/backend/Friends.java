@@ -4,8 +4,8 @@ package com.mapit.backend;
  * Created by shubhashis on 1/22/2015.
  */
 public class Friends {
-    private String mail1;  //The person who requests
-    private String mail2;   //The person who Accepts
+    private String mail1;  //The person who has been requested
+    private String mail2;   //The person who requests
     private String status;
 
     public String getMail1() {

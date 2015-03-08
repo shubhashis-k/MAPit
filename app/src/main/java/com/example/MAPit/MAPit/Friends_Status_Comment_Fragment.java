@@ -174,7 +174,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
 
                                 myWallData.putString(PropertyNames.Status_groupKey.getProperty(), GroupKey);
                                 myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getmail());
-                                
+
                                 sttus.setArguments(myWallData);
 
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
