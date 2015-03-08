@@ -75,10 +75,17 @@ public class StatusFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment fragment = new Friends_Status_Comment_Fragment();
-                bundle = new Bundle();
                 StatusData st = passThisData.get(position);
+
+                bundle = new Bundle();
+                String groupKey = data.getString(PropertyNames.Status_groupKey.getProperty());
+                if(groupKey != null) {
+                    st.setGroupKey(groupKey);
+                }
+
                 ArrayList<StatusData> passData = new ArrayList<StatusData>();
                 passData.add(st);
+
                 bundle.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Status.getCommand());
                 bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passData);
                 fragment.setArguments(bundle);
@@ -168,28 +175,28 @@ public class StatusFragment extends Fragment {
         statuslistAdapter.notifyDataSetChanged();
 
 
-             for (int i = 0; i < result.size(); i++) {
-                 StatusData statusData = result.get(i);
+        for (int i = 0; i < result.size(); i++) {
+            StatusData statusData = result.get(i);
 
-                 item = new StatusListItem();
-                 item.setName(statusData.getPersonName());
-                 item.setStatus(statusData.getStatus());
-                 item.setLocation(statusData.getLocation());
+            item = new StatusListItem();
+            item.setName(statusData.getPersonName());
+            item.setStatus(statusData.getStatus());
+            item.setLocation(statusData.getLocation());
 
 
-                 if (statusData.getStatusPhoto() != null) {
-                     Log.v("pop", "called");
-                     item.setImge(statusData.getStatusPhoto());
-                 }
-                 if (statusData.getProfilePic() != null) {
-                     item.setProfilePic(statusData.getProfilePic());
-                 } else {
+            if (statusData.getStatusPhoto() != null) {
+                Log.v("pop", "called");
+                item.setImge(statusData.getStatusPhoto());
+            }
+            if (statusData.getProfilePic() != null) {
+                item.setProfilePic(statusData.getProfilePic());
+            } else {
 
-                 }
+            }
 
-                 statusListItems.add(item);
+            statusListItems.add(item);
 
-         }
+        }
 
         statuslistAdapter.notifyDataSetChanged();
     }
@@ -200,8 +207,8 @@ public class StatusFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.menu_home_fragment, menu);
         if(command.equals(Commands.Called_From_Group.getCommand())) {
-             menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
-             menu.add(0,1,1,"Switch to Map");
+            menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
+            menu.add(0,1,1,"Switch to Map");
         }
         else if(command.equals(Commands.Called_From_MyWall.getCommand())){
             menu.clear();
@@ -222,14 +229,14 @@ public class StatusFragment extends Fragment {
                     fragment = new HomeFragment();
 
                 } else if (command.equals(Commands.Called_From_Info.getCommand())) {
-                        bundle = new Bundle();
-                        bundle.putString(Commands.ForMarkerView.getCommand(), Commands.Called_From_Status.getCommand());
-                        bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
-                        fragment = new Marker_MapView();
-                        fragment.setArguments(bundle);
+                    bundle = new Bundle();
+                    bundle.putString(Commands.ForMarkerView.getCommand(), Commands.Called_From_Status.getCommand());
+                    bundle.putSerializable(Commands.Arraylist_Values.getCommand(), passThisData);
+                    fragment = new Marker_MapView();
+                    fragment.setArguments(bundle);
 
                 }
-                 else if(command.equals(Commands.Called_From_Group.getCommand())) {
+                else if(command.equals(Commands.Called_From_Group.getCommand())) {
                     Boolean logged = data.getBoolean(PropertyNames.Group_logged.getProperty());
                     if (logged) {
                         fragment = new OnlyGoogleMap();
@@ -245,7 +252,7 @@ public class StatusFragment extends Fragment {
                         return true;
                     }
 
-                 }
+                }
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);

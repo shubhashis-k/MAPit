@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,9 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.model.GmapV2Direction;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -30,7 +36,7 @@ import java.util.ArrayList;
 /**
  * Created by SETU on 1/23/2015.
  */
-public class Friend_Location_Fragment extends Fragment {
+public class Friend_Location_Fragment extends Fragment implements  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     public Friend_Location_Fragment(){setHasOptionsMenu(true);}
     //GeoPoint point1,point2;
@@ -40,6 +46,9 @@ public class Friend_Location_Fragment extends Fragment {
     MarkerOptions markerOptions;
     LatLng fromPosition, toPosition;
     Document document;
+    Location location;
+    GoogleApiClient mgClient;
+    int dis=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,12 +74,60 @@ public class Friend_Location_Fragment extends Fragment {
         Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
         fromPosition = new LatLng(lat, lng);
         toPosition = new LatLng(myLat, myLng);
+
         directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+
+        mgClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mgClient.connect();
+
         //calling the getroutetask for knowing the route
         GetRouteTask getRouteTask = new GetRouteTask();
         getRouteTask.execute();
 
+
+
         return v;
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
+        toPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 
 
@@ -90,6 +147,7 @@ public class Friend_Location_Fragment extends Fragment {
         protected String doInBackground(String... params) {
             document = route.getDocument(fromPosition, toPosition, GmapV2Direction.MODE_DRIVING);
             response = "Success";
+            dis = checkForArea(fromPosition,toPosition);
             return response;
         }
 
@@ -112,6 +170,7 @@ public class Friend_Location_Fragment extends Fragment {
                 directionMap.addMarker(markerOptions);
             }
             dialog.dismiss();
+            Toast.makeText(getActivity(),"Distance:"+String.valueOf(dis)+ " Km.",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -130,6 +189,11 @@ public class Friend_Location_Fragment extends Fragment {
         super.onPause();
         if (directionMap != null)
             directionMap = null;
+        if (mgClient.isConnected()) {
+            //LocationServices.FusedLocationApi.removeLocationUpdates(mgClient, (com.google.android.gms.location.LocationListener) this);
+            mgClient.disconnect();
+
+        }
     }
 
     @Override
@@ -162,5 +226,17 @@ public class Friend_Location_Fragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private int checkForArea( LatLng fromPosition, LatLng toPosition) {
+        Location locationA = new Location("point A");
+        locationA.setLatitude(fromPosition.latitude);
+        locationA.setLongitude(fromPosition.longitude);
+        Location locationB = new Location("point B");
+        locationB.setLatitude(toPosition.latitude);
+        locationB.setLongitude(toPosition.longitude);
+        int distance = (int) locationA.distanceTo(locationB);
+        return distance / 1000;
+
     }
 }

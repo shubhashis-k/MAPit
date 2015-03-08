@@ -15,8 +15,6 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.InflateException;
@@ -41,20 +39,12 @@ import com.example.MAPit.Data_and_Return_Data.Data;
 import com.example.MAPit.Data_and_Return_Data.GroupsEndpointReturnData;
 import com.example.MAPit.model.GmapV2Direction;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.BaseImplementation;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.common.api.d;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -76,7 +66,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by SETU on 2/13/2015.
  */
-public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,LocationListener{
+public class OnlyGoogleMap extends Fragment implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     public static View v;
     private GoogleMap map;
     private final int SELECT_PHOTO = 1;
@@ -159,15 +149,13 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
             @Override
             public boolean onMyLocationButtonClick() {
                 location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
-                fromPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
                 return true;
             }
         });
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
-
-
 
 
         et = (EditText) v.findViewById(R.id.editText1);
@@ -415,7 +403,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
                     markerInfo = result;
 
                 } catch (Exception e) {
-                   markerInfo= new ArrayList<Information>();
+                    markerInfo = new ArrayList<Information>();
                 }
                 drawMarkerAndLine(radius);
             }
@@ -438,6 +426,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
 
 
     private void gotoLocation(double lat, double lng, float zoom) {
+        populateInfoOfLocation("All", -1);
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         map.moveCamera(update);
@@ -457,7 +446,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
 
         double lat = add.getLatitude();
         double lng = add.getLongitude();
-        fromPosition = new LatLng(lat,lng);
+        fromPosition = new LatLng(lat, lng);
         gotoLocation(lat, lng, 15);
 
     }
@@ -482,9 +471,9 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
         if (map != null)
             map = null;
 
-            if (mgClient.isConnected()) {
-                //LocationServices.FusedLocationApi.removeLocationUpdates(mgClient, (com.google.android.gms.location.LocationListener) this);
-                mgClient.disconnect();
+        if (mgClient.isConnected()) {
+            //LocationServices.FusedLocationApi.removeLocationUpdates(mgClient, (com.google.android.gms.location.LocationListener) this);
+            mgClient.disconnect();
 
         }
     }
@@ -634,7 +623,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
                 }
 
 
-                map.addMarker(new MarkerOptions().position(fromPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+                //map.addMarker(new MarkerOptions().position(fromPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
             }
         }
 
@@ -657,7 +646,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
     @Override
     public void onConnected(Bundle bundle) {
         location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
-        fromPosition = new LatLng(location.getLatitude(),location.getLongitude());
+        fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
     }
 
@@ -691,13 +680,6 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
 
     }
 
-    /*@Override
-    public boolean onMyLocationButtonClick() {
-        Toast.makeText(getActivity(),"here",Toast.LENGTH_SHORT).show();
-        fromPosition = new LatLng(location.getLatitude(),location.getLongitude());
-        return true;
-    }*/
-
 
     private class GetRouteTask extends AsyncTask<LatLng, Void, String> {
 
@@ -724,6 +706,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener ,Goo
                     rectLine.add(directionPoint.get(i));
                 }
                 // Adding route on the map
+
                 map.addPolyline(rectLine);
             }
 
