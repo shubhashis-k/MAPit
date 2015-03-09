@@ -77,7 +77,7 @@ public class Friend_Request_Fragment extends Fragment {
                 ArrayList <com.mapit.backend.groupApi.model.Search> res = result.getDataList();
                 try {
                     PopulatePendingGroupList(res, Commands.Group_Join_Group.getCommand());
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
