@@ -8,10 +8,18 @@ public class Information {
     private String InfoName;
     private String InfoDescription;
     private String InformationPic;
+    private String DetailInfopic;
     private String latitude;
     private String longitude;
     private String location;
 
+    public String getDetailInfopic() {
+        return DetailInfopic;
+    }
+
+    public void setDetailInfopic(String detailInfopic) {
+        DetailInfopic = detailInfopic;
+    }
 
     public String getKindName() {
         return KindName;

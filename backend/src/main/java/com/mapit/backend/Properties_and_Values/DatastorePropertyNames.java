@@ -49,7 +49,8 @@ public enum DatastorePropertyNames {
     Information_latitude ("lat"),
     Information_longitude ("lng"),
     Information_infoPic ("infoPic"),
-    Information_location ("loc")
+    Information_detailpic ("detailPic"),
+    Information_location ("loc"),
     ;
 
     private String Property;

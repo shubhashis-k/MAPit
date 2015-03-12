@@ -53,6 +53,15 @@ public class InformationEndpoint {
             infoKind.setUnindexedProperty(DatastorePropertyNames.Information_infoPic.getProperty(), infoPhoto);
         }
 
+        if(data.getDetailInfopic()!=null) {
+            Text infoPhoto = new Text(data.getDetailInfopic());
+            infoKind.setUnindexedProperty(DatastorePropertyNames.Information_detailpic.getProperty(), infoPhoto);
+        }
+        else{
+            Text infoPhoto = new Text("");
+            infoKind.setUnindexedProperty(DatastorePropertyNames.Information_detailpic.getProperty(), infoPhoto);
+        }
+
         datastore.put(infoKind);
     }
 
@@ -96,6 +105,13 @@ public class InformationEndpoint {
                 String ImageData = imageText.getValue();
                 if (ImageData.length() > 0)
                     info.setInformationPic(ImageData);
+
+
+                Text detailImageText = (Text) result.getProperty(DatastorePropertyNames.Information_detailpic.getProperty());
+                String detailImageTextData = detailImageText.getValue();
+                if (detailImageTextData.length() > 0)
+                    info.setDetailInfopic(detailImageTextData);
+
 
                 informationList.add(info);
             }
