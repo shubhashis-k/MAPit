@@ -78,17 +78,21 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         name = (TextView) v.findViewById(R.id.group_name_single_status);
         location = (TextView) v.findViewById(R.id.timestamp_single_status);
         status = (TextView) v.findViewById(R.id.txtStatusMsg_single_status);
-        url = (TextView) v.findViewById(R.id.txtUrl_single_status);
+
 
         bundle = getArguments();
         command = bundle.getString(Commands.Fragment_Caller.getCommand());
+
+
         if (command.equals(Commands.Called_From_Location.getCommand())) {
             ArrayList<Information> data = (ArrayList<Information>) bundle.getSerializable(PropertyNames.Marker_Position.getProperty());
             Information markerInfo = data.get(0);
             name.setText(markerInfo.getInfoName());
+
+            profilePic.setVisibility(View.GONE);
             status.setText(markerInfo.getInfoDescription());
             if (markerInfo.getInformationPic() != null) {
-                profilePic.setImageBitmap(ImageConverter.stringToimageConverter(markerInfo.getInformationPic()));
+                feedPic.setImageBitmap(ImageConverter.stringToimageConverter(markerInfo.getInformationPic()));
             }
         }
 
@@ -185,7 +189,7 @@ public class Friends_Status_Comment_Fragment extends Fragment {
                         }.execute(new Pair<Data, StatusData>(d, s));
                     }
                     else
-                        Toast.makeText(getActivity(), "Sorry, Delete Your Post only!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Sorry, Delete Your Information only!", Toast.LENGTH_LONG).show();
 
                 }
 

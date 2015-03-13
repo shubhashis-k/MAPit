@@ -96,7 +96,7 @@ public class Edit_Profile extends Fragment{
                 ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
                 Bitmap selectedImage = null;
                 try {
-                    selectedImage = sh.shrinkBitmap(imageUri,50,50);
+                    selectedImage = sh.shrinkBitmap(imageUri,100,70);
                 } catch (Exception e) {
                    Toast.makeText(getActivity(),"Image Not Found",Toast.LENGTH_SHORT).show();
                 }

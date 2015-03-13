@@ -268,14 +268,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         Geocoder gc = new Geocoder(getActivity());
         List<Address> list = gc.getFromLocationName(location, 1);
-        Address add = list.get(0);
-        String locality = add.getLocality();
-        Toast.makeText(getActivity(), locality, Toast.LENGTH_LONG).show();
+        try {
+            Address add = list.get(0);
+            String locality = add.getLocality();
+            Toast.makeText(getActivity(), locality, Toast.LENGTH_LONG).show();
+            double lat = add.getLatitude();
+            double lng = add.getLongitude();
 
-        double lat = add.getLatitude();
-        double lng = add.getLongitude();
+            gotoLocation(lat, lng, 15);
+        }catch (Exception e){
+            Toast.makeText(getActivity(), "Give valid Location Name", Toast.LENGTH_LONG).show();
+        }
 
-        gotoLocation(lat, lng, 15);
 
     }
     // to hide keyboard must use getActivity() and Context

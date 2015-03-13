@@ -80,6 +80,7 @@ public class InformationEndpoint {
             Categories.add(Values.Information_Market.getValue());
             Categories.add(Values.Information_Religion.getValue());
             Categories.add(Values.Information_Transport.getValue());
+            Categories.add(Values.Information_tourism.getValue());
         }
         else
         {

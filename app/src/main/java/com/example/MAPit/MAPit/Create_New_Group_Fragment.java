@@ -136,8 +136,11 @@ public class Create_New_Group_Fragment extends Fragment {
             protected void onPostExecute(GroupsEndpointReturnData result){
 
                 super.onPostExecute(result);
-
-                String response = result.getResponseMessages();
+                try {
+                    String response = result.getResponseMessages();
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"Something went wrong.Try again!",Toast.LENGTH_SHORT).show();
+                }
 
             }
         }.execute(new Pair<Data, Groups>(d, g));

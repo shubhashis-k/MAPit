@@ -442,14 +442,18 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
 
         Geocoder gc = new Geocoder(getActivity());
         List<Address> list = gc.getFromLocationName(location, 1);
-        Address add = list.get(0);
-        String locality = add.getLocality();
-        Toast.makeText(getActivity(), locality, Toast.LENGTH_LONG).show();
+        try {
+            Address add = list.get(0);
+            String locality = add.getLocality();
+            Toast.makeText(getActivity(), locality, Toast.LENGTH_LONG).show();
 
-        double lat = add.getLatitude();
-        double lng = add.getLongitude();
-        fromPosition = new LatLng(lat, lng);
-        gotoLocation(lat, lng, 15);
+            double lat = add.getLatitude();
+            double lng = add.getLongitude();
+            fromPosition = new LatLng(lat, lng);
+            gotoLocation(lat, lng, 15);
+        }catch (Exception e){
+            Toast.makeText(getActivity(), "Give Valid Location Name", Toast.LENGTH_LONG).show();
+        }
 
     }
     // to hide keyboard must use getActivity() and Context
@@ -498,13 +502,13 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                 ShrinkBitmapConverter sh = new ShrinkBitmapConverter(getActivity());
                 Bitmap selectedImage = null;
                 try {
-                    selectedImage = sh.shrinkBitmap(imageUri, 50, 50);
+                    selectedImage = sh.shrinkBitmap(imageUri, 650, 450);
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), "Image Not Found", Toast.LENGTH_SHORT).show();
                 }
 
                 stringLocImage = ImageConverter.imageToStringConverter(selectedImage);
-                if (stringLocImage.length() > 102400) {
+                if (stringLocImage.length() > 716800) {
                     Toast.makeText(getActivity(), "Image is too big", Toast.LENGTH_LONG).show();
                 } else {
                     locImage.setImageBitmap(selectedImage);
@@ -606,7 +610,11 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                         map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
                     }
                 } else {
-                    map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    try {
+                        map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    }catch (Exception e){
+                        Toast.makeText(getActivity(),"Something went wrong.Try again!!",Toast.LENGTH_SHORT).show();
+                    }
                 }
 
 
@@ -647,9 +655,13 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
 
     @Override
     public void onConnected(Bundle bundle) {
-        location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
-        fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+        try {
+            location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
+            fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Something went wrong.Try again!",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

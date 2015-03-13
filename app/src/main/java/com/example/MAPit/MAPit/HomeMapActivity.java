@@ -139,14 +139,18 @@ public class HomeMapActivity extends FragmentActivity {
 
         Geocoder gc = new Geocoder(this);
         List<Address> list = gc.getFromLocationName(location, 1);
-        Address add = list.get(0);
-        String locality = add.getLocality();
-        Toast.makeText(this, locality, Toast.LENGTH_LONG).show();
+        try {
+            Address add = list.get(0);
+            String locality = add.getLocality();
+            Toast.makeText(this, locality, Toast.LENGTH_LONG).show();
 
-        double lat = add.getLatitude();
-        double lng = add.getLongitude();
+            double lat = add.getLatitude();
+            double lng = add.getLongitude();
 
-        gotoLocation(lat, lng, DEFAULTZOOM);
+            gotoLocation(lat, lng, DEFAULTZOOM);
+        }catch (Exception e){
+            Toast.makeText(this, "GIve Valid Location Name", Toast.LENGTH_LONG).show();
+        }
 
     }
 

@@ -123,17 +123,19 @@ public class SignUp extends Activity implements SignUp_Endpoint_Communicator.man
 
     @Override
     public void setResponseMessage(ResponseMessages response) {
-        String res = response.getMessage();
 
-        if(res.equals("OK"))
-        {
-            Toast.makeText(this, "Registration Successful!", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(SignUp.this,MainActivity.class);
-            startActivity(intent);
-        }
-        else
-        {
-            Toast.makeText(this, "Duplicate Email!", Toast.LENGTH_LONG).show();
+        try {
+            String res = response.getMessage();
+
+            if (res.equals("OK")) {
+                Toast.makeText(this, "Registration Successful!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Duplicate Email!", Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e){
+            Toast.makeText(this, "Something Unexpected Happened", Toast.LENGTH_LONG).show();
         }
 
     }

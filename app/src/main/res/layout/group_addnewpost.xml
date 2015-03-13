@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#000000"
-        android:text="Type Post : "
+        android:text="Type Information : "
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#E8E8E8"
         android:textStyle="bold"

@@ -210,7 +210,7 @@ public class StatusFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.menu_home_fragment, menu);
         if(command.equals(Commands.Called_From_Group.getCommand())) {
-            menu.findItem(R.id.switch_view_to_list).setTitle("Add New Post");
+            menu.findItem(R.id.switch_view_to_list).setTitle("Add New Information");
             menu.add(0,1,1,"Switch to Map");
         }
         else if(command.equals(Commands.Called_From_MyWall.getCommand())){

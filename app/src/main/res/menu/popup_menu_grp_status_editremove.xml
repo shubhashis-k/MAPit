@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/edit_grp_post"
-        android:title="Edit Post"/>
+        android:title="Edit Information"/>
 
     <item
         android:id="@+id/remove_grp_post"
-        android:title="Remove Post"/>
+        android:title="Remove Information"/>
 </menu>

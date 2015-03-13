@@ -95,9 +95,13 @@ public class Friend_Location_Fragment extends Fragment implements  GoogleApiClie
 
     @Override
     public void onConnected(Bundle bundle) {
-        location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
-        toPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+        try {
+            location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
+            toPosition = new LatLng(location.getLatitude(), location.getLongitude());
+            directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"GPS not enabled",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
