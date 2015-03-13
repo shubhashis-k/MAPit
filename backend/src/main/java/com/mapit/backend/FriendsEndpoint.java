@@ -165,6 +165,39 @@ public class FriendsEndpoint {
         return friendList;
     }
 
+
+    @ApiMethod(name = "fetchFriendListRequested", path = "fetchFriendListRequestedPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> fetchFriendListRequested(@Named("usermail") String Mail) throws EntityNotFoundException{
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query.Filter Mail_Filter = new Query.FilterPredicate(DatastorePropertyNames.Friends_mail2.getProperty(), Query.FilterOperator.EQUAL, Mail);
+        Query Request_Query = new Query(DatastoreKindNames.FriendsData.getKind()).setFilter(Mail_Filter);
+
+        PreparedQuery queryResult = datastore.prepare(Request_Query);
+
+        ArrayList <Search> friendList = new ArrayList<>();
+
+        for (Entity result : queryResult.asIterable()) {
+            if (result.getProperty(DatastorePropertyNames.Friends_status.getProperty()).toString().equals("0")) {
+                String fmail1 = result.getProperty(DatastorePropertyNames.Friends_mail1.getProperty()).toString();
+
+                if (!fmail1.equals(Mail)) {
+                    Search s = getInfo(fmail1);
+                    friendList.add(s);
+                }
+
+                String fmail2 = result.getProperty(DatastorePropertyNames.Friends_mail2.getProperty()).toString();
+
+                if (!fmail2.equals(Mail)) {
+                    Search s = getInfo(fmail2);
+                    friendList.add(s);
+                }
+
+            }
+        }
+        return friendList;
+    }
+
     @ApiMethod(name = "fetchListNotFriends", path = "fetchListNotFriends", httpMethod = ApiMethod.HttpMethod.POST)
     public ArrayList<Search> fetchListNotFriends(@Named("usermail") String Mail, @Named("queryString") String queryString) throws EntityNotFoundException{
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -172,6 +205,8 @@ public class FriendsEndpoint {
         SearchEndpoint searchEndpoint = new SearchEndpoint();
 
         ArrayList <Search> friendList = fetchFriendList(Mail, "1");
+        friendList.addAll(fetchFriendListRequested(Mail));
+
         ArrayList <Search> searchedList = searchEndpoint.getResult(DatastoreKindNames.Userinfo.getKind(), queryString);//returns data with user name
 
         ArrayList <Search> result = new ArrayList<>();

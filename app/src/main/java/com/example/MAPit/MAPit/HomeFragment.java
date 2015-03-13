@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     MapFragment mapFrag;
     Bundle info_data;
     private ArrayList<StatusData> passThisData;
-    final CharSequence[] items = {"Give Status", "Create Group"};
+    final CharSequence[] items = {"Give Information", "Create Group"};
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
