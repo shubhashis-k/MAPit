@@ -588,53 +588,56 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         } else {
             map.clear();
         }
+        try {
+            if (markerInfo.size() != 0) {
+                for (int i = 0; i < markerInfo.size(); i++) {
 
-        if (markerInfo.size() != 0) {
-            for (int i = 0; i < markerInfo.size(); i++) {
+                    Double lat = Double.parseDouble(markerInfo.get(i).getLatitude());
+                    Double lng = Double.parseDouble(markerInfo.get(i).getLongitude());
+                    String status = markerInfo.get(i).getInfoDescription();
+                    String name = markerInfo.get(i).getInfoName();
+                    name += "/" + String.valueOf(i);
+                    LatLng ll = new LatLng(lat, lng);
+                    if (status.length() > 20) {
+                        status = status.substring(0, 20);
+                        status += "...";
+                    }
 
-                Double lat = Double.parseDouble(markerInfo.get(i).getLatitude());
-                Double lng = Double.parseDouble(markerInfo.get(i).getLongitude());
-                String status = markerInfo.get(i).getInfoDescription();
-                String name = markerInfo.get(i).getInfoName();
-                name += "/" + String.valueOf(i);
-                LatLng ll = new LatLng(lat, lng);
-                if (status.length() > 20) {
-                    status = status.substring(0, 20);
-                    status += "...";
+                    if (rad != -1) {
+                        boolean ret = checkForArea(rad, fromPosition, ll);
+                        if (ret) {
+                            routeData.add(ll);
+                            map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                        }
+                    } else {
+                        try {
+                            map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "Something went wrong.Try again!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
                 }
 
                 if (rad != -1) {
-                    boolean ret = checkForArea(rad, fromPosition, ll);
-                    if (ret) {
-                        routeData.add(ll);
-                        map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    for (int i = 0; i < routeData.size(); i++) {
+
+                        LatLng toPosition = new LatLng(routeData.get(i).latitude, routeData.get(i).longitude);
+                        new GetRouteTask() {
+                            @Override
+                            protected void onPostExecute(String s) {
+                                super.onPostExecute(s);
+                            }
+                        }.execute((LatLng) toPosition);
                     }
-                } else {
-                    try {
-                        map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-                    }catch (Exception e){
-                        Toast.makeText(getActivity(),"Something went wrong.Try again!!",Toast.LENGTH_SHORT).show();
-                    }
+
+
+                    //map.addMarker(new MarkerOptions().position(fromPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
                 }
-
-
             }
-
-            if (rad != -1) {
-                for (int i = 0; i < routeData.size(); i++) {
-
-                    LatLng toPosition = new LatLng(routeData.get(i).latitude, routeData.get(i).longitude);
-                    new GetRouteTask() {
-                        @Override
-                        protected void onPostExecute(String s) {
-                            super.onPostExecute(s);
-                        }
-                    }.execute((LatLng) toPosition);
-                }
-
-
-                //map.addMarker(new MarkerOptions().position(fromPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
-            }
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Problem.Try again!!",Toast.LENGTH_SHORT).show();
         }
 
     }
