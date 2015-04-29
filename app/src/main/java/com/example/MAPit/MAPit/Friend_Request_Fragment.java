@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -113,22 +114,25 @@ public class Friend_Request_Fragment extends Fragment {
     public void PopulatePendingGroupList(ArrayList<com.mapit.backend.groupApi.model.Search> result, String request_Type) throws IOException{
         listItems.clear();
         listAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < result.size(); i++) {
+                com.mapit.backend.groupApi.model.Search s = result.get(i);
 
-        for (int i = 0; i < result.size(); i++) {
-            com.mapit.backend.groupApi.model.Search s = result.get(i);
+                item = new Friend_Request_ListItem();
+                item.setUser_Name(s.getData());
+                item.setButton_type(request_Type);
+                item.setUsermail(s.getExtra());
+                item.setStringKey(s.getKey());
+                item.setUser_location(s.getExtra1());
 
-            item = new Friend_Request_ListItem();
-            item.setUser_Name(s.getData());
-            item.setButton_type(request_Type);
-            item.setUsermail(s.getExtra());
-            item.setStringKey(s.getKey());
-            item.setUser_location(s.getExtra1());
+                if (s.getPicData() != null) {
+                    item.setUser_Imge(s.getPicData());
+                }
 
-            if (s.getPicData() != null) {
-                item.setUser_Imge(s.getPicData());
+                listItems.add(item);
             }
-
-            listItems.add(item);
+        }catch(Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         // notify data changes to list adapter
@@ -140,21 +144,24 @@ public class Friend_Request_Fragment extends Fragment {
     public void PopulatePendingFriendList(ArrayList<Search> result, String request_Type) throws IOException{
         listItems.clear();
         listAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < result.size(); i++) {
+                Search s = result.get(i);
 
-        for (int i = 0; i < result.size(); i++) {
-            Search s = result.get(i);
+                item = new Friend_Request_ListItem();
+                item.setUser_Name(s.getData());
+                item.setButton_type(request_Type);
+                item.setUser_location(s.getLocation());
 
-            item = new Friend_Request_ListItem();
-            item.setUser_Name(s.getData());
-            item.setButton_type(request_Type);
-            item.setUser_location(s.getLocation());
+                item.setUsermail(s.getExtra());
+                if (s.getPicData() != null) {
+                    item.setUser_Imge(s.getPicData());
+                }
 
-            item.setUsermail(s.getExtra());
-            if (s.getPicData() != null) {
-                item.setUser_Imge(s.getPicData());
+                listItems.add(item);
             }
-
-            listItems.add(item);
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         // notify data changes to list adapter

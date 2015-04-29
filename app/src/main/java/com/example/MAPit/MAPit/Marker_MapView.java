@@ -178,28 +178,31 @@ public class Marker_MapView extends Fragment {
 
     private void drawMarkerAndLineForGroupStatus(ArrayList<StatusData> result) {
 
+       try {
+           if (result.size() != 0) {
+               for (int i = 0; i < result.size(); i++) {
+                   String status = result.get(i).getStatus();
+                   String name = result.get(i).getPersonName();
+                   String email = result.get(i).getPersonMail();
+                   name += "/" + email;
+                   name += "&" + String.valueOf(i);
+                   Double lat = Double.parseDouble(result.get(i).getLatitude());
+                   Double lng = Double.parseDouble(result.get(i).getLongitude());
+                   if (status.length() > 20) {
+                       status = status.substring(0, 20);
+                       status += "...";
+                   }
+                   LatLng ll = new LatLng(lat, lng);
+                   map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                   if (i == 0) {
+                       map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                   }
+               }
 
-        if (result.size() != 0) {
-            for (int i = 0; i < result.size(); i++) {
-                String status = result.get(i).getStatus();
-                String name = result.get(i).getPersonName();
-                String email = result.get(i).getPersonMail();
-                name += "/" + email;
-                name += "&" + String.valueOf(i);
-                Double lat = Double.parseDouble(result.get(i).getLatitude());
-                Double lng = Double.parseDouble(result.get(i).getLongitude());
-                if (status.length() > 20) {
-                    status = status.substring(0, 20);
-                    status += "...";
-                }
-                LatLng ll = new LatLng(lat, lng);
-                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-                if (i == 0) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-                }
-            }
-
-        }
+           }
+       }catch (Exception e){
+           Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
+       }
     }
 
     private void drawMarkerAndLineForGroup(ArrayList<Search> result) {
@@ -208,34 +211,38 @@ public class Marker_MapView extends Fragment {
                 .fillColor(0x330000FF)
                 .strokeColor(Color.BLUE)
                 .strokeWidth(3);
-        if (result.size() != 0) {
-            for (int i = 0; i < result.size(); i++) {
-                String status = result.get(i).getExtra();
-                String name = result.get(i).getData();
-                String key = result.get(i).getKey();
-                name += "/" + key;
-                String permission = result.get(i).getExtra1();
-                name += "~" + permission;
+        try {
+            if (result.size() != 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    String status = result.get(i).getExtra();
+                    String name = result.get(i).getData();
+                    String key = result.get(i).getKey();
+                    name += "/" + key;
+                    String permission = result.get(i).getExtra1();
+                    name += "~" + permission;
 
-                Double lat = Double.parseDouble(result.get(i).getLatitude());
-                Double lng = Double.parseDouble(result.get(i).getLongitude());
+                    Double lat = Double.parseDouble(result.get(i).getLatitude());
+                    Double lng = Double.parseDouble(result.get(i).getLongitude());
 
-                if(command.equals(Commands.Called_From_Status.getCommand())) {
-                    if (status.length() > 20) {
-                        status = status.substring(0, 20);
-                        status += "...";
+                    if (command.equals(Commands.Called_From_Status.getCommand())) {
+                        if (status.length() > 20) {
+                            status = status.substring(0, 20);
+                            status += "...";
+                        }
+                    }
+
+
+                    LatLng ll = new LatLng(lat, lng);
+                    options.add(ll);
+                    map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    if (i == 0) {
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
                     }
                 }
-
-
-                LatLng ll = new LatLng(lat, lng);
-                options.add(ll);
-                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-                if (i == 0) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-                }
+                map.addPolygon(options);
             }
-            map.addPolygon(options);
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -245,27 +252,31 @@ public class Marker_MapView extends Fragment {
                 .fillColor(0x330000FF)
                 .strokeColor(Color.BLUE)
                 .strokeWidth(3);
-        if (result.size() != 0) {
-            for (int i = 0; i < result.size(); i++) {
-                String status = result.get(i).getStatus();
-                String name = result.get(i).getPersonName();
-                String email = result.get(i).getPersonMail();
-                name += "/" + email;
-                name += "&" + String.valueOf(i);
-                Double lat = Double.parseDouble(result.get(i).getLatitude());
-                Double lng = Double.parseDouble(result.get(i).getLongitude());
-                if (status.length() > 20) {
-                    status = status.substring(0, 20);
-                    status += "...";
+        try {
+            if (result.size() != 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    String status = result.get(i).getStatus();
+                    String name = result.get(i).getPersonName();
+                    String email = result.get(i).getPersonMail();
+                    name += "/" + email;
+                    name += "&" + String.valueOf(i);
+                    Double lat = Double.parseDouble(result.get(i).getLatitude());
+                    Double lng = Double.parseDouble(result.get(i).getLongitude());
+                    if (status.length() > 20) {
+                        status = status.substring(0, 20);
+                        status += "...";
+                    }
+                    LatLng ll = new LatLng(lat, lng);
+                    options.add(ll);
+                    map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    if (i == 0) {
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                    }
                 }
-                LatLng ll = new LatLng(lat, lng);
-                options.add(ll);
-                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-                if (i == 0) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-                }
+                map.addPolygon(options);
             }
-            map.addPolygon(options);
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
     }

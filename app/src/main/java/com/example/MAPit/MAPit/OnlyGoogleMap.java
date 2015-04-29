@@ -350,7 +350,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     drawMarkerForGroups(AllGroups);
 
                 } catch (Exception e) {
-
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(new Pair<Data, Groups>(info, g));
@@ -364,21 +364,25 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         } else {
             map.clear();
         }
+        try {
+            if (allGroups.size() != 0) {
+                for (int i = 0; i < allGroups.size(); i++) {
 
-        if (allGroups.size() != 0) {
-            for (int i = 0; i < allGroups.size(); i++) {
+                    Double lat = Double.parseDouble(allGroups.get(i).getLatitude());
+                    Double lng = Double.parseDouble(allGroups.get(i).getLongitude());
+                    String status = allGroups.get(i).getExtra();
+                    String name = allGroups.get(i).getData();
 
-                Double lat = Double.parseDouble(allGroups.get(i).getLatitude());
-                Double lng = Double.parseDouble(allGroups.get(i).getLongitude());
-                String status = allGroups.get(i).getExtra();
-                String name = allGroups.get(i).getData();
+                    LatLng ll = new LatLng(lat, lng);
 
-                LatLng ll = new LatLng(lat, lng);
+                    map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
 
-                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-
+                }
             }
+        }catch ( Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public String getmail() {
@@ -663,7 +667,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
             fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
         }catch (Exception e){
-            Toast.makeText(getActivity(),"Something went wrong.Try again!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
     }
 

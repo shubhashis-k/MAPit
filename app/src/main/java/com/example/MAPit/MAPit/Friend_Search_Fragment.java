@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import com.example.MAPit.Commands_and_Properties.Commands;
@@ -110,7 +111,7 @@ public class Friend_Search_Fragment extends Fragment {
                     PopulateFriends(res);
                 }
                 catch(Exception e){
-
+                    Toast.makeText(getActivity(), "Internet Connection Error.", Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(new Pair<Data, Friends>(info, f));
@@ -119,20 +120,23 @@ public class Friend_Search_Fragment extends Fragment {
     public void PopulateFriends(ArrayList<Search> a) {
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < a.size(); i++) {
+                Search s = a.get(i);
 
-        for (int i = 0; i < a.size(); i++) {
-            Search s = a.get(i);
-
-            item = new SearchListItem();
-            item.setName(s.getData());
-            item.setLocation(s.getLocation());
-            item.setKey(s.getKey());
-            item.setButton(Commands.Button_removeFriend.getCommand());
-            item.setExtra(s.getExtra());
-            if (s.getPicData() != null) {
-                item.setImage(s.getPicData());
+                item = new SearchListItem();
+                item.setName(s.getData());
+                item.setLocation(s.getLocation());
+                item.setKey(s.getKey());
+                item.setButton(Commands.Button_removeFriend.getCommand());
+                item.setExtra(s.getExtra());
+                if (s.getPicData() != null) {
+                    item.setImage(s.getPicData());
+                }
+                listItems.add(item);
             }
-            listItems.add(item);
+        }catch ( Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         // notify data changes to list adapter
@@ -164,7 +168,7 @@ public class Friend_Search_Fragment extends Fragment {
                     PopulateNotFriends(res);
                 }
                 catch(Exception e){
-
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(new Pair<Data, Friends>(info, f));
@@ -173,20 +177,23 @@ public class Friend_Search_Fragment extends Fragment {
     public void PopulateNotFriends(ArrayList<Search> a) {
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < a.size(); i++) {
+                Search s = a.get(i);
 
-        for (int i = 0; i < a.size(); i++) {
-            Search s = a.get(i);
-
-            item = new SearchListItem();
-            item.setName(s.getData());
-            item.setLocation(s.getLocation());
-            item.setButton(Commands.Button_addFriend.getCommand());
-            if (s.getPicData() != null) {
-                item.setImage(s.getPicData());
+                item = new SearchListItem();
+                item.setName(s.getData());
+                item.setLocation(s.getLocation());
+                item.setButton(Commands.Button_addFriend.getCommand());
+                if (s.getPicData() != null) {
+                    item.setImage(s.getPicData());
+                }
+                item.setKey(s.getKey());
+                item.setExtra(s.getExtra());
+                listItems.add(item);
             }
-            item.setKey(s.getKey());
-            item.setExtra(s.getExtra());
-            listItems.add(item);
+        }catch(Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         // notify data changes to list adapter

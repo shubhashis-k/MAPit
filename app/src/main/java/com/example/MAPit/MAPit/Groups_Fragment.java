@@ -139,7 +139,7 @@ public class Groups_Fragment extends Fragment {
                     PopulateMyGroups(res);
                 }
                 catch (Exception e){
-
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(new Pair<Data, Groups>(info, g));
@@ -148,27 +148,30 @@ public class Groups_Fragment extends Fragment {
     public void PopulateMyGroups(ArrayList<Search> a){
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < a.size(); i++) {
+                Search s = a.get(i);
 
-        for (int i = 0; i < a.size(); i++) {
-            Search s = a.get(i);
+                SearchListItem item = new SearchListItem();
+                item.setName(s.getData());
+                //item.setLocation("Khulna");
+                item.setLocation(s.getLocation());
 
-            SearchListItem item = new SearchListItem();
-            item.setName(s.getData());
-            //item.setLocation("Khulna");
-            item.setLocation(s.getLocation());
+                if (s.getPicData() != null)
+                    item.setImage(s.getPicData());
 
-            if(s.getPicData() != null)
-                item.setImage(s.getPicData());
+                item.setKey(s.getKey());
 
-            item.setKey(s.getKey());
+                if (s.getExtra2().equals(getmail()))
+                    item.setButton(Commands.Group_Remove.getCommand());
+                else
+                    item.setButton(Commands.Leave_Group.getCommand());
 
-            if(s.getExtra2().equals(getmail()))
-                item.setButton(Commands.Group_Remove.getCommand());
-            else
-                item.setButton(Commands.Leave_Group.getCommand());
-
-            item.setExtra(s.getExtra2());
-            listItems.add(item);
+                item.setExtra(s.getExtra2());
+                listItems.add(item);
+            }
+        }catch(Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         // notify data changes to list adapter
@@ -199,7 +202,7 @@ public class Groups_Fragment extends Fragment {
                     PopulateSearchGroup(res);
                 }
                 catch (Exception e){
-
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -209,19 +212,22 @@ public class Groups_Fragment extends Fragment {
     public void PopulateSearchGroup(ArrayList<Search> a){
         listItems.clear();
         searchListAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < a.size(); i++) {
+                Search s = a.get(i);
 
-        for (int i = 0; i < a.size(); i++) {
-            Search s = a.get(i);
-
-            SearchListItem item = new SearchListItem();
-            item.setName(s.getData());
-            item.setLocation(s.getLocation());
-            if(s.getPicData() != null)
-                item.setImage(s.getPicData());
-            item.setButton(Commands.Group_Join_Group.getCommand());
-            item.setKey(s.getKey());
-            item.setExtra(getmail());
-            listItems.add(item);
+                SearchListItem item = new SearchListItem();
+                item.setName(s.getData());
+                item.setLocation(s.getLocation());
+                if (s.getPicData() != null)
+                    item.setImage(s.getPicData());
+                item.setButton(Commands.Group_Join_Group.getCommand());
+                item.setKey(s.getKey());
+                item.setExtra(getmail());
+                listItems.add(item);
+            }
+        }catch ( Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         // notify data changes to list adapter

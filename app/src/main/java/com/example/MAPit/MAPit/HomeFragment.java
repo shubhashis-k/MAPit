@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 try {
                     drawMarkerAndLine(result);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -204,31 +204,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void drawMarkerAndLine(ArrayList<StatusData> result) throws Exception{
-
-        if (result.size() != 0) {
-            PolygonOptions options = new PolygonOptions()
-                    .fillColor(0x330000FF)
-                    .strokeColor(Color.BLUE)
-                    .strokeWidth(3);
-            for (int i = 0; i < result.size(); i++) {
-                String status = result.get(i).getStatus();
-                String name = result.get(i).getPersonName();
-                String email = result.get(i).getPersonMail();
-                name += "/" + email;
-                Double lat = Double.parseDouble(result.get(i).getLatitude());
-                Double lng = Double.parseDouble(result.get(i).getLongitude());
-                if (status.length() > 20) {
-                    status = status.substring(0, 20);
-                    status += "...";
+        try {
+            if (result.size() != 0) {
+                PolygonOptions options = new PolygonOptions()
+                        .fillColor(0x330000FF)
+                        .strokeColor(Color.BLUE)
+                        .strokeWidth(3);
+                for (int i = 0; i < result.size(); i++) {
+                    String status = result.get(i).getStatus();
+                    String name = result.get(i).getPersonName();
+                    String email = result.get(i).getPersonMail();
+                    name += "/" + email;
+                    Double lat = Double.parseDouble(result.get(i).getLatitude());
+                    Double lng = Double.parseDouble(result.get(i).getLongitude());
+                    if (status.length() > 20) {
+                        status = status.substring(0, 20);
+                        status += "...";
+                    }
+                    LatLng ll = new LatLng(lat, lng);
+                    options.add(ll);
+                    map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
+                    if (i == 0) {
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                    }
                 }
-                LatLng ll = new LatLng(lat, lng);
-                options.add(ll);
-                map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
-                if (i == 0) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-                }
+                map.addPolygon(options);
             }
-            map.addPolygon(options);
+        }catch ( Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
 

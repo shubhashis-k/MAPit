@@ -124,7 +124,7 @@ public class StatusFragment extends Fragment {
                 try {
                     populate(result);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -154,7 +154,7 @@ public class StatusFragment extends Fragment {
                 try {
                     populate(result);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(new Pair<Data, StatusData>(d, s));
@@ -168,7 +168,7 @@ public class StatusFragment extends Fragment {
         try {
             populate(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -177,28 +177,32 @@ public class StatusFragment extends Fragment {
         statusListItems.clear();
         statuslistAdapter.notifyDataSetChanged();
 
+        try {
 
-        for (int i = 0; i < result.size(); i++) {
-            StatusData statusData = result.get(i);
+            for (int i = 0; i < result.size(); i++) {
+                StatusData statusData = result.get(i);
 
-            item = new StatusListItem();
-            item.setName(statusData.getPersonName());
-            item.setStatus(statusData.getStatus());
-            item.setLocation(statusData.getLocation());
+                item = new StatusListItem();
+                item.setName(statusData.getPersonName());
+                item.setStatus(statusData.getStatus());
+                item.setLocation(statusData.getLocation());
 
 
-            if (statusData.getStatusPhoto() != null) {
-                Log.v("pop", "called");
-                item.setImge(statusData.getStatusPhoto());
+                if (statusData.getStatusPhoto() != null) {
+                    Log.v("pop", "called");
+                    item.setImge(statusData.getStatusPhoto());
+                }
+                if (statusData.getProfilePic() != null) {
+                    item.setProfilePic(statusData.getProfilePic());
+                } else {
+
+                }
+
+                statusListItems.add(item);
+
             }
-            if (statusData.getProfilePic() != null) {
-                item.setProfilePic(statusData.getProfilePic());
-            } else {
-
-            }
-
-            statusListItems.add(item);
-
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Internet Connection Error.",Toast.LENGTH_SHORT).show();
         }
 
         statuslistAdapter.notifyDataSetChanged();

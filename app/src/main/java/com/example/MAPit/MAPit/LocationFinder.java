@@ -2,6 +2,7 @@ package com.example.MAPit.MAPit;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -23,7 +24,7 @@ public class LocationFinder extends AsyncTask <LocationFinderData, Void, Locatio
         try {
             loc=ll.GetLocation(Lat,Long);
         } catch (IOException e) {
-            e.printStackTrace();
+            Toast.makeText(context, "Internet Connection Error.", Toast.LENGTH_SHORT).show();
         }
 
         LocationFinderData returnData = new LocationFinderData();
