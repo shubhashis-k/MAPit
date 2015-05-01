@@ -26,6 +26,8 @@ public class ResponseMessages {
     public final String Person_added_Accepted = "Person added!";
     public final String Person_removed = "Person removed!";
 
+    public final String GCM_registered = "Registered";
+    public final String GCM_notregistered = "Not registered";
 
     public void setMessage(String message)
     {

@@ -9,7 +9,8 @@ public enum DatastoreKindNames {
     Groups ("Groups"),
     PersonsInGroup ("PersonsInGroup"),
     StatusInGroup ("GroupStatus"),
-    StatusbyIndividual ("IndividualStatus")
+    StatusbyIndividual ("IndividualStatus"),
+    GCMdata             ("GCMdata")
     ;
 
     private String kind;

@@ -51,6 +51,8 @@ public enum DatastorePropertyNames {
     Information_infoPic ("infoPic"),
     Information_detailpic ("detailPic"),
     Information_location ("loc"),
+
+    GCMdata_id ("id"),
     ;
 
     private String Property;
