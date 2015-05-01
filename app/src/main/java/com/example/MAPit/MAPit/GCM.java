@@ -12,6 +12,8 @@ public class GCM extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gcm);
+
+        new GcmRegistrationAsyncTask(this).execute();
     }
 
 
