@@ -1,6 +1,6 @@
 package com.example.MAPit.Data_and_Return_Data;
 
-import com.mapit.backend.statusApi.model.Status;
+import com.mapit.backend.statusApi.model.StatusData;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class StatusEndpointReturnData {
     private String response;
-    private ArrayList <Status> statusList;
+    private ArrayList <StatusData> statusList;
 
     public String getResponse() {
         return response;
@@ -19,11 +19,11 @@ public class StatusEndpointReturnData {
         this.response = response;
     }
 
-    public ArrayList<Status> getStatusList() {
+    public ArrayList<StatusData> getStatusList() {
         return statusList;
     }
 
-    public void setStatusList(ArrayList<Status> statusList) {
+    public void setStatusList(ArrayList<StatusData> statusList) {
         this.statusList = statusList;
     }
 }

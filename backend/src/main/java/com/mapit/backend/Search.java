@@ -3,6 +3,8 @@ package com.mapit.backend;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import static com.google.appengine.api.datastore.KeyFactory.*;
+
 /**
  * Created by shubhashis on 1/23/2015.
  */
@@ -67,7 +69,7 @@ public class Search {
 
     public void setKey(Key key) {
 
-        String keyToString = KeyFactory.keyToString(key);
+        String keyToString = keyToString(key);
         this.key = keyToString;
     }
 

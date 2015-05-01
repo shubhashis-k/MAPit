@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 import javax.inject.Named;
 
+import static com.google.appengine.api.datastore.KeyFactory.*;
+
 
 /**
  * An endpoint class we are exposing
@@ -217,7 +219,7 @@ public class FriendsEndpoint {
             if(!friendList.contains(searchedList.get(i)) && !person.getKey().equals(searchedList.get(i).getKey()))
             {
                 String key = searchedList.get(i).getKey();
-                Key k = KeyFactory.stringToKey(key);
+                Key k = stringToKey(key);
 
                 Entity e = datastore.get(k);
                 String usermail = e.getProperty(DatastorePropertyNames.Userinfo_Mail.getProperty()).toString();

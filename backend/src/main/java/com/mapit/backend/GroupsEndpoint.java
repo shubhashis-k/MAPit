@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 import javax.inject.Named;
 
+import static com.google.appengine.api.datastore.KeyFactory.*;
+
 /**
  * An endpoint class we are exposing
  */
@@ -81,7 +83,7 @@ public class GroupsEndpoint {
     public ResponseMessages RemoveGroup(@Named("GroupKey") String groupKey) {
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Key key = KeyFactory.stringToKey(groupKey);
+        Key key = stringToKey(groupKey);
         datastore.delete(key);
 
         Query removePersonQuery = new Query(DatastoreKindNames.PersonsInGroup.getKind());
@@ -197,7 +199,7 @@ public class GroupsEndpoint {
             if(!myGroupList.contains(QueryList.get(i)) && !JoinedGroupList.contains(QueryList.get(i)))
             {
                 Search s = QueryList.get(i);
-                Key k = KeyFactory.stringToKey(s.getKey());
+                Key k = stringToKey(s.getKey());
 
                 s = getDetailedGroupInfo(k);
                 FilteredList.add(s);
@@ -293,7 +295,7 @@ public class GroupsEndpoint {
             String groupKey = s.getKey();
 
             DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-            Entity GroupInfo = datastore.get(KeyFactory.stringToKey(groupKey));
+            Entity GroupInfo = datastore.get(stringToKey(groupKey));
             String creator = GroupInfo.getProperty(DatastorePropertyNames.Groups_creatormail.getProperty()).toString();
 
             if(!creator.equals(usermail))

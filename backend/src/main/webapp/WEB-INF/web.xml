@@ -8,7 +8,9 @@
             <param-value>com.mapit.backend.UserinfoEndpoint, com.mapit.backend.FriendsEndpoint,
                 com.mapit.backend.SearchEndpoint, com.mapit.backend.GroupsEndpoint,
                 com.mapit.backend.PersonsInGroupEndpoint, com.mapit.backend.StatusEndpoint,
-                com.mapit.backend.infoCollectorEndpoint, com.mapit.backend.InformationEndpoint</param-value>
+                com.mapit.backend.infoCollectorEndpoint, com.mapit.backend.InformationEndpoint,
+                com.mapit.backend.MessagingEndpoint, com.mapit.backend.RegistrationEndpoint
+            </param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

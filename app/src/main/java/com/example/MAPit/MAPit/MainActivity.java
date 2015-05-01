@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 //This is my first activity
@@ -42,6 +43,14 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        Button GCM = (Button) findViewById(R.id.gcm);
+        GCM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gcmIntent = new Intent(MainActivity.this, GCM.class);
+                startActivity(gcmIntent);
+            }
+        });
 
     }
 
