@@ -13,7 +13,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check"
+        android:text="Register"
         android:id="@+id/checkbutton"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/textView"
@@ -27,5 +27,35 @@
         android:layout_toRightOf="@+id/textView"
         android:layout_toEndOf="@+id/textView"
         android:layout_marginBottom="74dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        android:id="@+id/sendButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/msgField"
+        android:layout_alignStart="@+id/msgField"
+        android:layout_marginBottom="32dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/msgField"
+        android:layout_below="@+id/checkbutton"
+        android:layout_toRightOf="@+id/mailText"
+        android:layout_toEndOf="@+id/mailText"
+        android:layout_marginTop="52dp"
+        android:text="msg" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mailField"
+        android:layout_below="@+id/msgField"
+        android:layout_alignLeft="@+id/msgField"
+        android:layout_alignStart="@+id/msgField"
+        android:text="mail" />
 
 </RelativeLayout>

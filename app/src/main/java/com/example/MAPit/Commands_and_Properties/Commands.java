@@ -72,6 +72,9 @@ public enum Commands {
 
     GCM_getRegID("GetRegID"),
     GCM_setRegID("SetRegID"),
+
+    ChatSession_insert("insert"),
+    ChatSession_fetch("fetch"),
     ;
 
     private String command;

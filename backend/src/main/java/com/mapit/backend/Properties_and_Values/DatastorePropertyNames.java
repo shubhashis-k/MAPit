@@ -53,6 +53,11 @@ public enum DatastorePropertyNames {
     Information_location ("loc"),
 
     GCMdata_id ("id"),
+
+    ChatSession_chatsessionName ("chatsession"),
+    ChatSession_personName ("personName"),
+    ChatSession_message ("message"),
+    ChatSession_msgTime ("msgTime"),
     ;
 
     private String Property;

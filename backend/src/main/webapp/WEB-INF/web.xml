@@ -18,7 +18,7 @@
                 com.mapit.backend.PersonsInGroupEndpoint, com.mapit.backend.StatusEndpoint,
                 com.mapit.backend.infoCollectorEndpoint, com.mapit.backend.InformationEndpoint,
                 com.mapit.backend.MessagingEndpoint, com.mapit.backend.RegistrationEndpoint,
-                com.mapit.backend.GCMregistrationEndpoint</param-value>
+                com.mapit.backend.GCMregistrationEndpoint, com.mapit.backend.ChatSessionEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

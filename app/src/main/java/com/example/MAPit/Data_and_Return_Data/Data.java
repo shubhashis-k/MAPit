@@ -7,10 +7,26 @@ import android.content.Context;
  */
 public class Data {
     private Context context;
-    private String usermail;
+    private String usermail, username;
     private String Command;
-    private String extra;
+    private String extra, extramsg;
     private String StringKey;
+
+    public String getExtramsg() {
+        return extramsg;
+    }
+
+    public void setExtramsg(String extramsg) {
+        this.extramsg = extramsg;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public Context getContext() {
         return context;
