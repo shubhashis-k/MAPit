@@ -28,11 +28,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
 import com.example.MAPit.Data_and_Return_Data.Data;
@@ -451,7 +453,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
             double lng = add.getLongitude();
             fromPosition = new LatLng(lat, lng);
             gotoLocation(lat, lng, 15);
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), "Give Valid Location Name", Toast.LENGTH_LONG).show();
         }
 
@@ -522,6 +524,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         if (command.equals(Commands.ShowInMap.getCommand())) {
             inflater.inflate(R.menu.menu_addnew_status, menu);
             menu.findItem(R.id.add_new_status).setTitle("Find Location");
+
         }
         if (command.equals(Commands.Group_Create.getCommand())) {
 
@@ -577,8 +580,57 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
                 dialog.show();
                 return true;
+
+            case R.id.location_timer:
+
+                Location_TimeBased_Setting();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // adding time based filtering of search and add
+    private void Location_TimeBased_Setting() {
+
+       // final TextView chk_8_12, chk_1_3,chk_4_5,chk_6_8,chk_9_12;
+        Button Update;
+
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.setting_location_timer);
+        dialog.setTitle("   Choose Your Option");
+
+        /*chk_8_12 = (TextView) dialog.findViewById(R.id.ck_8_12);
+        chk_1_3 = (TextView) dialog.findViewById(R.id.ck_1_3);
+        chk_4_5 = (TextView) dialog.findViewById(R.id.ck_4_5);
+        chk_6_8 = (TextView) dialog.findViewById(R.id.ck_6_8);
+        chk_9_12 = (TextView) dialog.findViewById(R.id.ck_9_12);
+        */
+
+
+        Update = (Button) dialog.findViewById(R.id.time_based_location_update);
+        final Spinner sp1 = (Spinner) dialog.findViewById(R.id.sp_choose_8_12);
+        final Spinner sp2 = (Spinner) dialog.findViewById(R.id.sp_choose_1_3);
+        final Spinner sp3 = (Spinner) dialog.findViewById(R.id.sp_choose_4_5);
+        final Spinner sp4 = (Spinner) dialog.findViewById(R.id.sp_choose_6_8);
+        final Spinner sp5 = (Spinner) dialog.findViewById(R.id.sp_choose_9_12);
+
+        ArrayAdapter adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.timebased_location_category, android.R.layout.simple_list_item_checked);
+        adapter2.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        sp1.setAdapter(adapter2);
+        sp2.setAdapter(adapter2);
+        sp3.setAdapter(adapter2);
+        sp4.setAdapter(adapter2);
+        sp5.setAdapter(adapter2);
+
+        Update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //at first load specific items will be in the selected of the spinner
+                //String a = "chk-8-12:"+chk_8_12.isChecked() +"\n" + "value:"+ sp1.getSelectedItem().toString();
+                //Toast.makeText(getActivity(),a,Toast.LENGTH_LONG).show();
+            }
+        });
+        dialog.show();
     }
 
 
@@ -636,8 +688,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     //map.addMarker(new MarkerOptions().position(fromPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
                 }
             }
-        }catch (Exception e){
-            Toast.makeText(getActivity(),"Internet Connection Problem.Try again!!",Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Internet Connection Problem.Try again!!", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -662,8 +714,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
             location = LocationServices.FusedLocationApi.getLastLocation(mgClient);
             fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
-        }catch (Exception e){
-            Toast.makeText(getActivity(),"Something went wrong.Try again!",Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Something went wrong.Try again!", Toast.LENGTH_SHORT).show();
         }
     }
 

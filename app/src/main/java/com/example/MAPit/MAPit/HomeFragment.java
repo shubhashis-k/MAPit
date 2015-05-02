@@ -4,13 +4,17 @@ package com.example.MAPit.MAPit;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -49,6 +53,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
     }
 
+
+    private Button chat,call,see_info;
     private Context context;
     private GoogleMap map;
     EditText et;
@@ -163,18 +169,58 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new StatusFragment();
-                fragment.setArguments(info_data);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                final Dialog dialog =new Dialog(getActivity());
+                dialog.setContentView(R.layout.call_chat_dialog);
+                dialog.setTitle("   Choose Any Option");
+
+                see_info = (Button) dialog.findViewById(R.id.b_see_information);
+                chat = (Button) dialog.findViewById(R.id.b_chat);
+                call = (Button) dialog.findViewById(R.id.b_call);
+
+                see_info.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Fragment fragment = new StatusFragment();
+                        fragment.setArguments(info_data);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
+
+                call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       makeCall();
+                    }
+                });
+
+                chat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //I have to implement chat heres
+                    }
+                });
+
+                dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
+                dialog.show();
+
             }
         });
 
         fetchFriendStatus();
 
         return v;
+    }
+
+    private void makeCall() {
+        // PhoneCallListener phoneCallListener = new PhoneCal
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:"));
+        startActivity(callIntent);
     }
 
 
