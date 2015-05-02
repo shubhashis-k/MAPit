@@ -68,7 +68,10 @@ public enum Commands {
     ShowInMap("showinmap"),
     ForMarkerView("markerView"),
     Information_set("set"),
-    Information_get("get")
+    Information_get("get"),
+
+    GCM_getRegID("GetRegID"),
+    GCM_setRegID("SetRegID"),
     ;
 
     private String command;
