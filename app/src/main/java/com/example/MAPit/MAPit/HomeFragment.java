@@ -17,6 +17,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,7 +62,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     MapFragment mapFrag;
     Bundle info_data;
     private ArrayList<StatusData> passThisData;
-    final CharSequence[] items = {"Give Information", "Create Group"};
+    final CharSequence[] items = {"Give Information", "Create Group","Buzz"};
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -117,7 +118,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
+            public void onMapLongClick(final LatLng latLng) {
                 final String lat = String.valueOf(latLng.latitude);
                 final String lng = String.valueOf(latLng.longitude);
 
@@ -149,6 +150,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                         transaction.replace(R.id.frame_container, fragment);
                                         transaction.addToBackStack(null);
                                         transaction.commit();
+                                        break;
+                                    case 2:
+                                        Intent buzz= new Intent(getActivity(),LocBuzzService.class);
+                                        Bundle b = new Bundle();
+                                        b.putDouble("lat",latLng.latitude);
+                                        b.putDouble("lng",latLng.longitude);
+                                        buzz.putExtras(b);
+                                        getActivity().startService(buzz);
+
+
                                         break;
                                     default:
                                         break;
@@ -340,7 +351,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
         ft.remove(fragment);
+        try{
         ft.commit();
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Closing MapIit",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
