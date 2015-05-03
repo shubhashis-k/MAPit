@@ -11,7 +11,7 @@ public enum DatastoreKindNames {
     StatusInGroup ("GroupStatus"),
     StatusbyIndividual ("IndividualStatus"),
     GCMdata             ("GCMdata"),
-    ChatSession ("ChatSession")
+    ChatSessionList ("ChatSessionList")
     ;
 
     private String kind;

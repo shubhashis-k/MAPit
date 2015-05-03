@@ -33,11 +33,74 @@ import javax.inject.Named;
         )
 )
 public class ChatSessionEndpoint {
+    @ApiMethod(name = "checkChatSession", path = "checkChatSessionPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ChatSession checkChatSession(@Named("SessionName") String sessionName){
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query chatSessionQuery = new Query(sessionName);
+
+        List<Entity> sessionList = datastore.prepare(chatSessionQuery).asList(FetchOptions.Builder.withLimit(1));
+
+        ChatSession cs = new ChatSession();
+        if(sessionList.size() == 1)
+        {
+            cs.setMsg("1");
+        }
+        else{
+            cs.setMsg("0");
+        }
+
+        return cs;
+    }
+
+    @ApiMethod(name = "createChatSession", path = "createChatSessionPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public void createChatSession(@Named("SessionName") String sessionName) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        ChatSession cs = checkChatSession(sessionName);
+        if(!cs.getMsg().equals("0"))
+         return;
+
+        Entity e = new Entity(DatastoreKindNames.ChatSessionList.getKind());
+        e.setProperty(DatastorePropertyNames.ChatSessionList_chatsessionName.getProperty(), sessionName);
+        datastore.put(e);
+    }
+
+    @ApiMethod(name = "searchChatSession", path = "searchChatSessionPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public List<ChatSession> searchChatSession(@Named("userMail") String userMail) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        List<ChatSession> sessionList = new ArrayList<>();
+
+        Query q = new Query(DatastoreKindNames.ChatSessionList.getKind());
+        PreparedQuery pq = datastore.prepare(q);
+        for (Entity result : pq.asIterable()) {
+            String sessionName = (String)result.getProperty(DatastorePropertyNames.ChatSessionList_chatsessionName.getProperty());
+
+            if(sessionName.substring(0, userMail.length()).equals(userMail)){
+                String pmail = sessionName.substring(userMail.length(), sessionName.length());
+
+                ChatSession cs = new ChatSession();
+                cs.setSessionName(pmail);
+
+                sessionList.add(cs);
+            }
+            else if(sessionName.substring(sessionName.length()-userMail.length(), sessionName.length()).equals(userMail))
+            {
+                String pmail = sessionName.substring(0, sessionName.length()-userMail.length());
+
+                ChatSession cs = new ChatSession();
+                cs.setSessionName(pmail);
+
+                sessionList.add(cs);
+            }
+        }
+        return sessionList;
+    }
 
     @ApiMethod(name = "insertChatMessage", path = "insertChatMessagePath", httpMethod = ApiMethod.HttpMethod.POST)
     public void insertChatMessage(ChatSession chatSession) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
+        
         Entity e = new Entity(chatSession.getSessionName());
 
         e.setProperty(DatastorePropertyNames.ChatSession_personName.getProperty(), chatSession.getNameofPerson());
