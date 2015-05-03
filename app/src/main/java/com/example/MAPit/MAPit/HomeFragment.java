@@ -212,7 +212,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 chat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //I have to implement chat heres
+                        dialog.dismiss();
+                        Fragment fragment = new ChatFragment();
+                        //fragment.setArguments(info_data);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+
                     }
                 });
 
@@ -226,6 +233,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         return v;
     }
+
 
     private void makeCall() {
         // PhoneCallListener phoneCallListener = new PhoneCal

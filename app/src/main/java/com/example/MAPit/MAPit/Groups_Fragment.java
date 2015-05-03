@@ -154,7 +154,6 @@ public class Groups_Fragment extends Fragment {
 
             SearchListItem item = new SearchListItem();
             item.setName(s.getData());
-            //item.setLocation("Khulna");
             item.setLocation(s.getLocation());
 
             if(s.getPicData() != null)
