@@ -2,5 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/add_new_status"
-        android:title="Give Information"/>
+        android:title="Give Information" />
+    <item
+        android:id="@+id/location_timer"
+        android:title="Customize Location" />
+
 </menu>

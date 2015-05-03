@@ -4,15 +4,20 @@ package com.example.MAPit.MAPit;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,13 +54,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
     }
 
+
+    private Button chat,call,see_info;
     private Context context;
     private GoogleMap map;
     EditText et;
     MapFragment mapFrag;
     Bundle info_data;
     private ArrayList<StatusData> passThisData;
-    final CharSequence[] items = {"Give Information", "Create Group"};
+    final CharSequence[] items = {"Give Information", "Create Group","Buzz"};
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -111,7 +118,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
+            public void onMapLongClick(final LatLng latLng) {
                 final String lat = String.valueOf(latLng.latitude);
                 final String lng = String.valueOf(latLng.longitude);
 
@@ -144,6 +151,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                         transaction.addToBackStack(null);
                                         transaction.commit();
                                         break;
+                                    case 2:
+                                        Intent buzz= new Intent(getActivity(),LocBuzzService.class);
+                                        Bundle b = new Bundle();
+                                        b.putDouble("lat",latLng.latitude);
+                                        b.putDouble("lng",latLng.longitude);
+                                        buzz.putExtras(b);
+                                        getActivity().startService(buzz);
+
+
+                                        break;
                                     default:
                                         break;
 
@@ -163,18 +180,66 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Fragment fragment = new StatusFragment();
-                fragment.setArguments(info_data);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                final Dialog dialog =new Dialog(getActivity());
+                dialog.setContentView(R.layout.call_chat_dialog);
+                dialog.setTitle("   Choose Any Option");
+
+                see_info = (Button) dialog.findViewById(R.id.b_see_information);
+                chat = (Button) dialog.findViewById(R.id.b_chat);
+                call = (Button) dialog.findViewById(R.id.b_call);
+
+                see_info.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Fragment fragment = new StatusFragment();
+                        fragment.setArguments(info_data);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
+
+                call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       makeCall();
+                    }
+                });
+
+                chat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Fragment fragment = new ChatFragment();
+                        //fragment.setArguments(info_data);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+
+                    }
+                });
+
+                dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
+                dialog.show();
+
             }
         });
 
         fetchFriendStatus();
 
         return v;
+    }
+
+
+    private void makeCall() {
+        // PhoneCallListener phoneCallListener = new PhoneCal
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:"));
+        startActivity(callIntent);
     }
 
 
@@ -294,7 +359,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
         ft.remove(fragment);
+        try{
         ft.commit();
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Closing MapIit",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

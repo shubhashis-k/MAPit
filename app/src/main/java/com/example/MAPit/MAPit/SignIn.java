@@ -82,6 +82,7 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
                 Intent signin_intent = new Intent(SignIn.this, SlidingDrawerActivity.class);
                 signin_intent.putExtra(PropertyNames.Userinfo_Mail.getProperty(), input_mail);
                 signin_intent.putExtra(PropertyNames.Userinfo_Username.getProperty(), logininfo.getName());
+                signin_intent.putExtra(PropertyNames.Userinfo_Mobile.getProperty(),logininfo.getMobilephone());
 
                 String imageData = logininfo.getImagedata();
                 if (imageData != null)

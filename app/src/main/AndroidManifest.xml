@@ -42,6 +42,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name="com.example.MAPit.Volley.app.AppController"
@@ -70,6 +73,9 @@
         <activity
             android:name=".SignIn"
             android:label="@string/app_name" />
+
+        <service android:name=".LocBuzzService"
+            android:exported="false"/>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

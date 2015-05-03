@@ -37,7 +37,19 @@
         <item>@drawable/ic_sign_out</item>
     </array>
 
+
     <string-array name="location_category">
+        <item>Food</item>
+        <item>Education</item>
+        <item>Transport</item>
+        <item>Tourism</item>
+        <item>Religion</item>
+        <item>Market</item>
+        <item>Accommodation</item>
+    </string-array>
+
+    <string-array name="timebased_location_category">
+        <item>All</item>
         <item>Food</item>
         <item>Education</item>
         <item>Transport</item>
