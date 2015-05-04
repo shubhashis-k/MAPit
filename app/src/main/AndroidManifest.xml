@@ -23,10 +23,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <permission
-        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:name="com.example.MAPit.MAPit.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.example.MAPit.MAPit.permission.C2D_MESSAGE" />
 
     <supports-screens
         android:anyDensity="true"
@@ -90,7 +90,7 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <category android:name="mapit.gcm" />
+                <category android:name="com.example.MAPit.MAPit" />
             </intent-filter>
         </receiver>
 

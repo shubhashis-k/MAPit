@@ -5,11 +5,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.MAPit.MAPit.ImageConverter;
@@ -27,6 +29,7 @@ public class ChatWindowAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<ChatInfo> chatListItems;
+    LinearLayout wrapper;
 
     public ChatWindowAdapter(Activity activity, List<ChatInfo> chatListItems) {
         this.activity = activity;
@@ -57,21 +60,21 @@ public class ChatWindowAdapter extends BaseAdapter {
         //if (convertView == null)
         convertView = inflater.inflate(R.layout.single_chat_row, null);
 
+        wrapper = (LinearLayout) convertView.findViewById(R.id.wrapper);
         TextView chat_text = (TextView) convertView.findViewById(R.id.chat_text);
         TextView chat_time = (TextView) convertView.findViewById(R.id.chat_time);
 
         ChatInfo chatInfo = chatListItems.get(position);
         chat_text.setText(chatInfo.getChat_text());
         chat_time.setText(chatInfo.getChat_time());
+        if (chatInfo.getDirection().equals("left")){
+            chat_text.setBackgroundResource(R.drawable.bubble_green);
+            wrapper.setGravity(Gravity.LEFT);
+        }else{
+            chat_text.setBackgroundResource(R.drawable.bubble_yellow);
+            wrapper.setGravity(Gravity.RIGHT);
+        }
 
-        // Converting timestamp into x ago format
-
-        /*
-        CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
-                Long.parseLong(item.getTimeStamp()),
-                System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
-        timestamp.setText(timeAgo);
-        */
         return convertView;
     }
 }

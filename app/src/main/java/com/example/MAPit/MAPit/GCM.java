@@ -32,7 +32,7 @@ public class GCM extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 String mail = ((EditText) findViewById(R.id.mailText)).getText().toString();
-                Check(mail, c);
+                //Check(mail, c);
             }
         });
 
@@ -78,55 +78,6 @@ public class GCM extends ActionBarActivity {
         d.setUsername(mail);
 
         new ChatSessionEndpointCommunicator().execute(d);
-    }
-
-
-
-
-    public void Check(String mail, Context c){
-        final String CheckMail = mail;
-        final Context mainContext = c;
-
-        Data d = new Data();
-        d.setUsermail(mail);
-        d.setCommand(Commands.GCM_getRegID.getCommand());
-
-        new GCMRegIDCheckerEndpointCommunicator(){
-            @Override
-            protected void onPostExecute(GCMEndpointReturnData result){
-
-                super.onPostExecute(result);
-                if(result.getRegID() != null)
-                {
-                    Toast.makeText(mainContext, "Already Registered",Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    GenerateAndRegister(CheckMail);
-                }
-            }
-        }.execute(d);
-    }
-
-    public void GenerateAndRegister(String mail){
-        regID = null;
-
-        final Data d = new Data();
-        d.setUsermail(mail);
-        d.setCommand(Commands.GCM_setRegID.getCommand());
-        final Context c = this;
-
-
-            new GcmRegistrationAsyncTask() {
-                @Override
-                protected void onPostExecute(String msg) {
-                    regID = msg;
-                    Toast.makeText(c, msg, Toast.LENGTH_LONG).show();
-                    d.setExtra(msg);
-                    new GCMRegIDCheckerEndpointCommunicator().execute(d);
-                }
-            }.execute(this);
-
     }
 
     @Override

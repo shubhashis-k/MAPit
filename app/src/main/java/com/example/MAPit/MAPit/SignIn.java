@@ -7,12 +7,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
+import com.example.MAPit.Data_and_Return_Data.Data;
+import com.example.MAPit.Data_and_Return_Data.GCMEndpointReturnData;
 import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 
 /**
@@ -63,6 +67,7 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
     public void getInformation() {
         input_mail = ((EditText) findViewById(R.id.signin_email)).getText().toString();
         input_pass = ((EditText) findViewById(R.id.signin_password)).getText().toString();
+
     }
 
     public void getPassfromDatstore() {
@@ -90,6 +95,7 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
 
                 signin_intent.putExtra(PropertyNames.Userinfo_longitude.getProperty(), logininfo.getLongitude());
                 signin_intent.putExtra(PropertyNames.Userinfo_latitude.getProperty(), logininfo.getLatitude());
+                register_gcm(input_mail, this);
                 startActivity(signin_intent);
             } else {
                 Toast.makeText(this, "Login Failed! Wrong Password", Toast.LENGTH_LONG).show();
@@ -100,6 +106,43 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
         }
 
     }
+
+    public void register_gcm(String mail, Context c){
+        final String CheckMail = mail;
+        final Context mainContext = c;
+
+        Data d = new Data();
+        d.setUsermail(mail);
+        d.setCommand(Commands.GCM_getRegID.getCommand());
+
+        new GCMRegIDCheckerEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GCMEndpointReturnData result){
+
+                super.onPostExecute(result);
+                if(result.getRegID() != null)
+                {
+                    //Toast.makeText(mainContext, "Already Registered",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    GenerateAndRegister(CheckMail);
+                }
+            }
+        }.execute(d);
+    }
+
+    public void GenerateAndRegister(String mail){
+        Data d = new Data();
+        d.setUsermail(mail);
+        d.setCommand(Commands.GCM_setRegID.getCommand());
+        d.setContext(this);
+        Log.v("status","in generateriger");
+        new GcmRegistrationAsyncTask().execute(d);
+    }
+
+
+
 
     @Override
     public void onBackPressed() {

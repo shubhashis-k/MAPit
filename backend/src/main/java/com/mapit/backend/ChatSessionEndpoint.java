@@ -118,7 +118,7 @@ public class ChatSessionEndpoint {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         List<ChatSession> msgList = new ArrayList<>();
 
-        Query chatSessionQuery = new Query(ChatSessionName).addSort(DatastorePropertyNames.ChatSession_msgTime.getProperty(), Query.SortDirection.DESCENDING);
+        Query chatSessionQuery = new Query(ChatSessionName).addSort(DatastorePropertyNames.ChatSession_msgTime.getProperty(), Query.SortDirection.ASCENDING);
 
         PreparedQuery queryResult = datastore.prepare(chatSessionQuery);
 
