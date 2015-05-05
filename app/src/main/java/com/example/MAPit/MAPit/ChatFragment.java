@@ -1,7 +1,13 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +39,8 @@ import java.util.List;
  */
 public class ChatFragment extends Fragment {
 
+    String incoming_msg;
+    //ChatBroadCastReceiver mReceiver;
     private EditText et_chat;
     Bundle mailData;
     String caller_mail;
@@ -42,6 +50,44 @@ public class ChatFragment extends Fragment {
     private List<ChatInfo> chatListItems;
     Button chat_send;
     public ChatFragment() {
+
+    }
+
+    public BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("chat","I am in BroadCastReceiver");
+            incoming_msg = intent.getStringExtra("msg");
+            //Log.i("chat",msg);
+            String sender_mail = incoming_msg.substring(0,incoming_msg.indexOf(" "));
+            String message = incoming_msg.substring(incoming_msg.indexOf(" ")+1);
+            if(sender_mail.equals(caller_mail)) {
+                updateChatWindow(message);
+            }
+
+
+        }
+    };
+
+    private void updateChatWindow(String message) {
+
+        ChatInfo chatInfo= new ChatInfo();
+        chatInfo.setChat_text(message);
+        chatInfo.setDirection("left");
+        Date d = new Date();
+        chatInfo.setChat_time(d.toString());
+        chatListItems.add(chatInfo);
+        chatWindowAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+       // mReceiver = new ChatBroadCastReceiver();
+        //getActivity().registerReceiver(new ChatBroadCastReceiver(),new IntentFilter("chatupdater"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,new IntentFilter("chatupdater"));
+        Log.i("chat", "I am in onCreate");
 
     }
 
@@ -69,11 +115,16 @@ public class ChatFragment extends Fragment {
                 chatWindowAdapter.notifyDataSetChanged();
 
                 fetchID(caller_mail);
+                //Toast.makeText(getActivity(),"working",Toast.LENGTH_LONG).show();
             }
         });
 
         return v;
     }
+
+
+
+
 
 
     public void fetchID(String mail) {
@@ -108,7 +159,7 @@ public class ChatFragment extends Fragment {
         }
 
         d.setStringKey(sessionName);
-        d.setExtramsg(et_chat.getText().toString());
+        d.setExtramsg( getMymail()+ " " + et_chat.getText().toString());
         d.setUsername(getMyName());
 
         new ChatSessionEndpointCommunicator().execute(d);

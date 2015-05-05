@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -35,6 +37,12 @@ public class GcmIntentService extends IntentService {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
                 showToast(extras.getString("message"));
+                Intent sendData = new Intent("chatupdater");
+                sendData.putExtra("msg", extras.getString("message"));
+                LocalBroadcastManager.getInstance(this).sendBroadcast(sendData);
+                Log.i("chat","i am in GCMIntentService");
+
+
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -44,7 +52,7 @@ public class GcmIntentService extends IntentService {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
             }
         });
