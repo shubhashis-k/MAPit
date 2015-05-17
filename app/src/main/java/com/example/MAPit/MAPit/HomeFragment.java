@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.mapit.backend.statusApi.model.StatusData;
+import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
+import com.mapit.backend.userinfoModelApi.model.UserinfoModelCollection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,15 +56,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
     }
 
-
-    private Button chat,call,see_info;
+    String email;
+    private Button chat, call, see_info;
     private Context context;
     private GoogleMap map;
     EditText et;
     MapFragment mapFrag;
     Bundle info_data;
     private ArrayList<StatusData> passThisData;
-    final CharSequence[] items = {"Give Information", "Create Group","Buzz"};
+    final CharSequence[] items = {"Give Information", "Create Group", "Buzz"};
 
     // public static View v;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -99,12 +101,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     TextView tvFrndStatus = (TextView) v.findViewById(R.id.tv_frnd_status);
                     String status = marker.getTitle();
                     String actual_status = status.substring(0, status.indexOf('/'));
-                    String email = status.substring(status.lastIndexOf('/') + 1);
+                    email = status.substring(status.lastIndexOf('/') + 1);
                     tvFrndname.setText(actual_status);
                     tvFrndStatus.setText(marker.getSnippet());
                     info_data = new Bundle();
                     info_data.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_Info.getCommand());
                     info_data.putString(PropertyNames.Userinfo_Mail.getProperty(), email);
+
                     return v;
                 }
             });
@@ -152,10 +155,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                         transaction.commit();
                                         break;
                                     case 2:
-                                        Intent buzz= new Intent(getActivity(),LocBuzzService.class);
+                                        Intent buzz = new Intent(getActivity(), LocBuzzService.class);
                                         Bundle b = new Bundle();
-                                        b.putDouble("lat",latLng.latitude);
-                                        b.putDouble("lng",latLng.longitude);
+                                        b.putDouble("lat", latLng.latitude);
+                                        b.putDouble("lng", latLng.longitude);
                                         buzz.putExtras(b);
                                         getActivity().startService(buzz);
 
@@ -181,7 +184,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-                final Dialog dialog =new Dialog(getActivity());
+                final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.call_chat_dialog);
                 dialog.setTitle("   Choose Any Option");
 
@@ -205,7 +208,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 call.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       makeCall();
+                        fetchCall();
                     }
                 });
 
@@ -235,10 +238,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void makeCall() {
+    private void fetchCall() {
+        final UserinfoModel userdata = new UserinfoModel();
+        userdata.setMail(email);
+
+        new SignIn_Endpoint_Communicator() {
+            @Override
+            protected void onPostExecute(UserinfoModelCollection result) {
+                try {
+                    ArrayList<UserinfoModel> result_list = (ArrayList<UserinfoModel>) result.getItems();
+                    UserinfoModel userininfo = new UserinfoModel();
+
+                    if (result_list.size() > 0)
+                        userininfo = result_list.get(0);
+
+                    String phoneNumber = userininfo.getMobilephone();
+                    makeCall(phoneNumber);
+                } catch (Exception e) {
+
+                }
+            }
+        }.execute(new Pair<Context, UserinfoModel>(this.getActivity(), userdata));
         // PhoneCallListener phoneCallListener = new PhoneCal
+    }
+
+    private void makeCall(String number) {
+
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:"));
+        callIntent.setData(Uri.parse("tel:" + number));
         startActivity(callIntent);
     }
 
@@ -268,7 +295,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }.execute(new Pair<Data, StatusData>(d, statusData));
     }
 
-    private void drawMarkerAndLine(ArrayList<StatusData> result) throws Exception{
+    private void drawMarkerAndLine(ArrayList<StatusData> result) throws Exception {
 
         if (result.size() != 0) {
             PolygonOptions options = new PolygonOptions()
@@ -341,7 +368,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             double lng = add.getLongitude();
 
             gotoLocation(lat, lng, 15);
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), "Give valid Location Name", Toast.LENGTH_LONG).show();
         }
 
@@ -353,16 +380,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
         ft.remove(fragment);
-        try{
-        ft.commit();
-        }catch (Exception e){
-            Toast.makeText(getActivity(),"Closing MapIit",Toast.LENGTH_SHORT).show();
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Closing MapIit", Toast.LENGTH_SHORT).show();
         }
     }
 

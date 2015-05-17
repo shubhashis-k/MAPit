@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -46,9 +49,10 @@ public class ChatFragment extends Fragment {
     String caller_mail;
     private ListView chatListview;
     private ChatWindowAdapter chatWindowAdapter;
-    private List<ChatSession>PreviousChatSession;
+    private List<ChatSession> PreviousChatSession;
     private List<ChatInfo> chatListItems;
     Button chat_send;
+
     public ChatFragment() {
 
     }
@@ -56,22 +60,36 @@ public class ChatFragment extends Fragment {
     public BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("chat","I am in BroadCastReceiver");
+            Log.i("chat", "I am in BroadCastReceiver");
             incoming_msg = intent.getStringExtra("msg");
             //Log.i("chat",msg);
-            String sender_mail = incoming_msg.substring(0,incoming_msg.indexOf(" "));
-            String message = incoming_msg.substring(incoming_msg.indexOf(" ")+1);
-            if(sender_mail.equals(caller_mail)) {
+            String sender_mail = incoming_msg.substring(0, incoming_msg.indexOf(" "));
+            String message = incoming_msg.substring(incoming_msg.indexOf(" ") + 1);
+            if (sender_mail.equals(caller_mail)) {
+                Log.i("chat", "Inside updateChatWindow");
                 updateChatWindow(message);
+                startNotificationSound();
             }
 
 
         }
     };
 
+    private void startNotificationSound() {
+
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
+            r.play();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(),"Something with Internet.Leaving..",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     private void updateChatWindow(String message) {
 
-        ChatInfo chatInfo= new ChatInfo();
+        ChatInfo chatInfo = new ChatInfo();
         chatInfo.setChat_text(message);
         chatInfo.setDirection("left");
         Date d = new Date();
@@ -84,9 +102,9 @@ public class ChatFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-       // mReceiver = new ChatBroadCastReceiver();
+        // mReceiver = new ChatBroadCastReceiver();
         //getActivity().registerReceiver(new ChatBroadCastReceiver(),new IntentFilter("chatupdater"));
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,new IntentFilter("chatupdater"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter("chatupdater"));
         Log.i("chat", "I am in onCreate");
 
     }
@@ -96,11 +114,11 @@ public class ChatFragment extends Fragment {
         View v = inflater.inflate(R.layout.chat_window, null, false);
         et_chat = (EditText) v.findViewById(R.id.et_chat);
         chat_send = (Button) v.findViewById(R.id.bt_chat_send);
-        chatListview = (ListView)v.findViewById(R.id.chat_listView);
+        chatListview = (ListView) v.findViewById(R.id.chat_listView);
         chatListItems = new ArrayList<ChatInfo>();
-        chatWindowAdapter = new ChatWindowAdapter(getActivity(),chatListItems);
+        chatWindowAdapter = new ChatWindowAdapter(getActivity(), chatListItems);
         chatListview.setAdapter(chatWindowAdapter);
-        mailData=getArguments();
+        mailData = getArguments();
         caller_mail = mailData.getString(PropertyNames.Userinfo_Mail.getProperty());
 
         retrieveChats();
@@ -108,7 +126,7 @@ public class ChatFragment extends Fragment {
         chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatInfo chatInfo= new ChatInfo();
+                ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setChat_text(et_chat.getText().toString());
                 chatInfo.setDirection("right");
                 chatListItems.add(chatInfo);
@@ -121,10 +139,6 @@ public class ChatFragment extends Fragment {
 
         return v;
     }
-
-
-
-
 
 
     public void fetchID(String mail) {
@@ -143,28 +157,26 @@ public class ChatFragment extends Fragment {
         }.execute(d);
     }
 
-    public void insertMsg(String DestinationID){
+    public void insertMsg(String DestinationID) {
 
         Data d = new Data();
         d.setCommand(Commands.ChatSession_insert.getCommand());
         d.setExtra(DestinationID);
 
         String sessionName = null;
-        if(caller_mail.compareTo(getMymail()) < 0){
+        if (caller_mail.compareTo(getMymail()) < 0) {
             sessionName = caller_mail + getMymail();
-        }
-        else //greater
+        } else //greater
         {
             sessionName = getMymail() + caller_mail;
         }
 
         d.setStringKey(sessionName);
-        d.setExtramsg( getMymail()+ " " + et_chat.getText().toString());
+        d.setExtramsg(getMymail() + " " + et_chat.getText().toString());
         d.setUsername(getMyName());
 
         new ChatSessionEndpointCommunicator().execute(d);
     }
-
 
 
     public String getMymail() {
@@ -181,10 +193,9 @@ public class ChatFragment extends Fragment {
 
     private void retrieveChats() {
         String sessionName = null;
-        if(caller_mail.compareTo(getMymail()) < 0){
+        if (caller_mail.compareTo(getMymail()) < 0) {
             sessionName = caller_mail + getMymail();
-        }
-        else //greater
+        } else //greater
         {
             sessionName = getMymail() + caller_mail;
         }
@@ -194,30 +205,32 @@ public class ChatFragment extends Fragment {
         d.setCommand(Commands.ChatSession_fetch.getCommand());
         d.setStringKey(sessionName);
 
-        new ChatSessionEndpointCommunicator(){
+        new ChatSessionEndpointCommunicator() {
             @Override
             protected void onPostExecute(List<ChatSession> result) {
 
                 super.onPostExecute(result);
                 PreviousChatSession = result;
                 populateChats(PreviousChatSession);
-                }
+            }
         }.execute(d);
     }
 
     private void populateChats(List<ChatSession> previousChatSession) {
-        for(int i=0;i<previousChatSession.size();i++){
+        for (int i = 0; i < previousChatSession.size(); i++) {
             ChatSession c = previousChatSession.get(i);
             ChatInfo chatInfo = new ChatInfo();
-            chatInfo.setChat_text(c.getMsg());
+            String incoming_msg = c.getMsg();
+            String message = incoming_msg.substring(incoming_msg.indexOf(" ") + 1);
+            chatInfo.setChat_text(message);
             try {
                 chatInfo.setChat_time(convertDate(c.getDate()));
             } catch (ParseException e) {
 
             }
-            if (c.getNameofPerson().equals(getMyName())){
+            if (c.getNameofPerson().equals(getMyName())) {
                 chatInfo.setDirection("right");
-            }else{
+            } else {
                 chatInfo.setDirection("left");
             }
             chatListItems.add(chatInfo);
