@@ -3,6 +3,7 @@ package com.example.MAPit.MAPit;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -21,6 +22,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.start_screen);
         TextView signin = (TextView) findViewById(R.id.signin);
         TextView signup = (TextView) findViewById(R.id.signup);
+        TextView mapit = (TextView) findViewById(R.id.st_mapit);
+        Typeface typeFace=Typeface.createFromAsset(getAssets(),"fonts/freestylefont.ttf");
+        mapit.setTypeface(typeFace);
+
 
         //must return true otherwise it will take many backbutton press to come back to the previous activity
         signup.setOnTouchListener(new View.OnTouchListener() {
@@ -43,14 +48,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        Button GCM = (Button) findViewById(R.id.gcm);
-        GCM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent gcmIntent = new Intent(MainActivity.this, GCM.class);
-                startActivity(gcmIntent);
-            }
-        });
 
     }
 

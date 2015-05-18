@@ -3,6 +3,7 @@ package com.example.MAPit.MAPit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
@@ -27,12 +29,18 @@ public class SignIn extends Activity implements SignIn_Endpoint_Communicator.man
     private String retrieved_pass;
     private String input_pass;
     private String input_mail;
+    private TextView map_it;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin);
-        Button signin = (Button) findViewById(R.id.userlogin);
+        Button signin = (Button) findViewById(R.id.userLogin);
+        map_it = (TextView) findViewById(R.id.tv_mapit);
+        Typeface typeFace=Typeface.createFromAsset(getAssets(),"fonts/freestylefont.ttf");
+        map_it.setTypeface(typeFace);
+
         //activity for userlogin
         signin.setOnClickListener(new View.OnClickListener() {
             @Override

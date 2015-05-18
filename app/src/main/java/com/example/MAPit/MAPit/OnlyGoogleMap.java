@@ -375,6 +375,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                 String status = allGroups.get(i).getExtra();
                 String name = allGroups.get(i).getData();
 
+
                 LatLng ll = new LatLng(lat, lng);
 
                 map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
@@ -598,14 +599,6 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.setting_location_timer);
         dialog.setTitle("   Choose Your Option");
-
-        /*chk_8_12 = (TextView) dialog.findViewById(R.id.ck_8_12);
-        chk_1_3 = (TextView) dialog.findViewById(R.id.ck_1_3);
-        chk_4_5 = (TextView) dialog.findViewById(R.id.ck_4_5);
-        chk_6_8 = (TextView) dialog.findViewById(R.id.ck_6_8);
-        chk_9_12 = (TextView) dialog.findViewById(R.id.ck_9_12);
-        */
-
 
         Update = (Button) dialog.findViewById(R.id.time_based_location_update);
         final Spinner sp1 = (Spinner) dialog.findViewById(R.id.sp_choose_8_12);
