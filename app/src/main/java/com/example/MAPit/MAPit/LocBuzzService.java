@@ -124,6 +124,7 @@ public class LocBuzzService extends Service implements GoogleApiClient.Connectio
                     public void onLocationChanged(Location location) {
                         current_lat = location.getLatitude();
                         current_lng = location.getLongitude();
+                        //eikhane current position ta ache dekh eita database e save korte parbi kina..eikhane theke jodi save kora jay taile r problem hobe nah
                         Log.i(TAG,"Current Data:" + String.valueOf(current_lat)+","+String.valueOf(current_lng));
                     }
                 });

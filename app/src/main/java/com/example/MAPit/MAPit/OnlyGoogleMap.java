@@ -47,6 +47,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -641,6 +642,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     Double lng = Double.parseDouble(markerInfo.get(i).getLongitude());
                     String status = markerInfo.get(i).getInfoDescription();
                     String name = markerInfo.get(i).getInfoName();
+                    String kind= markerInfo.get(i).getKindName();
                     name += "/" + String.valueOf(i);
                     LatLng ll = new LatLng(lat, lng);
                     if (status.length() > 20) {
@@ -652,6 +654,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                         boolean ret = checkForArea(rad, fromPosition, ll);
                         if (ret) {
                             routeData.add(ll);
+
                             map.addMarker(new MarkerOptions().position(ll).title(name).snippet(status));
                         }
                     } else {
