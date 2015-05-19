@@ -8,11 +8,16 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.v4.util.Pair;
 import android.util.Log;
+
+import com.example.MAPit.Commands_and_Properties.Commands;
+import com.example.MAPit.Data_and_Return_Data.Data;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.mapit.backend.locationServiceApi.model.LocationService;
 
 
 /**
@@ -113,6 +118,62 @@ public class LocBuzzService extends Service implements GoogleApiClient.Connectio
 
     @Override
     public void onConnected(Bundle bundle) {
+
+
+
+
+
+
+        //replace this portion anywhere to update location of user.
+
+        String usermail = "USER MAIL GOES HERE";
+
+        //information needed to be saved via Locationservice Class
+        LocationService ls = new LocationService();
+        ls.setStatus("1"); //one or zero whichever you prefer;
+        ls.setLongitude("12.1123123");
+        ls.setLatitude("13.222");
+        ls.setMail(usermail);
+
+        Data d = new Data();
+        d.setUsermail(usermail);
+        d.setCommand(Commands.locService_setInfo.getCommand());
+        new locServiceEndpointCommunicator().execute(new Pair<Data,LocationService> (d,ls));
+
+
+
+
+
+
+
+
+        /*
+        //replace this portion anywhere to get the location of any specific user.
+
+        String usermail = "USER MAIL GOES HERE";
+        LocationService ls = new LocationService();
+
+
+        Data d = new Data();
+        d.setUsermail(usermail);
+        d.setCommand(Commands.locService_getInfo.getCommand());
+
+        new locServiceEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(LocationService fetchedData){
+
+                //these three information you get
+                fetchedData.getLatitude();
+                fetchedData.getLongitude();
+                fetchedData.getStatus();
+
+            }
+        }
+        .execute(new Pair<Data,LocationService> (d,ls));
+
+         */
+
+
 
         Log.i(TAG, "Onconnected");
         mLocationRequest = LocationRequest.create();
