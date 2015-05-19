@@ -58,8 +58,12 @@ public enum DatastorePropertyNames {
     ChatSession_message ("message"),
     ChatSession_msgTime ("msgTime"),
 
-
     ChatSessionList_chatsessionName ("csname"),
+
+    locService_mail ("mail"),
+    locService_lat ("lat"),
+    locService_long ("long"),
+    locService_status ("stat")
     ;
 
     private String Property;
