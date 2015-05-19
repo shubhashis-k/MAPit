@@ -126,10 +126,10 @@ public class LocBuzzService extends Service implements GoogleApiClient.Connectio
 
         //replace this portion anywhere to update location of user.
 
-        String usermail = "USER MAIL GOES HERE";
+        //String usermail = "USER MAIL GOES HERE";
 
         //information needed to be saved via Locationservice Class
-        LocationService ls = new LocationService();
+        /*LocationService ls = new LocationService();
         ls.setStatus("1"); //one or zero whichever you prefer;
         ls.setLongitude("12.1123123");
         ls.setLatitude("13.222");
@@ -139,6 +139,7 @@ public class LocBuzzService extends Service implements GoogleApiClient.Connectio
         d.setUsermail(usermail);
         d.setCommand(Commands.locService_setInfo.getCommand());
         new locServiceEndpointCommunicator().execute(new Pair<Data,LocationService> (d,ls));
+        */
 
 
 
@@ -185,7 +186,21 @@ public class LocBuzzService extends Service implements GoogleApiClient.Connectio
                     public void onLocationChanged(Location location) {
                         current_lat = location.getLatitude();
                         current_lng = location.getLongitude();
-                        //eikhane current position ta ache dekh eita database e save korte parbi kina..eikhane theke jodi save kora jay taile r problem hobe nah
+
+                       //for testing purpose
+                        String usermail = "USER MAIL GOES HERE";
+                        LocationService ls = new LocationService();
+                        ls.setStatus("1"); //one or zero whichever you prefer;
+                        ls.setLongitude("12.1123123");
+                        ls.setLatitude("13.222");
+                        ls.setMail(usermail);
+
+                        Data d = new Data();
+                        d.setUsermail(usermail);
+                        d.setCommand(Commands.locService_setInfo.getCommand());
+                        new locServiceEndpointCommunicator().execute(new Pair<Data,LocationService> (d,ls));
+
+
                         Log.i(TAG,"Current Data:" + String.valueOf(current_lat)+","+String.valueOf(current_lng));
                     }
                 });
