@@ -9,8 +9,16 @@ public class Data {
     private Context context;
     private String usermail, username;
     private String Command;
-    private String extra, extramsg;
+    private String extra, extramsg, DateInfo;
     private String StringKey;
+
+    public String getDateInfo() {
+        return DateInfo;
+    }
+
+    public void setDateInfo(String dateInfo) {
+        DateInfo = dateInfo;
+    }
 
     public String getExtramsg() {
         return extramsg;

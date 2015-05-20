@@ -175,6 +175,11 @@ public class ChatFragment extends Fragment {
         d.setExtramsg(getMymail() + " " + et_chat.getText().toString());
         d.setUsername(getMyName());
 
+        Date now = new Date();
+        DateConverter dc = new DateConverter();
+        String stringDate = dc.DateToString(now);
+
+        d.setDateInfo(stringDate);
         new ChatSessionEndpointCommunicator().execute(d);
     }
 
@@ -223,11 +228,9 @@ public class ChatFragment extends Fragment {
             String incoming_msg = c.getMsg();
             String message = incoming_msg.substring(incoming_msg.indexOf(" ") + 1);
             chatInfo.setChat_text(message);
-            try {
-                chatInfo.setChat_time(convertDate(c.getDate()));
-            } catch (ParseException e) {
 
-            }
+            chatInfo.setChat_time(c.getDate());
+
             if (c.getNameofPerson().equals(getMyName())) {
                 chatInfo.setDirection("right");
             } else {
@@ -237,18 +240,5 @@ public class ChatFragment extends Fragment {
         }
         chatWindowAdapter.notifyDataSetChanged();
     }
-
-
-    private String convertDate(DateTime date) throws ParseException {
-
-        //DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd      HH:MM");
-        //String s = formatter.format(date);\
-        String oldstring = date.toString();
-        Date date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(oldstring);
-
-        String newstring = new SimpleDateFormat("yyyy-MM-dd    HH:mm").format(date1);
-        return newstring;
-    }
-
 
 }

@@ -106,11 +106,14 @@ public class ChatSessionEndpoint {
         e.setProperty(DatastorePropertyNames.ChatSession_personName.getProperty(), chatSession.getNameofPerson());
         e.setProperty(DatastorePropertyNames.ChatSession_message.getProperty(), chatSession.getMsg());
 
-        Date now = new Date();
-        e.setProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty(), now);
+        String stringDate = chatSession.getDate();
+
+        DateConverter dc = new DateConverter();
+        Date date = dc.StringToDate(stringDate);
+        e.setProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty(), date);
 
         datastore.put(e);
-        sendMessageToDevice(chatSession);
+        //sendMessageToDevice(chatSession);
     }
 
     @ApiMethod(name = "fetchChatSession", path = "fetchChatSessionPath", httpMethod = ApiMethod.HttpMethod.POST)
@@ -123,7 +126,10 @@ public class ChatSessionEndpoint {
         PreparedQuery queryResult = datastore.prepare(chatSessionQuery);
 
         for (Entity result : queryResult.asIterable()) {
-            Date msgTime = (Date) result.getProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty());
+            Date date = (Date) result.getProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty());
+            String msgTime = date.toString();
+
+
             String msg = (String) result.getProperty(DatastorePropertyNames.ChatSession_message.getProperty());
             String name = (String) result.getProperty(DatastorePropertyNames.ChatSession_personName.getProperty());
             ChatSession c = new ChatSession();
