@@ -2,27 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<EditText
-    android:id="@+id/searchBox"
-    android:layout_width="fill_parent"
-    android:layout_height="40dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginRight="10dp"
-    android:hint="  Search"
-    android:background="@drawable/rounded_edittext"
-    android:textSize="25dp"
-    />
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    <ListView
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:id="@+id/searchBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_marginRight="5dp"
+            android:hint="search"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:background="@null"/>
+        </LinearLayout>
+
+
+        <ListView
             android:id="@+id/listview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:focusable="true">
-    </ListView>
+            </ListView>
 
-    </RelativeLayout>
+
 </LinearLayout>

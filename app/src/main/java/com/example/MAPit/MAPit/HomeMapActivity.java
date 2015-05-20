@@ -20,7 +20,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -45,6 +47,8 @@ public class HomeMapActivity extends FragmentActivity {
 
         if (servicesOK()) {
             setContentView(R.layout.home_map_activity);
+            ToggleButton toggleButton = (ToggleButton)  findViewById(R.id.enPosition);
+            toggleButton.setVisibility(View.GONE);
 
             if (initMap()) {
                 Toast.makeText(this, "Ready to map!", Toast.LENGTH_SHORT)
@@ -63,7 +67,7 @@ public class HomeMapActivity extends FragmentActivity {
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
         mMap.setTrafficEnabled(true);
-        Button go = (Button) findViewById(R.id.go);
+        ImageView go = (ImageView) findViewById(R.id.go);
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +138,7 @@ public class HomeMapActivity extends FragmentActivity {
     public void geoLocate(View v) throws IOException {
         hideSoftKeyboard(v);
 
-        EditText et = (EditText) findViewById(R.id.editText1);
+        EditText et = (EditText) findViewById(R.id.etsearch);
         String location = et.getText().toString();
 
         Geocoder gc = new Geocoder(this);

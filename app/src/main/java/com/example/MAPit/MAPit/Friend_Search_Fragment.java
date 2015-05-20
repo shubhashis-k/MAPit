@@ -1,6 +1,7 @@
 package com.example.MAPit.MAPit;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,8 +14,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import com.example.MAPit.Commands_and_Properties.Commands;
@@ -58,6 +61,17 @@ public class Friend_Search_Fragment extends Fragment {
         listItems = new ArrayList<SearchListItem>();
         searchListAdapter = new SearchListAdapter(getActivity(), listItems);
         listview.setAdapter(searchListAdapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Fragment fragment = new Friend_Tracking();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         showFriends();
         searchBox.addTextChangedListener(new TextWatcher() {

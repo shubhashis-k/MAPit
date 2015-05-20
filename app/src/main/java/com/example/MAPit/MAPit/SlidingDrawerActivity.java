@@ -1,5 +1,6 @@
 package com.example.MAPit.MAPit;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,13 +37,13 @@ import com.mapit.backend.userinfoModelApi.model.UserinfoModel;
 import java.util.ArrayList;
 
 
-public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile{
+public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Profile_Endpoint_Communicator.manipulate_Edit_Profile {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mDrawerLinear;
     private TextView profile_name;
-    public ArrayList <Search> searchData;
+    public ArrayList<Search> searchData;
     private ImageView profilePic;
     public int Count;
     // nav drawer title
@@ -72,7 +74,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         profile_name.setText(profileName);
 
         String imageString = getIntent().getExtras().getString(PropertyNames.Userinfo_Profilepic.getProperty());
-        if(imageString != null)
+        if (imageString != null)
             profilePic.setImageBitmap(ImageConverter.stringToimageConverter(imageString));
 
         mTitle = mDrawerTitle = getTitle();
@@ -109,9 +111,6 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         adapter = new NavDrawerListAdapter(getApplicationContext(),
                 navDrawerItems);
         mDrawerList.setAdapter(adapter);
-
-
-
 
 
         // enabling action bar app icon and behaving it as toggle button
@@ -157,8 +156,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         });
     }
 
-    public Bundle getEmail()
-    {
+    public Bundle getEmail() {
         Bundle mailInfo = getIntent().getExtras();
         return mailInfo;
     }
@@ -169,16 +167,16 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         String username = editedInfo.getName();
         String imageText = editedInfo.getImagedata();
 
-        if(imageText == null)
+        if (imageText == null)
             imageText = "";
 
-        if(username == null)
+        if (username == null)
             username = "";
 
-        if(username.length() > 0)
+        if (username.length() > 0)
             profile_name.setText(username);
 
-        if(imageText.length() > 0)
+        if (imageText.length() > 0)
             profilePic.setImageBitmap(ImageConverter.stringToimageConverter(imageText));
 
         Toast.makeText(this, "Profile Updated!", Toast.LENGTH_LONG).show();
@@ -201,7 +199,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 public void run() {
                     displayView(position);
                 }
-            },250);
+            }, 250);
 
 
         }
@@ -215,26 +213,26 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         switch (position) {
             case 0:
                 fragment = new HomeFragment();
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 1:
                 fragment = new Friend_Search_Fragment();
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 2:
                 fragment = new Groups_Fragment();
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 3:
                 fragment = new Friend_Request_Fragment();
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 Bundle frienddata = new Bundle();
                 frienddata.putString(Commands.Notification_job.getCommand(), Commands.Friends_Request.getCommand());
                 fragment.setArguments(frienddata);
                 break;
             case 4:
                 fragment = new Friend_Request_Fragment();
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 Bundle groupdata = new Bundle();
                 groupdata.putString(Commands.Notification_job.getCommand(), Commands.Group_Join_Group.getCommand());
                 fragment.setArguments(groupdata);
@@ -245,17 +243,17 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
                 myWallData.putString(Commands.Fragment_Caller.getCommand(), Commands.Called_From_MyWall.getCommand());
                 myWallData.putString(PropertyNames.Userinfo_Mail.getProperty(), getEmail().getString(PropertyNames.Userinfo_Mail.getProperty()));
                 fragment.setArguments(myWallData);
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 6:
                 fragment = new OnlyGoogleMap();
                 Bundle data = new Bundle();
-                data.putString(Commands.SearchAndADD.getCommand(),Commands.ShowInMap.getCommand());
+                data.putString(Commands.SearchAndADD.getCommand(), Commands.ShowInMap.getCommand());
                 fragment.setArguments(data);
-                getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;
             case 7:
-                Intent intent = new Intent(SlidingDrawerActivity.this,SignIn.class);
+                Intent intent = new Intent(SlidingDrawerActivity.this, SignIn.class);
                 startActivity(intent);
                 break;
             default:
@@ -266,7 +264,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
     private void startFragment(Fragment fragment, int position) {
         //mDrawerLayout.closeDrawer(mDrawerLinear);
-        FragmentManager fm= getFragmentManager();
+        FragmentManager fm = getFragmentManager();
         int count = fm.getBackStackEntryCount();
         for (int i = 0; i < count; ++i) {
             fm.popBackStackImmediate();
@@ -274,7 +272,7 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
 
         if (fragment != null) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container,fragment);
+            transaction.replace(R.id.frame_container, fragment);
             transaction.addToBackStack(null);
             transaction.commit();
 
@@ -303,9 +301,6 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
-
 
 
     /**
@@ -350,9 +345,30 @@ public class SlidingDrawerActivity extends ActionBarActivity implements Edit_Pro
             //int count = getFragmentManager().getBackStackEntryCount();
             getFragmentManager().popBackStack();
         } else {
-            Toast.makeText(this,"Leaving..",Toast.LENGTH_LONG).show();
-            Intent sigIn = new Intent(SlidingDrawerActivity.this,SignIn.class);
-            startActivity(sigIn);
+
+            final Dialog exit = new Dialog(this);
+            exit.setContentView(R.layout.exit_dialog);
+            exit.setTitle("Exit");
+            Button Yes = (Button) exit.findViewById(R.id.btexit);
+            Button No = (Button) exit.findViewById(R.id.btremain);
+
+            Yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Leaving..", Toast.LENGTH_SHORT).show();
+                    Intent sigIn = new Intent(SlidingDrawerActivity.this, SignIn.class);
+                    startActivity(sigIn);
+                }
+            });
+
+            No.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    exit.dismiss();
+                }
+            });
+
+            exit.show();
         }
     }
 

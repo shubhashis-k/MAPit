@@ -80,6 +80,8 @@
 
         <service android:name=".LocBuzzService"
             android:exported="false"/>
+        <service android:name=".EnableLocation"
+            android:exported="false"/>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

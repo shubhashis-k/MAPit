@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,10 +54,10 @@ public class ChatFragment extends Fragment {
     private ChatWindowAdapter chatWindowAdapter;
     private List<ChatSession> PreviousChatSession;
     private List<ChatInfo> chatListItems;
-    Button chat_send;
+    ImageView chat_send;
 
     public ChatFragment() {
-
+          setHasOptionsMenu(true);
     }
 
     public BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -113,7 +116,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.chat_window, null, false);
         et_chat = (EditText) v.findViewById(R.id.et_chat);
-        chat_send = (Button) v.findViewById(R.id.bt_chat_send);
+        chat_send = (ImageView) v.findViewById(R.id.bt_chat_send);
         chatListview = (ListView) v.findViewById(R.id.chat_listView);
         chatListItems = new ArrayList<ChatInfo>();
         chatWindowAdapter = new ChatWindowAdapter(getActivity(), chatListItems);
@@ -174,8 +177,12 @@ public class ChatFragment extends Fragment {
         d.setStringKey(sessionName);
         d.setExtramsg(getMymail() + " " + et_chat.getText().toString());
         d.setUsername(getMyName());
-
-        new ChatSessionEndpointCommunicator().execute(d);
+        try {
+            new ChatSessionEndpointCommunicator().execute(d);
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"something went wrong",Toast.LENGTH_SHORT).show();
+        }
+        et_chat.setText("");
     }
 
 
@@ -250,5 +257,9 @@ public class ChatFragment extends Fragment {
         return newstring;
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
 }

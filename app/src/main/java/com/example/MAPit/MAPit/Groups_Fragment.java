@@ -14,9 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -43,21 +45,33 @@ public class Groups_Fragment extends Fragment {
     private SearchListAdapter searchListAdapter;
     private List<SearchListItem> listItems;
     private boolean ShowingMyGroups = false;
-
+    private ToggleButton searchCategory;
     public Groups_Fragment() {
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.search_list_adapter_layout, null, false);
+        View v = inflater.inflate(R.layout.groups_search_layout, null, false);
         res = new ArrayList<>();
+        searchCategory = (ToggleButton) v.findViewById(R.id.tbgroupsearch);
         searchBox = (EditText) v.findViewById(R.id.searchBox);
         listview = (ListView) v.findViewById(R.id.listview);
         listItems = new ArrayList<SearchListItem>();
         searchListAdapter = new SearchListAdapter(getActivity(), listItems);
         listview.setAdapter(searchListAdapter);
         listview.setItemsCanFocus(true);
+
+        searchCategory.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    //here search by location name
+                }else{
+                    //here search by group name
+                }
+            }
+        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

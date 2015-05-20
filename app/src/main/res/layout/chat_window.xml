@@ -2,25 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/samplebackground">
 
     <ListView
         android:id="@+id/chat_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_wrapper"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/lledit"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true">
     </ListView>
 
-    <RelativeLayout
-        android:id="@+id/chat_wrapper"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:orientation="vertical" >
-
-        <EditText
+      <!--  <EditText
             android:id="@+id/et_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,6 +30,36 @@
             android:text="Send"
             android:layout_marginRight="10dp"
             android:id="@+id/bt_chat_send"/>
-    </RelativeLayout>
+            -->
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:layout_margin="10dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/lledit">
+
+        <EditText
+            android:id="@+id/et_chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_marginRight="5dp"
+            android:hint="Type"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:background="@null"/>
+
+        <ImageView
+            android:id="@+id/bt_chat_send"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="-1dp"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_arrow" />
+        </LinearLayout>
+    </RelativeLayout>

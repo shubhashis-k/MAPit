@@ -7,7 +7,9 @@
         android:id="@+id/wrapper"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent">
 
         <TextView
             android:id="@+id/chat_time"

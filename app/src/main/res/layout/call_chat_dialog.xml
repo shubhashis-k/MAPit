@@ -8,7 +8,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="See Info"/>
+        android:text="Info"
+        android:textColor="#FFFFFF"
+        android:background="#6699FF"
+        android:layout_marginTop="10dp"/>
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
@@ -21,7 +24,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:text="Call"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:background="#CCFF33"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:id="@+id/b_chat"
@@ -29,7 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:text="Chat"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:background="#99FF99"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="10dp"/>
 
     </RelativeLayout>
 

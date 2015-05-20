@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -105,6 +106,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         }
         try {
             v = inflater.inflate(R.layout.home_map_activity, null, false);
+            ToggleButton toggleButton = (ToggleButton) v.findViewById(R.id.enPosition);
+            toggleButton.setVisibility(View.GONE);
         } catch (InflateException e) {
             Toast.makeText(getActivity(), "Map can't be loaded", Toast.LENGTH_LONG).show();
         }
@@ -161,9 +164,9 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
 
 
-        et = (EditText) v.findViewById(R.id.editText1);
+        et = (EditText) v.findViewById(R.id.etsearch);
         //added the go button listener
-        Button go = (Button) v.findViewById(R.id.go);
+       ImageView go = (ImageView) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
         singleMarkerInfo = new ArrayList<Information>();

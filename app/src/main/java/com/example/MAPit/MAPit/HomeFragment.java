@@ -11,6 +11,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,9 +27,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -56,6 +60,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
     }
 
+    boolean togstate;
+    ToggleButton toggleButton;
     String email;
     private Button chat, call, see_info;
     private Context context;
@@ -70,8 +76,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        Log.i("Tracking","I am in onCreateView");
 
         View v = inflater.inflate(R.layout.home_map_activity, null, false);
+        toggleButton = (ToggleButton) v.findViewById(R.id.enPosition);
+
+        checkPreferenceForTogState();
+
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    enableMyPosition();
+                    togstate=true;
+                    Toast.makeText(getActivity(), "Sharing Location.", Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent i = new Intent(getActivity(), EnableLocation.class);
+                    getActivity().stopService(i);
+                    togstate=false;
+                    Toast.makeText(getActivity(), "Location Sharing Stopped.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -113,8 +140,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             });
         }
 
-        et = (EditText) v.findViewById(R.id.editText1);
-        Button go = (Button) v.findViewById(R.id.go);
+        et = (EditText) v.findViewById(R.id.etsearch);
+        ImageView go = (ImageView) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
         //onclick listener on map
@@ -161,7 +188,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                         b.putDouble("lng", latLng.longitude);
                                         buzz.putExtras(b);
                                         getActivity().startService(buzz);
-
 
                                         break;
                                     default:
@@ -235,6 +261,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fetchFriendStatus();
 
         return v;
+    }
+
+
+
+    private void enableMyPosition() {
+        Log.i("Tracking","I am in enableMyPostion");
+        Intent enPos = new Intent(getActivity(), EnableLocation.class);
+        Bundle b = new Bundle();
+        b.putString("usermail", getmail());
+        enPos.putExtras(b);
+        getActivity().startService(enPos);
     }
 
 
@@ -383,7 +420,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onDestroyView() {
+        Log.i("Tracking","i am in onDestroy");
         super.onDestroyView();
+        saveToggleState();
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
         ft.remove(fragment);
@@ -394,9 +433,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void saveToggleState() {
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("togstate",togstate);
+        editor.commit();
+    }
+
+    private void checkPreferenceForTogState() {
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        togstate = sharedPref.getBoolean("togstate",true);
+        toggleButton.setChecked(togstate);
+
+    }
+
     @Override
     public void onPause() {
         super.onPause();
+        saveToggleState();
         if (map != null) {
             map = null;
         }
