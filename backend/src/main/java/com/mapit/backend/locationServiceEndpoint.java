@@ -15,6 +15,7 @@ import com.google.appengine.api.datastore.Query;
 import com.mapit.backend.Properties_and_Values.DatastoreKindNames;
 import com.mapit.backend.Properties_and_Values.DatastorePropertyNames;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -46,9 +47,18 @@ public class locationServiceEndpoint {
         locationService locInfo = new locationService();
 
         for (Entity result : queryResult.asIterable()) {
+            locInfo.setKey(KeyFactory.keyToString(result.getKey()));
+
+            locInfo.setMail(mail);
             locInfo.setLatitude((String)result.getProperty(DatastorePropertyNames.locService_lat.getProperty()));
             locInfo.setLongitude((String)result.getProperty(DatastorePropertyNames.locService_long.getProperty()));
             locInfo.setStatus((String)result.getProperty(DatastorePropertyNames.locService_status.getProperty()));
+
+
+            Date date = (Date)result.getProperty(DatastorePropertyNames.locService_date.getProperty());
+
+            DateConverter dc = new DateConverter();
+            locInfo.setDate(dc.DateToString(date));
         }
 
         return locInfo;
@@ -75,6 +85,12 @@ public class locationServiceEndpoint {
             e.setProperty(DatastorePropertyNames.locService_long.getProperty(), locationService.getLongitude());
             e.setProperty(DatastorePropertyNames.locService_status.getProperty(), locationService.getStatus());
 
+            String stringDate = locationService.getDate();
+
+            DateConverter dc = new DateConverter();
+            Date date = dc.StringToDate(stringDate);
+            e.setProperty(DatastorePropertyNames.locService_date.getProperty(), date);
+
             datastore.put(e);
         }
         else
@@ -89,6 +105,12 @@ public class locationServiceEndpoint {
             e.setProperty(DatastorePropertyNames.locService_lat.getProperty(), locationService.getLatitude());
             e.setProperty(DatastorePropertyNames.locService_long.getProperty(), locationService.getLongitude());
             e.setProperty(DatastorePropertyNames.locService_status.getProperty(), locationService.getStatus());
+
+            String stringDate = locationService.getDate();
+
+            DateConverter dc = new DateConverter();
+            Date date = dc.StringToDate(stringDate);
+            e.setProperty(DatastorePropertyNames.locService_date.getProperty(), date);
 
             datastore.put(e);
         }

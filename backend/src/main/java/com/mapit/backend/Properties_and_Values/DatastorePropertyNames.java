@@ -63,7 +63,8 @@ public enum DatastorePropertyNames {
     locService_mail ("mail"),
     locService_lat ("lat"),
     locService_long ("long"),
-    locService_status ("stat")
+    locService_status ("stat"),
+    locService_date ("date"),
     ;
 
     private String Property;

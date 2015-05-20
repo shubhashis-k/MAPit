@@ -17,7 +17,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.api.client.util.DateTime;
 import com.mapit.backend.locationServiceApi.model.LocationService;
+
+import java.util.Date;
 
 
 /**
