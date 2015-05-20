@@ -120,6 +120,9 @@ public class Groups_Fragment extends Fragment {
     }
 
 
+
+
+
     public void showMyGroups(){
         ShowingMyGroups = true;
         Data info = new Data();
@@ -204,6 +207,48 @@ public class Groups_Fragment extends Fragment {
             }
         }.execute(new Pair<Data, Groups>(info, g));
     }
+
+
+
+
+
+    // Call this method and Groups filtered By Location will be shown. searching done in same way as previous
+    public void searchGroupsByLocation(String pattern){
+        ShowingMyGroups = false;
+        Search searchProperty = new Search();
+        searchProperty.setData(pattern);
+
+        Data info = new Data();
+        info.setContext(getActivity());
+        info.setCommand(Commands.Group_fetch_GroupsByLocation.getCommand());
+        info.setUsermail(getmail());
+        info.setExtra(pattern);
+
+        Groups g = new Groups();
+
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+                try {
+                    super.onPostExecute(result);
+
+                    res = result.getDataList();
+                    PopulateSearchGroup(res);
+                }
+                catch (Exception e){
+
+                }
+
+            }
+        }.execute(new Pair<Data, Groups>(info, g));
+    }
+
+
+
+
+
+
+
 
     public void PopulateSearchGroup(ArrayList<Search> a){
         listItems.clear();
