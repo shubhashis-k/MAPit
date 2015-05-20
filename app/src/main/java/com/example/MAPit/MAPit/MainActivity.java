@@ -10,11 +10,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
 //This is my first activity
 public class MainActivity extends ActionBarActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,12 @@ public class MainActivity extends ActionBarActivity {
         Typeface typeFace=Typeface.createFromAsset(getAssets(),"fonts/freestylefont.ttf");
         mapit.setTypeface(typeFace);
 
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.slidein_top);
+        mapit.startAnimation(animation);
+        Animation ani1= AnimationUtils.loadAnimation(this,R.anim.slide_in_left);
+        Animation ani2=AnimationUtils.loadAnimation(this,R.anim.slide_in_right);
+        signin.startAnimation(ani2);
+        signup.startAnimation(ani1);
 
         //must return true otherwise it will take many backbutton press to come back to the previous activity
         signup.setOnTouchListener(new View.OnTouchListener() {
