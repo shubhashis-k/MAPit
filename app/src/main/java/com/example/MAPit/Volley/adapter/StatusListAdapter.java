@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,6 +106,8 @@ public class StatusListAdapter extends BaseAdapter {
 
         //profilePic.setImageBitmap(bp);
         Log.v("call", "scrolled");
+        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_in_left);
+        convertView.startAnimation(animation);
         return convertView;
     }
     class cmplx{

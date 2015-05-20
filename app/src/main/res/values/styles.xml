@@ -10,4 +10,12 @@
         <item name="android:windowExitAnimation">@anim/slide_out_right</item>
     </style>
 
+    <style name="filter_animation">
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_right</item>
+    </style>
+    <style name="add_location_animation">
+        <item name="android:windowEnterAnimation">@anim/slidein_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_right</item>
+    </style>
 </resources>

@@ -9,6 +9,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,9 +72,13 @@ public class ChatWindowAdapter extends BaseAdapter {
         if (chatInfo.getDirection().equals("left")){
             chat_text.setBackgroundResource(R.drawable.bubble_green);
             wrapper.setGravity(Gravity.LEFT);
+            //Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_in_right);
+            //convertView.startAnimation(animation);
         }else{
             chat_text.setBackgroundResource(R.drawable.bubble_yellow);
             wrapper.setGravity(Gravity.RIGHT);
+            //Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_in_left);
+           // convertView.startAnimation(animation);
         }
 
         return convertView;

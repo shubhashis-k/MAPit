@@ -6,6 +6,8 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -80,6 +82,10 @@ public class CommentListAdapter extends BaseAdapter {
         timestamp.setText(timeAgo);
 
         statuscomment.setText(item.getUser_comment());
+
+        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_in_left);
+        convertView.startAnimation(animation);
+
         return convertView;
     }
 

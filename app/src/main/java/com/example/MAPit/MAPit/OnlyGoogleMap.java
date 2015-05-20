@@ -298,6 +298,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     });
 
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                    dialog.getWindow().getAttributes().windowAnimations=R.style.add_location_animation;
                     dialog.show();
 
 
@@ -583,6 +584,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                 });
 
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                dialog.getWindow().getAttributes().windowAnimations=R.style.filter_animation;
                 dialog.show();
                 return true;
 

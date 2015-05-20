@@ -11,6 +11,8 @@ import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -112,6 +114,9 @@ public class SearchListAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         });
+
+        Animation animation = AnimationUtils.loadAnimation(activity,R.anim.slide_in_left);
+        convertView.startAnimation(animation);
 
         return convertView;
     }
