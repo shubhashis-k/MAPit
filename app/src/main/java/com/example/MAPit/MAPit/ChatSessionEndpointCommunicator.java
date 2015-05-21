@@ -46,6 +46,7 @@ public class ChatSessionEndpointCommunicator extends AsyncTask<Data, Void, List<
         String SessionName = params[0].getStringKey();
         String DestinationID = params[0].getExtra();
         String msg = params[0].getExtramsg();
+        String date = params[0].getDateInfo();
 
         if(command.equals(Commands.ChatSession_insert.getCommand())){
             ChatSession ChatData = new ChatSession();
@@ -53,6 +54,8 @@ public class ChatSessionEndpointCommunicator extends AsyncTask<Data, Void, List<
             ChatData.setMsg(msg);
             ChatData.setDestinationID(DestinationID);
             ChatData.setSessionName(SessionName);
+            ChatData.setDate(date);
+
 
             try {
                 chatSessionApi.insertChatMessage(ChatData).execute();
