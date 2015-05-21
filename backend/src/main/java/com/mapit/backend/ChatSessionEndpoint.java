@@ -58,7 +58,7 @@ public class ChatSessionEndpoint {
 
         ChatSession cs = checkChatSession(sessionName);
         if(!cs.getMsg().equals("0"))
-         return;
+            return;
 
         Entity e = new Entity(DatastoreKindNames.ChatSessionList.getKind());
         e.setProperty(DatastorePropertyNames.ChatSessionList_chatsessionName.getProperty(), sessionName);
@@ -100,17 +100,20 @@ public class ChatSessionEndpoint {
     @ApiMethod(name = "insertChatMessage", path = "insertChatMessagePath", httpMethod = ApiMethod.HttpMethod.POST)
     public void insertChatMessage(ChatSession chatSession) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        
+
         Entity e = new Entity(chatSession.getSessionName());
 
         e.setProperty(DatastorePropertyNames.ChatSession_personName.getProperty(), chatSession.getNameofPerson());
         e.setProperty(DatastorePropertyNames.ChatSession_message.getProperty(), chatSession.getMsg());
 
-        Date now = new Date();
-        e.setProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty(), now);
+        String stringDate = chatSession.getDate();
+
+        DateConverter dc = new DateConverter();
+        Date date = dc.StringToDate(stringDate);
+        e.setProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty(), date);
 
         datastore.put(e);
-        sendMessageToDevice(chatSession);
+        //sendMessageToDevice(chatSession);
     }
 
     @ApiMethod(name = "fetchChatSession", path = "fetchChatSessionPath", httpMethod = ApiMethod.HttpMethod.POST)
@@ -123,7 +126,10 @@ public class ChatSessionEndpoint {
         PreparedQuery queryResult = datastore.prepare(chatSessionQuery);
 
         for (Entity result : queryResult.asIterable()) {
-            Date msgTime = (Date) result.getProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty());
+            Date date = (Date) result.getProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty());
+            String msgTime = date.toString();
+
+
             String msg = (String) result.getProperty(DatastorePropertyNames.ChatSession_message.getProperty());
             String name = (String) result.getProperty(DatastorePropertyNames.ChatSession_personName.getProperty());
             ChatSession c = new ChatSession();

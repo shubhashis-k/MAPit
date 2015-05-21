@@ -32,6 +32,7 @@ public enum Commands {
     Group_Remove ("Remove"),
     Group_fetch_myGroups ("myGroups"),
     Group_fetch_GroupsnotMine ("notmyGroups"),
+    Group_fetch_GroupsByLocation ("grploc"),
     Group_Join_Group ("Join"),
     Group_fetch_notification ("fetch"),
     Request_Group ("Request"),

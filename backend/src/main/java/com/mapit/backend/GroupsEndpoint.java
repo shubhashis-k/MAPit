@@ -53,7 +53,7 @@ public class GroupsEndpoint {
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_longitude.getProperty(), group.getLongitude());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Description.getProperty(), group.getGroupDescription());
             groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_Permission.getProperty(), group.getPermission());
-            groupKind.setUnindexedProperty(DatastorePropertyNames.Groups_location.getProperty(), group.getLocation());
+            groupKind.setProperty(DatastorePropertyNames.Groups_location.getProperty(), group.getLocation());
 
             if(group.getGroupPic() != null)
             {
@@ -204,6 +204,47 @@ public class GroupsEndpoint {
                 s = getDetailedGroupInfo(k);
                 FilteredList.add(s);
             }
+        }
+
+        return FilteredList;
+    }
+
+
+
+    @ApiMethod(name = "getGroupsByLocation", path = "getGroupsByLocationPath", httpMethod = ApiMethod.HttpMethod.POST)
+    public ArrayList<Search> getGroupsByLocation(@Named("usermail") String mail, @Named("searchQuery") String searchQuery) throws EntityNotFoundException{
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        SearchEndpoint getQueryResult = new SearchEndpoint();
+        ArrayList <Search> QueryList = getAllGroups(mail);
+        ArrayList <Search> myGroupList = getMyGroups(mail);
+        ArrayList <Search> JoinedGroupList = getJoinedGroups(mail);
+        ArrayList <Search> FilteredList = new ArrayList<>();
+        for(int i = 0 ; i < QueryList.size(); i++){
+            if(!myGroupList.contains(QueryList.get(i)) && !JoinedGroupList.contains(QueryList.get(i)))
+            {
+                Search s = QueryList.get(i);
+                Key k = stringToKey(s.getKey());
+
+                s = getDetailedGroupInfo(k);
+
+                String temp = s.getData();
+                s.setData(s.getLocation());
+                s.setLocation(temp);
+
+                FilteredList.add(s);
+            }
+        }
+
+        KMP ApplyKMP = new KMP();
+        FilteredList = ApplyKMP.FilterField(FilteredList, searchQuery);
+
+        for(int i = 0; i < FilteredList.size(); i++){
+            Search s = FilteredList.get(i);
+
+            String temp = s.getData();
+            s.setData(s.getLocation());
+            s.setLocation(temp);
         }
 
         return FilteredList;

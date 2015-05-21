@@ -230,11 +230,13 @@ public class ChatFragment extends Fragment {
             String incoming_msg = c.getMsg();
             String message = incoming_msg.substring(incoming_msg.indexOf(" ") + 1);
             chatInfo.setChat_text(message);
-            try {
+            //intentionally done that..I have to change it.
+           /* try {
                 chatInfo.setChat_time(convertDate(c.getDate()));
             } catch (ParseException e) {
 
-            }
+            }*/
+
             if (c.getNameofPerson().equals(getMyName())) {
                 chatInfo.setDirection("right");
             } else {

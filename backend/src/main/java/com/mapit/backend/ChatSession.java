@@ -7,7 +7,7 @@ import java.util.Date;
  */
 public class ChatSession {
     private String sessionName, NameofPerson, msg, destinationID;
-    private Date date;
+    private String date;
 
     public String getSessionName() {
         return sessionName;
@@ -33,11 +33,11 @@ public class ChatSession {
         this.msg = msg;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

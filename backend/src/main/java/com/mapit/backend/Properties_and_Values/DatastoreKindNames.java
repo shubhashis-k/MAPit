@@ -7,6 +7,7 @@ public enum DatastoreKindNames {
     Userinfo ("Userinfo"),
     FriendsData ("FriendsData"),
     Groups ("Groups"),
+    Groups_loc ("groupLoc"),
     PersonsInGroup ("PersonsInGroup"),
     StatusInGroup ("GroupStatus"),
     StatusbyIndividual ("IndividualStatus"),

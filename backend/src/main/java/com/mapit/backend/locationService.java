@@ -5,6 +5,7 @@ package com.mapit.backend;
  */
 public class locationService {
     private String mail, latitude, longitude, status, key;
+    private String date;
 
     public String getMail() {
         return mail;
@@ -40,6 +41,14 @@ public class locationService {
 
     public String getKey() {
         return key;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setKey(String key) {

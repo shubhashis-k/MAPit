@@ -46,6 +46,7 @@ public class Groups_Fragment extends Fragment {
     private List<SearchListItem> listItems;
     private boolean ShowingMyGroups = false;
     private ToggleButton searchCategory;
+    boolean search_state=false;
     public Groups_Fragment() {
         setHasOptionsMenu(true);
     }
@@ -66,9 +67,9 @@ public class Groups_Fragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    //here search by location name
+                    search_state=true;
                 }else{
-                    //here search by group name
+                   search_state=false;
                 }
             }
         });
@@ -117,7 +118,12 @@ public class Groups_Fragment extends Fragment {
                 String pattern = searchBox.getText().toString().toLowerCase(Locale.getDefault());
 
                 if(pattern.length() != 0)
-                    searchGroups(pattern);
+                    if(search_state == false) {
+                        searchGroups(pattern);
+                    }
+                    else{
+                        searchGroupsByLocation(pattern);
+                    }
                 else
                     showMyGroups();
 
@@ -218,6 +224,48 @@ public class Groups_Fragment extends Fragment {
             }
         }.execute(new Pair<Data, Groups>(info, g));
     }
+
+
+
+
+
+    // Call this method and Groups filtered By Location will be shown. searching done in same way as previous
+    public void searchGroupsByLocation(String pattern){
+        ShowingMyGroups = false;
+        Search searchProperty = new Search();
+        searchProperty.setData(pattern);
+
+        Data info = new Data();
+        info.setContext(getActivity());
+        info.setCommand(Commands.Group_fetch_GroupsByLocation.getCommand());
+        info.setUsermail(getmail());
+        info.setExtra(pattern);
+
+        Groups g = new Groups();
+
+        new GroupsEndpointCommunicator(){
+            @Override
+            protected void onPostExecute(GroupsEndpointReturnData result){
+                try {
+                    super.onPostExecute(result);
+
+                    res = result.getDataList();
+                    PopulateSearchGroup(res);
+                }
+                catch (Exception e){
+
+                }
+
+            }
+        }.execute(new Pair<Data, Groups>(info, g));
+    }
+
+
+
+
+
+
+
 
     public void PopulateSearchGroup(ArrayList<Search> a){
         listItems.clear();

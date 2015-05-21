@@ -59,7 +59,7 @@ public class SearchEndpoint {
         return searchList;
     }
 
-    @ApiMethod(name = "getGroupData", path = "getGroupDataPath", httpMethod = ApiMethod.HttpMethod.POST)
+    @ApiMethod(name = "getGroupData", path = "getGroupDataPath")
     public ArrayList<Search> getGroupData() {
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -87,7 +87,7 @@ public class SearchEndpoint {
     }
 
 
-    @ApiMethod(name = "getResult", path = "getResultPath", httpMethod = ApiMethod.HttpMethod.POST)
+    @ApiMethod(name = "getResult", path = "getResultPath")
     public ArrayList<Search> getResult(@Named("KindName") String kindName, @Named("SearchKey") String SearchKey){
         ArrayList<Search> fullList = new ArrayList<>();
 
