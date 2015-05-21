@@ -58,7 +58,7 @@ public class ChatSessionEndpoint {
 
         ChatSession cs = checkChatSession(sessionName);
         if(!cs.getMsg().equals("0"))
-            return;
+         return;
 
         Entity e = new Entity(DatastoreKindNames.ChatSessionList.getKind());
         e.setProperty(DatastorePropertyNames.ChatSessionList_chatsessionName.getProperty(), sessionName);

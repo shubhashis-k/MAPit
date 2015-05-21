@@ -1,5 +1,7 @@
 package com.mapit.backend;
 
+import java.util.Date;
+
 /**
  * Created by shubhashis on 5/19/2015.
  */

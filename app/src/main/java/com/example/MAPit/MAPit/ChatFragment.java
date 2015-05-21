@@ -132,11 +132,12 @@ public class ChatFragment extends Fragment {
                 ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setChat_text(et_chat.getText().toString());
                 chatInfo.setDirection("right");
+                chatInfo.setChat_time(new Date().toString());
                 chatListItems.add(chatInfo);
                 chatWindowAdapter.notifyDataSetChanged();
 
                 fetchID(caller_mail);
-                //Toast.makeText(getActivity(),"working",Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -177,10 +178,16 @@ public class ChatFragment extends Fragment {
         d.setStringKey(sessionName);
         d.setExtramsg(getMymail() + " " + et_chat.getText().toString());
         d.setUsername(getMyName());
+
+        Date now = new Date();
+        DateConverter dc = new DateConverter();
+        String stringDate = dc.DateToString(now);
+
+        d.setDateInfo(stringDate);
         try {
             new ChatSessionEndpointCommunicator().execute(d);
         }catch (Exception e){
-            Toast.makeText(getActivity(),"something went wrong",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Problem with Internet",Toast.LENGTH_SHORT).show();
         }
         et_chat.setText("");
     }
@@ -230,12 +237,13 @@ public class ChatFragment extends Fragment {
             String incoming_msg = c.getMsg();
             String message = incoming_msg.substring(incoming_msg.indexOf(" ") + 1);
             chatInfo.setChat_text(message);
-            //intentionally done that..I have to change it.
-           /* try {
-                chatInfo.setChat_time(convertDate(c.getDate()));
-            } catch (ParseException e) {
 
-            }*/
+
+            try {
+                chatInfo.setChat_time(c.getDate());
+            } catch (Exception e) {
+                Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+            }
 
             if (c.getNameofPerson().equals(getMyName())) {
                 chatInfo.setDirection("right");
