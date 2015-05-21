@@ -122,6 +122,23 @@ public class GroupsEndpointCommunicator extends AsyncTask <Pair<Data, Groups>, V
                 return null;
             }
         }
+        else if(command.equals(Commands.Group_fetch_GroupsByLocation.getCommand())){
+            try {
+                SearchCollection myGroupCollection = groupApi.getGroupsByLocation(pattern, usermail).execute();
+                ArrayList<Search> myGroupList = (ArrayList <Search>) myGroupCollection.getItems();
+
+
+                GroupsEndpointReturnData returnData = new GroupsEndpointReturnData();
+                returnData.setDataList(myGroupList);
+
+                return returnData;
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
+        }
         else if(command.equals(Commands.Groups_fetch_all.getCommand())){
             try {
                 SearchCollection myGroupCollection = groupApi.getAllGroups(usermail).execute();
