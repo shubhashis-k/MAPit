@@ -65,6 +65,12 @@ public enum DatastorePropertyNames {
     locService_long ("long"),
     locService_status ("stat"),
     locService_date ("date"),
+
+
+    timeSharing_mail ("mail"),
+    timeSharing_startTime ("sttTime"),
+    timeSharing_endTime ("endTime"),
+    timeSharing_category ("cat"),
     ;
 
     private String Property;
