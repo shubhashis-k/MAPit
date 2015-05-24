@@ -1,5 +1,6 @@
 package com.example.MAPit.MAPit;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -68,15 +70,47 @@ public class Friend_Search_Fragment extends Fragment {
 
                 //here i want the email of the listview item of that friend.
 
-                String mail = listItems.get(position).getExtra();
-                Bundle b = new Bundle();
-                b.putString("mail",mail);
-                Fragment fragment = new Friend_Tracking();
-                fragment.setArguments(b);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                final String mail = listItems.get(position).getExtra();
+                final Bundle b = new Bundle();
+                b.putString("mail", mail);
+
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.setTitle("Choose Any Option");
+                dialog.setContentView(R.layout.friend_search_option);
+                Button track = (Button) dialog.findViewById(R.id.bt_track_friend);
+                Button chat = (Button) dialog.findViewById(R.id.bt_chat);
+                dialog.show();
+
+                track.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.dismiss();
+                                                Fragment fragment = new Friend_Tracking();
+                                                fragment.setArguments(b);
+                                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                                transaction.replace(R.id.frame_container, fragment);
+                                                transaction.addToBackStack(null);
+                                                transaction.commit();
+
+                                            }
+                                        }
+                );
+
+                chat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle m = new Bundle();
+                        m.putString(PropertyNames.Userinfo_Mail.getProperty(), mail);
+                        dialog.dismiss();
+                        Fragment fragment = new ChatFragment();
+                        fragment.setArguments(m);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
+
             }
         });
 
@@ -121,7 +155,7 @@ public class Friend_Search_Fragment extends Fragment {
 
         new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result) {
 
                 super.onPostExecute(result);
 
@@ -129,8 +163,7 @@ public class Friend_Search_Fragment extends Fragment {
                 try {
                     ArrayList<Search> res = result.getDataList();
                     PopulateFriends(res);
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
             }
@@ -175,7 +208,7 @@ public class Friend_Search_Fragment extends Fragment {
 
         new FriendsEndpointCommunicator() {
             @Override
-            protected void onPostExecute(FriendsEndpointReturnData result){
+            protected void onPostExecute(FriendsEndpointReturnData result) {
 
                 super.onPostExecute(result);
 
@@ -183,8 +216,7 @@ public class Friend_Search_Fragment extends Fragment {
                 try {
                     ArrayList<Search> res = result.getDataList();
                     PopulateNotFriends(res);
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
             }
