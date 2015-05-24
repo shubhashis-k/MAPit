@@ -113,7 +113,7 @@ public class ChatSessionEndpoint {
         e.setProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty(), date);
 
         datastore.put(e);
-        //sendMessageToDevice(chatSession);
+        sendMessageToDevice(chatSession);
     }
 
     @ApiMethod(name = "fetchChatSession", path = "fetchChatSessionPath", httpMethod = ApiMethod.HttpMethod.POST)
@@ -127,7 +127,9 @@ public class ChatSessionEndpoint {
 
         for (Entity result : queryResult.asIterable()) {
             Date date = (Date) result.getProperty(DatastorePropertyNames.ChatSession_msgTime.getProperty());
-            String msgTime = date.toString();
+
+            DateConverter dc = new DateConverter();
+            String msgTime = dc.DateToString(date);
 
 
             String msg = (String) result.getProperty(DatastorePropertyNames.ChatSession_message.getProperty());
