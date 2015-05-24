@@ -677,12 +677,17 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     for (int i = 0; i < routeData.size(); i++) {
 
                         LatLng toPosition = new LatLng(routeData.get(i).latitude, routeData.get(i).longitude);
-                        new GetRouteTask() {
-                            @Override
-                            protected void onPostExecute(String s) {
-                                super.onPostExecute(s);
-                            }
-                        }.execute((LatLng) toPosition);
+                        try {
+                            new GetRouteTask() {
+                                @Override
+                                protected void onPostExecute(String s) {
+                                    super.onPostExecute(s);
+                                }
+                            }.execute((LatLng) toPosition);
+                        }catch (Exception e){
+                            Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+
+                        }
                     }
 
 
