@@ -225,7 +225,11 @@ public class ChatFragment extends Fragment {
 
                 super.onPostExecute(result);
                 PreviousChatSession = result;
-                populateChats(PreviousChatSession);
+                try {
+                    populateChats(PreviousChatSession);
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                }
             }
         }.execute(d);
     }

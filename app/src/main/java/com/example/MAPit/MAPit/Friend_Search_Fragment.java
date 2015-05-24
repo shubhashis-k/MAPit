@@ -65,7 +65,14 @@ public class Friend_Search_Fragment extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //here i want the email of the listview item of that friend.
+
+                String mail = listItems.get(position).getExtra();
+                Bundle b = new Bundle();
+                b.putString("mail",mail);
                 Fragment fragment = new Friend_Tracking();
+                fragment.setArguments(b);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);

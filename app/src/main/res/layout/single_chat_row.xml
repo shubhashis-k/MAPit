@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <LinearLayout
         android:id="@+id/wrapper"
@@ -17,21 +18,40 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Time"
+            android:textSize="9sp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dip"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="#FFFFFF"/>
 
-        <TextView
-            android:id="@+id/chat_text"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dip"
-            android:background="@drawable/bubble_yellow"
-            android:paddingLeft="10dip"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="Hello bubbles!"
-            android:textColor="@android:color/primary_text_light" />
+            android:id="@+id/relchat"
+            android:background="@drawable/bubble_green">
+
+            <TextView
+                android:id="@+id/chat_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dip"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="10dip"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Hello bubbles!"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/chat_text"
+                android:text="5:16 PM"
+                android:textSize="9sp"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 

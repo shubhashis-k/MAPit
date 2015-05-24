@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.MAPit.MAPit.ImageConverter;
@@ -65,17 +66,18 @@ public class ChatWindowAdapter extends BaseAdapter {
         wrapper = (LinearLayout) convertView.findViewById(R.id.wrapper);
         TextView chat_text = (TextView) convertView.findViewById(R.id.chat_text);
         TextView chat_time = (TextView) convertView.findViewById(R.id.chat_time);
+        RelativeLayout rel_bubble = (RelativeLayout) convertView.findViewById(R.id.relchat);
 
         ChatInfo chatInfo = chatListItems.get(position);
         chat_text.setText(chatInfo.getChat_text());
-        chat_time.setText(chatInfo.getChat_time());
+        chat_time.setText("27 May");
         if (chatInfo.getDirection().equals("left")){
-            chat_text.setBackgroundResource(R.drawable.bubble_green);
+            rel_bubble.setBackgroundResource(R.drawable.bubble_yellow);
             wrapper.setGravity(Gravity.LEFT);
             //Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_in_right);
             //convertView.startAnimation(animation);
         }else{
-            chat_text.setBackgroundResource(R.drawable.bubble_yellow);
+            rel_bubble.setBackgroundResource(R.drawable.bubble_green);
             wrapper.setGravity(Gravity.RIGHT);
             //Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_in_left);
            // convertView.startAnimation(animation);

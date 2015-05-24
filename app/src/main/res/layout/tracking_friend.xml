@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <RelativeLayout
+        android:id="@+id/reltrack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/customborder"
@@ -30,8 +31,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/textView1"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:text="Online "
+            android:textColor="#86AD33"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_below="@+id/textView1"
+            android:layout_marginBottom="5dp"
+            android:text="Last Seen: "
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvLastSeen"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/textView2"
+            android:layout_below="@+id/tvOnline"
+            android:layout_marginBottom="10dp"
+            android:text="Unknown"
             android:textColor="#86AD33"
             android:textSize="20sp" />
 

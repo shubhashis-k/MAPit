@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.util.Pair;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Data_and_Return_Data.Data;

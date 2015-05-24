@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.util.Pair;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Data_and_Return_Data.Data;
 import com.google.android.gms.common.ConnectionResult;
@@ -15,6 +17,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.mapit.backend.locationServiceApi.model.LocationService;
+
+import java.util.Date;
 
 
 /**
@@ -63,45 +67,38 @@ public class EnableLocation extends Service implements GoogleApiClient.Connectio
     public void onDestroy() {
 
         Log.i(TAG, "Service onDestroy");
+
+        LocationService ls = new LocationService();
+        ls.setStatus("0");
+        ls.setLongitude(String.valueOf(current_lng));
+        ls.setLatitude(String.valueOf(current_lat));
+        ls.setMail(user_mail);
+
+        Date now = new Date();
+        DateConverter dc = new DateConverter();
+        String stringDate = dc.DateToString(now);
+
+        ls.setDate(stringDate);
+
+        Data d = new Data();
+        d.setUsermail(user_mail);
+        d.setCommand(Commands.locService_setInfo.getCommand());
+        try {
+            new locServiceEndpointCommunicator().execute(new Pair<Data, LocationService>(d, ls));
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+        }
+
         mGoogleApiClient.disconnect();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
 
-
-        /*
-        //replace this portion anywhere to get the location of any specific user.
-
-        String usermail = "USER MAIL GOES HERE";
-        LocationService ls = new LocationService();
-
-
-        Data d = new Data();
-        d.setUsermail(usermail);
-        d.setCommand(Commands.locService_getInfo.getCommand());
-
-        new locServiceEndpointCommunicator(){
-            @Override
-            protected void onPostExecute(LocationService fetchedData){
-
-                //these three information you get
-                fetchedData.getLatitude();
-                fetchedData.getLongitude();
-                fetchedData.getStatus();
-
-            }
-        }
-        .execute(new Pair<Data,LocationService> (d,ls));
-
-         */
-
-
-
         Log.i(TAG, "Onconnected");
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(120000); // Update location every second
+        mLocationRequest.setInterval(60000);
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest,new com.google.android.gms.location.LocationListener() {
                     @Override
@@ -112,15 +109,25 @@ public class EnableLocation extends Service implements GoogleApiClient.Connectio
                         //for testing purpose
 
                         LocationService ls = new LocationService();
-                        ls.setStatus("1"); //one or zero whichever you prefer;
+                        ls.setStatus("1");
                         ls.setLongitude(String.valueOf(current_lng));
                         ls.setLatitude(String.valueOf(current_lat));
                         ls.setMail(user_mail);
 
+                        Date now = new Date();
+                        DateConverter dc = new DateConverter();
+                        String stringDate = dc.DateToString(now);
+
+                        ls.setDate(stringDate);
+
                         Data d = new Data();
                         d.setUsermail(user_mail);
                         d.setCommand(Commands.locService_setInfo.getCommand());
-                        new locServiceEndpointCommunicator().execute(new Pair<Data,LocationService> (d,ls));
+                        try {
+                            new locServiceEndpointCommunicator().execute(new Pair<Data, LocationService>(d, ls));
+                        }catch (Exception e){
+                            Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+                        }
 
 
                         Log.i(TAG,"Current Data:" + String.valueOf(current_lat)+","+String.valueOf(current_lng));

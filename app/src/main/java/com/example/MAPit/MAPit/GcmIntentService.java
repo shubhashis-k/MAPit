@@ -41,6 +41,7 @@ public class GcmIntentService extends IntentService {
                 sendData.putExtra("msg", extras.getString("message"));
                 LocalBroadcastManager.getInstance(this).sendBroadcast(sendData);
                 Log.i("chat","i am in GCMIntentService");
+                // I have to start a notification from here
 
 
             }
