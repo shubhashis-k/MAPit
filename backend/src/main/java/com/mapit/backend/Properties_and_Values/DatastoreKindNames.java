@@ -13,7 +13,8 @@ public enum DatastoreKindNames {
     StatusbyIndividual ("IndividualStatus"),
     GCMdata             ("GCMdata"),
     ChatSessionList ("ChatSessionList"),
-    locService      ("locService")
+    locService      ("locService"),
+    timeBasedSharing ("timeshare")
     ;
 
     private String kind;
