@@ -31,4 +31,24 @@ public class DateConverter {
 
         return s;
     }
+
+
+    public String MobileFriendly(String stringDate){
+        DateConverter dc = new DateConverter();
+        Date date = dc.StringToDate(stringDate);
+        String modf = "";
+        int Count = 0;
+        String dateString = date.toString();
+        for(int i = 0 ; i < dateString.length(); i++)
+        {
+            if(dateString.charAt(i) == ':')
+                Count++;
+            if(Count == 2)
+                break;
+
+            modf+=dateString.charAt(i);
+        }
+
+        return modf;
+    }
 }

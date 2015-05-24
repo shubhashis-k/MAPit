@@ -229,7 +229,9 @@ public class ChatFragment extends Fragment {
             String message = incoming_msg.substring(incoming_msg.indexOf(" ") + 1);
             chatInfo.setChat_text(message);
 
-            chatInfo.setChat_time(c.getDate());
+
+            DateConverter dc = new DateConverter();
+            chatInfo.setChat_time(dc.MobileFriendly(c.getDate()));
 
             if (c.getNameofPerson().equals(getMyName())) {
                 chatInfo.setDirection("right");
