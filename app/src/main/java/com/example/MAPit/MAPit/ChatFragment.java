@@ -96,7 +96,8 @@ public class ChatFragment extends Fragment {
         chatInfo.setChat_text(message);
         chatInfo.setDirection("left");
         Date d = new Date();
-        chatInfo.setChat_time(d.toString());
+        String t=MobileFriendly(d.toString());
+        chatInfo.setChat_time(t);
         chatListItems.add(chatInfo);
         chatWindowAdapter.notifyDataSetChanged();
     }
@@ -132,7 +133,8 @@ public class ChatFragment extends Fragment {
                 ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setChat_text(et_chat.getText().toString());
                 chatInfo.setDirection("right");
-                chatInfo.setChat_time(new Date().toString());
+                String t = MobileFriendly(new Date().toString());
+                chatInfo.setChat_time(t);
                 chatListItems.add(chatInfo);
                 chatWindowAdapter.notifyDataSetChanged();
 
@@ -187,7 +189,7 @@ public class ChatFragment extends Fragment {
         try {
             new ChatSessionEndpointCommunicator().execute(d);
         }catch (Exception e){
-            Toast.makeText(getActivity(),"Problem with Internet",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(),"Problem with Internet",Toast.LENGTH_SHORT).show();
         }
         et_chat.setText("");
     }
@@ -228,7 +230,7 @@ public class ChatFragment extends Fragment {
                 try {
                     populateChats(PreviousChatSession);
                 }catch (Exception e){
-                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(d);
@@ -244,9 +246,11 @@ public class ChatFragment extends Fragment {
 
 
             try {
-                chatInfo.setChat_time(c.getDate());
+
+                String t=MobileFriendly(c.getDate());
+                chatInfo.setChat_time(t);
             } catch (Exception e) {
-                Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
             }
 
             if (c.getNameofPerson().equals(getMyName())) {
@@ -260,15 +264,23 @@ public class ChatFragment extends Fragment {
     }
 
 
-    private String convertDate(DateTime date) throws ParseException {
+    public String MobileFriendly(String stringDate){
+        DateConverter dc = new DateConverter();
+        Date date = dc.StringToDate(stringDate);
+        String modf = "";
+        int Count = 0;
+        String dateString = date.toString();
+        for(int i = 0 ; i < dateString.length(); i++)
+        {
+            if(dateString.charAt(i) == ':')
+                Count++;
+            if(Count == 2)
+                break;
 
-        //DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd      HH:MM");
-        //String s = formatter.format(date);\
-        String oldstring = date.toString();
-        Date date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(oldstring);
+            modf+=dateString.charAt(i);
+        }
 
-        String newstring = new SimpleDateFormat("yyyy-MM-dd    HH:mm").format(date1);
-        return newstring;
+        return modf;
     }
 
     @Override
