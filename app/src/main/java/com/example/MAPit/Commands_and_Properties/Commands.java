@@ -80,6 +80,9 @@ public enum Commands {
 
     locService_getInfo("get"),
     locService_setInfo("set"),
+
+    timeBased_getAllInfo("getAll"),
+    timeBased_setInfo("set"),
     ;
 
     private String command;

@@ -6,6 +6,7 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
@@ -42,9 +43,9 @@ public class TimeBasedSharingEndpoint {
         Query.Filter endTimeFilter = new Query.FilterPredicate(DatastorePropertyNames.timeSharing_endTime.getProperty(), Query.FilterOperator.EQUAL, timeBasedSharing.getEndTime());
 
         Query.CompositeFilter startendFilter = Query.CompositeFilterOperator.and(mailFilter,startTimeFilter,endTimeFilter);
-        Query GroupnameQuery = new Query(DatastoreKindNames.timeBasedSharing.getKind()).setFilter(startendFilter);
+        Query timeQuery = new Query(DatastoreKindNames.timeBasedSharing.getKind()).setFilter(startendFilter);
 
-        PreparedQuery queryResult = datastore.prepare(GroupnameQuery);
+        PreparedQuery queryResult = datastore.prepare(timeQuery);
 
         TimeBasedSharing timeInfo = new TimeBasedSharing();
 
@@ -61,15 +62,47 @@ public class TimeBasedSharingEndpoint {
         return timeInfo;
     }
 
+    @ApiMethod(name = "getAllTimeBasedSharing", path = "getAllTimeBasedSharingpath", httpMethod = ApiMethod.HttpMethod.GET)
+    public ArrayList<TimeBasedSharing> getAllTimeBasedSharing(@Named("Mail") String mail) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query.Filter mailFilter = new Query.FilterPredicate(DatastorePropertyNames.timeSharing_mail.getProperty(), Query.FilterOperator.EQUAL, mail);
+
+        Query timeQuery = new Query(DatastoreKindNames.timeBasedSharing.getKind()).setFilter(mailFilter);
+
+        PreparedQuery queryResult = datastore.prepare(timeQuery);
+
+
+        ArrayList <TimeBasedSharing> timeInfo = new ArrayList<>();
+
+        for (Entity result : queryResult.asIterable()) {
+
+            TimeBasedSharing tb = new TimeBasedSharing();
+
+            tb.setKey(KeyFactory.keyToString(result.getKey()));
+
+            tb.setMail(mail);
+            tb.setStartTime((String) result.getProperty(DatastorePropertyNames.timeSharing_startTime.getProperty()));
+            tb.setEndTime((String) result.getProperty(DatastorePropertyNames.timeSharing_endTime.getProperty()));
+            tb.setCategory((String) result.getProperty(DatastorePropertyNames.timeSharing_category.getProperty()));
+
+            timeInfo.add(tb);
+
+        }
+
+        return timeInfo;
+    }
+
+
     @ApiMethod(name = "getCategoryFromTimeBasedSharing", path = "getCategoryFromTimeBasedSharingpath", httpMethod = ApiMethod.HttpMethod.POST)
     public TimeBasedSharing getCategoryFromTimeBasedSharing(TimeBasedSharing timeBasedSharing) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query.Filter mailFilter = new Query.FilterPredicate(DatastorePropertyNames.timeSharing_mail.getProperty(), Query.FilterOperator.EQUAL, timeBasedSharing.getMail());
 
-        Query GroupnameQuery = new Query(DatastoreKindNames.timeBasedSharing.getKind()).setFilter(mailFilter);
+        Query timeQuery = new Query(DatastoreKindNames.timeBasedSharing.getKind()).setFilter(mailFilter);
 
-        PreparedQuery queryResult = datastore.prepare(GroupnameQuery);
+        PreparedQuery queryResult = datastore.prepare(timeQuery);
 
         ArrayList<TimeBasedSharing> AllTimeInfo = new ArrayList<>();
 
@@ -113,7 +146,8 @@ public class TimeBasedSharingEndpoint {
         TimeBasedSharing ts = getTimeBasedSharing(timeBasedSharing);
 
         if(ts.getMail() != null) {
-            datastore.delete(KeyFactory.stringToKey(timeBasedSharing.getKey()));
+            Key key = KeyFactory.stringToKey(ts.getKey());
+            datastore.delete(key);
 
             Entity e = new Entity(DatastoreKindNames.timeBasedSharing.getKind());
             e.setProperty(DatastorePropertyNames.timeSharing_mail.getProperty(), timeBasedSharing.getMail());
