@@ -74,13 +74,11 @@ public class locationServiceEndpoint {
     public void insertlocationService(locationService locationService) {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        String mail = locationService.getMail();
+        locationService fetchedLoc = locationService;
 
-        locationService fetchedLoc = getlocationService(mail);
-
-        if(fetchedLoc.getMail() == null){
+        if(fetchedLoc.getKey() == null){
             Entity e = new Entity(DatastoreKindNames.locService.getKind());
-            e.setProperty(DatastorePropertyNames.locService_mail.getProperty(), mail);
+            e.setProperty(DatastorePropertyNames.locService_mail.getProperty(), locationService.getMail());
             e.setProperty(DatastorePropertyNames.locService_lat.getProperty(), locationService.getLatitude());
             e.setProperty(DatastorePropertyNames.locService_long.getProperty(), locationService.getLongitude());
             e.setProperty(DatastorePropertyNames.locService_status.getProperty(), locationService.getStatus());
@@ -101,7 +99,7 @@ public class locationServiceEndpoint {
             datastore.delete(k);
 
             Entity e = new Entity(DatastoreKindNames.locService.getKind());
-            e.setProperty(DatastorePropertyNames.locService_mail.getProperty(), mail);
+            e.setProperty(DatastorePropertyNames.locService_mail.getProperty(), locationService.getMail());
             e.setProperty(DatastorePropertyNames.locService_lat.getProperty(), locationService.getLatitude());
             e.setProperty(DatastorePropertyNames.locService_long.getProperty(), locationService.getLongitude());
             e.setProperty(DatastorePropertyNames.locService_status.getProperty(), locationService.getStatus());

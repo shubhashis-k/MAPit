@@ -102,35 +102,48 @@ public class EnableLocation extends Service implements GoogleApiClient.Connectio
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest,new com.google.android.gms.location.LocationListener() {
                     @Override
-                    public void onLocationChanged(Location location) {
-                        current_lat = location.getLatitude();
-                        current_lng = location.getLongitude();
-
-                        //for testing purpose
-
-                        LocationService ls = new LocationService();
-                        ls.setStatus("1");
-                        ls.setLongitude(String.valueOf(current_lng));
-                        ls.setLatitude(String.valueOf(current_lat));
-                        ls.setMail(user_mail);
-
-                        Date now = new Date();
-                        DateConverter dc = new DateConverter();
-                        String stringDate = dc.DateToString(now);
-
-                        ls.setDate(stringDate);
+                    public void onLocationChanged(final Location location) {
 
                         Data d = new Data();
                         d.setUsermail(user_mail);
-                        d.setCommand(Commands.locService_setInfo.getCommand());
+                        d.setCommand(Commands.locService_getInfo.getCommand());
+                        LocationService dummy = new LocationService();
                         try {
-                            new locServiceEndpointCommunicator().execute(new Pair<Data, LocationService>(d, ls));
+                            new locServiceEndpointCommunicator(){
+                                @Override
+                                protected void onPostExecute(LocationService ls) {
+                                    super.onPostExecute(ls);
+
+                                    current_lat = location.getLatitude();
+                                    current_lng = location.getLongitude();
+
+                                    //for testing purpose
+                                    ls.setStatus("1");
+                                    ls.setLongitude(String.valueOf(current_lng));
+                                    ls.setLatitude(String.valueOf(current_lat));
+                                    ls.setMail(user_mail);
+
+                                    Date now = new Date();
+                                    DateConverter dc = new DateConverter();
+                                    String stringDate = dc.DateToString(now);
+
+                                    ls.setDate(stringDate);
+
+                                    Data d = new Data();
+                                    d.setUsermail(user_mail);
+                                    d.setCommand(Commands.locService_setInfo.getCommand());
+                                    try {
+                                        new locServiceEndpointCommunicator().execute(new Pair<Data, LocationService>(d, ls));
+                                    }catch (Exception e){
+                                        Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                }
+                            }.execute(new Pair<Data, LocationService>(d, dummy));
                         }catch (Exception e){
                             Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
                         }
-
-
-                        Log.i(TAG,"Current Data:" + String.valueOf(current_lat)+","+String.valueOf(current_lng));
                     }
                 });
     }
