@@ -56,6 +56,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.mapit.backend.groupApi.model.Groups;
 import com.mapit.backend.groupApi.model.Search;
 import com.mapit.backend.informationApi.model.Information;
+import com.mapit.backend.timeBasedSharingApi.model.TimeBasedSharing;
 
 import org.w3c.dom.Document;
 
@@ -63,6 +64,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -129,7 +132,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         command = data.getString(Commands.SearchAndADD.getCommand());
 
         if (command.equals(Commands.ShowInMap.getCommand())) {
-            populateInfoOfLocation("All", -1);
+            //populateInfoOfLocation("All", -1);
+            checkForSavedTime();
 
         } else if (command.equals(Commands.All_Group_Show.getCommand())) {
             PopulateAllGroups();
@@ -337,6 +341,46 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         });
 
         return v;
+    }
+
+    private void checkForSavedTime() {
+
+        Data d = new Data();
+        d.setUsermail(getmail());
+        d.setCommand(Commands.timeBased_getAllInfo.getCommand());
+        TimeBasedSharing dummy = new TimeBasedSharing();
+        new TimeBasedEndpointCommunicator() {
+            @Override
+            protected void onPostExecute(ArrayList<TimeBasedSharing> timeBasedSharings) {
+                super.onPostExecute(timeBasedSharings);
+
+                try {
+                    findCategory(timeBasedSharings);
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+        .execute(new Pair<Data, TimeBasedSharing>(d, dummy));
+    }
+
+    private void findCategory(ArrayList<TimeBasedSharing> timeBasedSharings) {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        boolean state = false;
+
+        for(int i=0; i<timeBasedSharings.size();i++){
+              int stime =Integer.parseInt(timeBasedSharings.get(i).getStartTime());
+              int etime = Integer.parseInt(timeBasedSharings.get(i).getEndTime());
+              if(hour>=stime && hour<=etime){
+                  state = true;
+                  String cat =timeBasedSharings.get(i).getCategory();
+                  populateInfoOfLocation(cat,-1);
+              }
+        }
+        if(state == false){
+            populateInfoOfLocation("All", -1);
+        }
     }
 
     public void PopulateAllGroups() {
@@ -601,6 +645,16 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
 
        // final TextView chk_8_12, chk_1_3,chk_4_5,chk_6_8,chk_9_12;
         Button Update;
+        ArrayList<String> cat =new ArrayList<>();
+        cat.add("All");
+        cat.add("Food");
+        cat.add("Education");
+        cat.add("Transport");
+        cat.add("Tourism");
+        cat.add("Religion");
+        cat.add("Market");
+        cat.add("Accommodation");
+
 
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.setting_location_timer);
@@ -621,12 +675,62 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
         sp4.setAdapter(adapter2);
         sp5.setAdapter(adapter2);
 
+
+        Data d = new Data();
+        d.setUsermail(getmail());
+        d.setCommand(Commands.timeBased_getAllInfo.getCommand());
+        TimeBasedSharing dummy = new TimeBasedSharing();
+        new TimeBasedEndpointCommunicator() {
+            @Override
+            protected void onPostExecute(ArrayList<TimeBasedSharing> timeBasedSharings) {
+                super.onPostExecute(timeBasedSharings);
+
+                try {
+                   for(int i=0;i<timeBasedSharings.size();i++){
+                       //
+                   }
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+                .execute(new Pair<Data, TimeBasedSharing>(d, dummy));
+
+
+
+
         Update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //at first load specific items will be in the selected of the spinner
                 //String a = "chk-8-12:"+chk_8_12.isChecked() +"\n" + "value:"+ sp1.getSelectedItem().toString();
                 //Toast.makeText(getActivity(),a,Toast.LENGTH_LONG).show();
+                String[] cat = new String[6];
+                cat[0]= sp1.getSelectedItem().toString();
+                cat[1]= sp2.getSelectedItem().toString();
+                cat[2]= sp3.getSelectedItem().toString();
+                cat[3]= sp4.getSelectedItem().toString();
+                cat[4]= sp5.getSelectedItem().toString();
+
+
+
+                String[] startTime = {"8","13","16","18","21"};
+                String[] endTime = {"12","15","17","20","24"};
+                for(int i=0;i<5;i++) {
+                    TimeBasedSharing timeBasedSharing = new TimeBasedSharing();
+                    timeBasedSharing.setStartTime(startTime[i]);
+                    timeBasedSharing.setEndTime(endTime[i]);
+                    timeBasedSharing.setCategory(cat[i]);
+                    timeBasedSharing.setMail(getmail());
+
+                    Data d = new Data();
+                    d.setUsermail(getmail());
+                    d.setCommand(Commands.timeBased_setInfo.getCommand());
+
+                   new TimeBasedEndpointCommunicator().execute(new Pair<Data,TimeBasedSharing>(d,timeBasedSharing));
+                    dialog.dismiss();
+                }
             }
         });
         dialog.show();

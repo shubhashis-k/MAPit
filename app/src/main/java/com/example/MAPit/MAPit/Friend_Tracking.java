@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,8 @@ public class Friend_Tracking extends Fragment {
         while (true) {
 
             checkForPosition(mail);
+
+
             return v;
 
         }
@@ -139,6 +142,13 @@ public class Friend_Tracking extends Fragment {
             lastseen.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("ss","i am here");
+        checkForPosition(mail);
     }
 
     public void onDestroyView() {

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.MAPit.Commands_and_Properties.Commands;
 import com.example.MAPit.Commands_and_Properties.PropertyNames;
@@ -102,8 +103,8 @@ public class Friend_Request_Fragment extends Fragment {
                 ArrayList <Search> res = result.getDataList();
                 try {
                     PopulatePendingFriendList(res, Commands.Friends_Request.getCommand());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
                 }
 
             }
