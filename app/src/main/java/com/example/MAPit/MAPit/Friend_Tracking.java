@@ -25,6 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mapit.backend.locationServiceApi.model.LocationService;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
  * Created by SETU on 5/20/2015.
  */
@@ -92,7 +95,12 @@ public class Friend_Tracking extends Fragment {
                     String last_time = "Unknown";
                     try {
                         state = fetchedData.getStatus();
-                        last_time = fetchedData.getDate();
+
+                        DateConverter dc = new DateConverter();
+                        ArrayList<String> formatted = dc.MobileFriendly(fetchedData.getDate());
+
+                        last_time = formatted.get(0)+ " "+formatted.get(1);
+
                         lat = Double.parseDouble(fetchedData.getLatitude());
                         lng = Double.parseDouble(fetchedData.getLongitude());
                         if (state.equals("1")) {

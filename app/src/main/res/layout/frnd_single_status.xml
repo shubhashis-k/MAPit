@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:background="@color/feed_bg"
     android:orientation="vertical">
-
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
 
         android:layout_marginLeft="@dimen/feed_item_margin"
         android:layout_marginRight="@dimen/feed_item_margin"
@@ -69,11 +71,14 @@
             android:background="@color/white"
             android:scaleType="fitXY"
             android:visibility="visible"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
     </LinearLayout>
+</ScrollView>
 
-    <ListView
+   <!-- <ListView
         android:id="@+id/comment_single_status"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"></ListView> -->
 </LinearLayout>

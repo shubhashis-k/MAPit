@@ -66,11 +66,13 @@ public class ChatWindowAdapter extends BaseAdapter {
         wrapper = (LinearLayout) convertView.findViewById(R.id.wrapper);
         TextView chat_text = (TextView) convertView.findViewById(R.id.chat_text);
         TextView chat_time = (TextView) convertView.findViewById(R.id.chat_time);
+        TextView small_chat_time = (TextView) convertView.findViewById(R.id.small_chat_time);
         RelativeLayout rel_bubble = (RelativeLayout) convertView.findViewById(R.id.relchat);
 
         ChatInfo chatInfo = chatListItems.get(position);
         chat_text.setText(chatInfo.getChat_text());
-        chat_time.setText("27 May");
+        chat_time.setText(chatInfo.getChat_date().get(0));
+        small_chat_time.setText(chatInfo.getChat_date().get(1));
         if (chatInfo.getDirection().equals("left")){
             rel_bubble.setBackgroundResource(R.drawable.bubble_yellow);
             wrapper.setGravity(Gravity.LEFT);

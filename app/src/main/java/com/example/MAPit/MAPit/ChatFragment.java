@@ -95,9 +95,13 @@ public class ChatFragment extends Fragment {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setChat_text(message);
         chatInfo.setDirection("left");
-        Date d = new Date();
-        String t=MobileFriendly(d.toString());
-        chatInfo.setChat_time(t);
+
+        DateConverter dc = new DateConverter();
+        String stringDate = dc.DateToString(new Date());
+        ArrayList<String> formatted = dc.MobileFriendly(stringDate);
+
+        chatInfo.setChat_date(formatted);
+
         chatListItems.add(chatInfo);
         chatWindowAdapter.notifyDataSetChanged();
     }
@@ -133,8 +137,13 @@ public class ChatFragment extends Fragment {
                 ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setChat_text(et_chat.getText().toString());
                 chatInfo.setDirection("right");
-                String t = MobileFriendly(new Date().toString());
-                chatInfo.setChat_time(t);
+
+                DateConverter dc = new DateConverter();
+                String stringDate = dc.DateToString(new Date());
+                ArrayList<String> formatted = dc.MobileFriendly(stringDate);
+
+                chatInfo.setChat_date(formatted);
+
                 chatListItems.add(chatInfo);
                 chatWindowAdapter.notifyDataSetChanged();
 
@@ -247,8 +256,9 @@ public class ChatFragment extends Fragment {
 
             try {
 
-                String t=MobileFriendly(c.getDate());
-                chatInfo.setChat_time(t);
+                DateConverter dc = new DateConverter();
+                ArrayList<String> formatted = dc.MobileFriendly(c.getDate());
+                chatInfo.setChat_date(formatted);
             } catch (Exception e) {
                 //Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
             }
@@ -263,25 +273,6 @@ public class ChatFragment extends Fragment {
         chatWindowAdapter.notifyDataSetChanged();
     }
 
-
-    public String MobileFriendly(String stringDate){
-        DateConverter dc = new DateConverter();
-        Date date = dc.StringToDate(stringDate);
-        String modf = "";
-        int Count = 0;
-        String dateString = date.toString();
-        for(int i = 0 ; i < dateString.length(); i++)
-        {
-            if(dateString.charAt(i) == ':')
-                Count++;
-            if(Count == 2)
-                break;
-
-            modf+=dateString.charAt(i);
-        }
-
-        return modf;
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

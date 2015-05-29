@@ -1,10 +1,13 @@
 package com.example.MAPit.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by SETU on 5/3/2015.
  */
 public class ChatInfo {
     private String direction,chat_text,chat_time;
+    private ArrayList<String> chat_date;
     public ChatInfo(){
 
     }
@@ -32,5 +35,13 @@ public class ChatInfo {
     }
     public String getChat_time(){
         return chat_time;
+    }
+
+    public ArrayList<String> getChat_date() {
+        return chat_date;
+    }
+
+    public void setChat_date(ArrayList<String> chat_date) {
+        this.chat_date = chat_date;
     }
 }

@@ -3,6 +3,7 @@ package com.example.MAPit.MAPit;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -33,22 +34,24 @@ public class DateConverter {
     }
 
 
-    public String MobileFriendly(String stringDate){
-        DateConverter dc = new DateConverter();
-        Date date = dc.StringToDate(stringDate);
-        String modf = "";
-        int Count = 0;
-        String dateString = date.toString();
-        for(int i = 0 ; i < dateString.length(); i++)
-        {
-            if(dateString.charAt(i) == ':')
-                Count++;
-            if(Count == 2)
-                break;
+    public ArrayList<String> MobileFriendly(String time){
 
-            modf+=dateString.charAt(i);
+        ArrayList <String> formattedDate = new ArrayList<String>();
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-hh-mm");
+            final Date dateObj = sdf.parse(time);
+            System.out.println(dateObj);
+
+            String MonthDate = new SimpleDateFormat("MMMM dd").format(dateObj);
+            formattedDate.add(MonthDate);
+
+            String formTime = new SimpleDateFormat("K:mmaa").format(dateObj);
+            formattedDate.add(formTime);
+
+        } catch (final ParseException e) {
+            e.printStackTrace();
         }
 
-        return modf;
+        return formattedDate;
     }
 }

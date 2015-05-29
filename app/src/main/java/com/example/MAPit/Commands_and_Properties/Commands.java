@@ -5,8 +5,9 @@ package com.example.MAPit.Commands_and_Properties;
  */
 public enum Commands {
     //Ip_address ("http://10.0.3.2:8080/_ah/api/"),
-    Ip_address ("http://192.168.10.1:8080/_ah/api/"),
+    //Ip_address ("http://192.168.10.1:8080/_ah/api/"),
     //Ip_address ("http://192.168.43.56:8080/_ah/api/"),
+    Ip_address ("http://192.168.0.105:8080/_ah/api/"),
 
     Userinfo_getmail ("Get_Mail"),
     Userinfo_getpass ("Get_Pass"),

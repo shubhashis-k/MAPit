@@ -122,10 +122,10 @@ public class Friends_Status_Comment_Fragment extends Fragment {
         }
 
 
-        listView = (ListView) v.findViewById(R.id.comment_single_status);
-        commentItems = new ArrayList<Comment_Item>();
-        listAdapter = new CommentListAdapter(getActivity(), commentItems);
-        listView.setAdapter(listAdapter);
+        //listView = (ListView) v.findViewById(R.id.comment_single_status);
+       // commentItems = new ArrayList<Comment_Item>();
+       // listAdapter = new CommentListAdapter(getActivity(), commentItems);
+        //listView.setAdapter(listAdapter);
 
 
         return v;
