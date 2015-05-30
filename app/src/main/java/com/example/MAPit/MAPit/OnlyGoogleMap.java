@@ -170,7 +170,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
 
         et = (EditText) v.findViewById(R.id.etsearch);
         //added the go button listener
-       ImageView go = (ImageView) v.findViewById(R.id.go);
+        ImageView go = (ImageView) v.findViewById(R.id.go);
         go.setOnClickListener(this);
 
         singleMarkerInfo = new ArrayList<Information>();
@@ -302,7 +302,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     });
 
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                    dialog.getWindow().getAttributes().windowAnimations=R.style.add_location_animation;
+                    dialog.getWindow().getAttributes().windowAnimations = R.style.add_location_animation;
                     dialog.show();
 
 
@@ -356,29 +356,29 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
 
                 try {
                     findCategory(timeBasedSharings);
-                }catch (Exception e){
-                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "Internet Problem", Toast.LENGTH_SHORT).show();
                 }
 
             }
         }
-        .execute(new Pair<Data, TimeBasedSharing>(d, dummy));
+                .execute(new Pair<Data, TimeBasedSharing>(d, dummy));
     }
 
     private void findCategory(ArrayList<TimeBasedSharing> timeBasedSharings) {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         boolean state = false;
 
-        for(int i=0; i<timeBasedSharings.size();i++){
-              int stime =Integer.parseInt(timeBasedSharings.get(i).getStartTime());
-              int etime = Integer.parseInt(timeBasedSharings.get(i).getEndTime());
-              if(hour>=stime && hour<=etime){
-                  state = true;
-                  String cat =timeBasedSharings.get(i).getCategory();
-                  populateInfoOfLocation(cat,-1);
-              }
+        for (int i = 0; i < timeBasedSharings.size(); i++) {
+            int stime = Integer.parseInt(timeBasedSharings.get(i).getStartTime());
+            int etime = Integer.parseInt(timeBasedSharings.get(i).getEndTime());
+            if (hour >= stime && hour <= etime) {
+                state = true;
+                String cat = timeBasedSharings.get(i).getCategory();
+                populateInfoOfLocation(cat, -1);
+            }
         }
-        if(state == false){
+        if (state == false) {
             populateInfoOfLocation("All", -1);
         }
     }
@@ -628,7 +628,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                 });
 
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                dialog.getWindow().getAttributes().windowAnimations=R.style.filter_animation;
+                dialog.getWindow().getAttributes().windowAnimations = R.style.filter_animation;
                 dialog.show();
                 return true;
 
@@ -643,9 +643,9 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
     // adding time based filtering of search and add
     private void Location_TimeBased_Setting() {
 
-       // final TextView chk_8_12, chk_1_3,chk_4_5,chk_6_8,chk_9_12;
+        // final TextView chk_8_12, chk_1_3,chk_4_5,chk_6_8,chk_9_12;
         Button Update;
-        ArrayList<String> cat =new ArrayList<>();
+        final ArrayList<String> cat = new ArrayList<>();
         cat.add("All");
         cat.add("Food");
         cat.add("Education");
@@ -684,20 +684,47 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
             @Override
             protected void onPostExecute(ArrayList<TimeBasedSharing> timeBasedSharings) {
                 super.onPostExecute(timeBasedSharings);
+                ArrayList<String> checkcat = new ArrayList<String>();
+
 
                 try {
-                   for(int i=0;i<timeBasedSharings.size();i++){
-                       //
-                   }
-                }catch (Exception e){
-                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+
+                    for (int i = 0; i < timeBasedSharings.size(); i++) {
+                        int ind= cat.indexOf(timeBasedSharings.get(i).getCategory());
+                        int stime = Integer.parseInt(timeBasedSharings.get(i).getStartTime());
+                        int etime = Integer.parseInt(timeBasedSharings.get(i).getEndTime());
+
+                        if(stime==8 && etime ==12) {
+                            sp1.setSelection(ind);
+                        }
+                        else if(stime==13 && etime ==15) {
+                            sp2.setSelection(ind);
+                        }
+                        else if(stime==16 && etime ==17) {
+                            sp3.setSelection(ind);
+                        }
+                        else if(stime==18 && etime ==20) {
+                            sp4.setSelection(ind);
+                        }
+                        else if(stime==21 && etime ==24) {
+                            sp5.setSelection(ind);
+                        }
+
+
+
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "Internet Problem", Toast.LENGTH_SHORT).show();
                 }
 
             }
         }
                 .execute(new Pair<Data, TimeBasedSharing>(d, dummy));
-
-
 
 
         Update.setOnClickListener(new View.OnClickListener() {
@@ -707,17 +734,16 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                 //String a = "chk-8-12:"+chk_8_12.isChecked() +"\n" + "value:"+ sp1.getSelectedItem().toString();
                 //Toast.makeText(getActivity(),a,Toast.LENGTH_LONG).show();
                 String[] cat = new String[6];
-                cat[0]= sp1.getSelectedItem().toString();
-                cat[1]= sp2.getSelectedItem().toString();
-                cat[2]= sp3.getSelectedItem().toString();
-                cat[3]= sp4.getSelectedItem().toString();
-                cat[4]= sp5.getSelectedItem().toString();
+                cat[0] = sp1.getSelectedItem().toString();
+                cat[1] = sp2.getSelectedItem().toString();
+                cat[2] = sp3.getSelectedItem().toString();
+                cat[3] = sp4.getSelectedItem().toString();
+                cat[4] = sp5.getSelectedItem().toString();
 
 
-
-                String[] startTime = {"8","13","16","18","21"};
-                String[] endTime = {"12","15","17","20","24"};
-                for(int i=0;i<5;i++) {
+                String[] startTime = {"8", "13", "16", "18", "21"};
+                String[] endTime = {"12", "15", "17", "20", "24"};
+                for (int i = 0; i < 5; i++) {
                     TimeBasedSharing timeBasedSharing = new TimeBasedSharing();
                     timeBasedSharing.setStartTime(startTime[i]);
                     timeBasedSharing.setEndTime(endTime[i]);
@@ -728,7 +754,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     d.setUsermail(getmail());
                     d.setCommand(Commands.timeBased_setInfo.getCommand());
 
-                   new TimeBasedEndpointCommunicator().execute(new Pair<Data,TimeBasedSharing>(d,timeBasedSharing));
+                    new TimeBasedEndpointCommunicator().execute(new Pair<Data, TimeBasedSharing>(d, timeBasedSharing));
                     dialog.dismiss();
                 }
             }
@@ -751,7 +777,7 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                     Double lng = Double.parseDouble(markerInfo.get(i).getLongitude());
                     String status = markerInfo.get(i).getInfoDescription();
                     String name = markerInfo.get(i).getInfoName();
-                    String kind= markerInfo.get(i).getKindName();
+                    String kind = markerInfo.get(i).getKindName();
                     name += "/" + String.valueOf(i);
                     LatLng ll = new LatLng(lat, lng);
                     if (status.length() > 20) {
@@ -788,8 +814,8 @@ public class OnlyGoogleMap extends Fragment implements View.OnClickListener, Goo
                                     super.onPostExecute(s);
                                 }
                             }.execute((LatLng) toPosition);
-                        }catch (Exception e){
-                            Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internet Problem", Toast.LENGTH_SHORT).show();
 
                         }
                     }

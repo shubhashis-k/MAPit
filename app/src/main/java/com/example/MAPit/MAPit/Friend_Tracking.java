@@ -45,12 +45,12 @@ public class Friend_Tracking extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.tracking_friend, null, false);
+        final View v = inflater.inflate(R.layout.tracking_friend, null, false);
 
         online = (TextView) v.findViewById(R.id.tvOnline);
         lastseen = (TextView) v.findViewById(R.id.tvLastSeen);
         tv_last_seen = (TextView) v.findViewById(R.id.textView2);
-        rel=(RelativeLayout) v.findViewById(R.id.reltrack);
+        rel = (RelativeLayout) v.findViewById(R.id.reltrack);
 
         mapFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.tracking_map);
@@ -62,92 +62,102 @@ public class Friend_Tracking extends Fragment {
         map.getUiSettings().setAllGesturesEnabled(true);
         map.setTrafficEnabled(true);
 
-        Animation animation = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_in_right);
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_right);
         rel.startAnimation(animation);
 
 
         data = getArguments();
         mail = data.getString("mail");
 
-
-
-        while (true) {
-
+       /* while (true) {
             checkForPosition(mail);
-
-
             return v;
+        }*/
+       while(true) {
+           new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   checkForPosition(mail);
+                   Log.i("tracking","i am in thread");
+               }
 
-        }
+
+           }).start();
+           return v;
+       }
+
+
+
     }
 
     private void checkForPosition(String mail) {
 
-        String usermail = mail;
-        LocationService ls = new LocationService();
+            Log.i("tracking", "i am in while loop");
+            String usermail = mail;
+            LocationService ls = new LocationService();
 
-        Data d = new Data();
-        d.setUsermail(usermail);
-        d.setCommand(Commands.locService_getInfo.getCommand());
+            Data d = new Data();
+            d.setUsermail(usermail);
+            d.setCommand(Commands.locService_getInfo.getCommand());
 
-        try {
-            new locServiceEndpointCommunicator() {
-                @Override
-                protected void onPostExecute(LocationService fetchedData) {
-                    String state = "0";
-                    String last_time = "Unknown";
-                    try {
-                        state = fetchedData.getStatus();
+            try {
+                new locServiceEndpointCommunicator() {
+                    @Override
+                    protected void onPostExecute(LocationService fetchedData) {
+                        String state = "0";
+                        String last_time = "Unknown";
+                        try {
+                            state = fetchedData.getStatus();
 
-                        DateConverter dc = new DateConverter();
-                        ArrayList<String> formatted = dc.MobileFriendly(fetchedData.getDate());
+                            DateConverter dc = new DateConverter();
+                            ArrayList<String> formatted = dc.MobileFriendly(fetchedData.getDate());
 
-                        last_time = formatted.get(0)+ " "+formatted.get(1);
+                            last_time = formatted.get(0) + " " + formatted.get(1);
 
-                        lat = Double.parseDouble(fetchedData.getLatitude());
-                        lng = Double.parseDouble(fetchedData.getLongitude());
-                        if (state.equals("1")) {
-                            tv_last_seen.setVisibility(View.GONE);
-                            lastseen.setVisibility(View.GONE);
-                            MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
-                            marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
-                            map.addMarker(marker);
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
-                        } else {
+                            lat = Double.parseDouble(fetchedData.getLatitude());
+                            lng = Double.parseDouble(fetchedData.getLongitude());
+                            if (state.equals("1")) {
+                                tv_last_seen.setVisibility(View.GONE);
+                                lastseen.setVisibility(View.GONE);
+                                MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
+                                marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
+                                map.addMarker(marker);
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+                            } else {
+                                online.setText("Offline");
+                                online.setTextColor(Color.WHITE);
+                                lastseen.setTextColor(Color.WHITE);
+                                lastseen.setText(last_time);
+                                MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
+                                marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
+                                map.addMarker(marker);
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+
+                            }
+                        } catch (Exception e) {
                             online.setText("Offline");
                             online.setTextColor(Color.WHITE);
-                            lastseen.setTextColor(Color.WHITE);
-                            lastseen.setText(last_time);
-                            MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
-                            marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
-                            map.addMarker(marker);
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+                            tv_last_seen.setVisibility(View.GONE);
+                            lastseen.setVisibility(View.GONE);
 
                         }
-                    } catch (Exception e) {
-                        online.setText("Offline");
-                        online.setTextColor(Color.WHITE);
-                        tv_last_seen.setVisibility(View.GONE);
-                        lastseen.setVisibility(View.GONE);
 
                     }
-
-
                 }
+                        .execute(new Pair<Data, LocationService>(d, ls));
+            } catch (Exception e) {
+                online.setText("Offline");
+                tv_last_seen.setVisibility(View.GONE);
+                lastseen.setVisibility(View.GONE);
             }
-                    .execute(new Pair<Data, LocationService>(d, ls));
-        } catch (Exception e) {
-            online.setText("Offline");
-            tv_last_seen.setVisibility(View.GONE);
-            lastseen.setVisibility(View.GONE);
-        }
+
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("ss","i am here");
+        Log.i("ss", "i am here");
         checkForPosition(mail);
     }
 
