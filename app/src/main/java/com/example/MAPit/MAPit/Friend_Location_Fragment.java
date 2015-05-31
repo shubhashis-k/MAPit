@@ -70,10 +70,10 @@ public class Friend_Location_Fragment extends Fragment implements  GoogleApiClie
         Double lng = data.getDouble("longitude");
 
         Bundle mydata = ((SlidingDrawerActivity)getActivity()).getEmail();
-        Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
-        Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
+       // Double myLat = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_latitude.getProperty()));
+        //Double  myLng = Double.parseDouble(mydata.getString(PropertyNames.Userinfo_longitude.getProperty()));
         fromPosition = new LatLng(lat, lng);
-        toPosition = new LatLng(myLat, myLng);
+        //toPosition = new LatLng(myLat, myLng);
 
         directionMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fromPosition, 15));
 
@@ -86,7 +86,11 @@ public class Friend_Location_Fragment extends Fragment implements  GoogleApiClie
 
         //calling the getroutetask for knowing the route
         GetRouteTask getRouteTask = new GetRouteTask();
-        getRouteTask.execute();
+        try {
+            getRouteTask.execute();
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"Route is not available",Toast.LENGTH_SHORT).show();
+        }
 
 
 
@@ -145,11 +149,17 @@ public class Friend_Location_Fragment extends Fragment implements  GoogleApiClie
             dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Loading Route...");
             dialog.show();
+
         }
 
         @Override
         protected String doInBackground(String... params) {
-            document = route.getDocument(fromPosition, toPosition, GmapV2Direction.MODE_DRIVING);
+            try {
+
+                document = route.getDocument(fromPosition, toPosition, GmapV2Direction.MODE_DRIVING);
+            }catch (Exception e){
+               doInBackground();
+            }
             response = "Success";
             dis = checkForArea(fromPosition,toPosition);
             return response;

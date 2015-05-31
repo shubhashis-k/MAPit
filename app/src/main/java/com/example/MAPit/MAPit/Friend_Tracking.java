@@ -79,18 +79,21 @@ public class Friend_Tracking extends Fragment {
                public void run() {
                    checkForPosition(mail);
                    Log.i("tracking","i am in thread");
+
                }
+
 
 
            }).start();
            return v;
+
        }
 
 
 
     }
 
-    private void checkForPosition(String mail) {
+    private void checkForPosition(final String mail) {
 
             Log.i("tracking", "i am in while loop");
             String usermail = mail;
@@ -142,13 +145,19 @@ public class Friend_Tracking extends Fragment {
 
                         }
 
+
+
+
                     }
+
+
                 }
                         .execute(new Pair<Data, LocationService>(d, ls));
             } catch (Exception e) {
                 online.setText("Offline");
                 tv_last_seen.setVisibility(View.GONE);
                 lastseen.setVisibility(View.GONE);
+
             }
 
 

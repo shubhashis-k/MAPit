@@ -103,18 +103,22 @@ public class AddStatus extends Fragment {
                 lfd.setLatitude(Double.parseDouble(latitude));
                 lfd.setLongitude(Double.parseDouble(longitude));
 
-                new LocationFinder() {
-                    @Override
-                    protected void onPostExecute(LocationFinderData locationFinderData) {
-                        super.onPostExecute(locationFinderData);
+                try {
+                    new LocationFinder() {
+                        @Override
+                        protected void onPostExecute(LocationFinderData locationFinderData) {
+                            super.onPostExecute(locationFinderData);
 
-                        String location = locationFinderData.getLocation();
-                        status.setLocation(location);
+                            String location = locationFinderData.getLocation();
+                            status.setLocation(location);
 
-                        postStatus(status);
+                            postStatus(status);
 
-                    }
-                }.execute(lfd);
+                        }
+                    }.execute(lfd);
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
+                }
 
                 if (command.equals(Commands.Status_Job_Type_Individual.getCommand())) {
                     Fragment fragment = new HomeFragment();
@@ -139,6 +143,8 @@ public class AddStatus extends Fragment {
 
         Data d = new Data();
         d.setCommand(Commands.Status_add.getCommand());
+
+
 
         new StatusEndpointCommunicator() {
 

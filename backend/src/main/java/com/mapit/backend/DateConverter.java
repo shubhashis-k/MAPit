@@ -11,7 +11,7 @@ import java.util.Date;
 public class DateConverter {
     public Date StringToDate(String stringDate){
         //format yyyy-MM-dd-hh-mm
-        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd-hh-mm");
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd-hh-mm-ss");
 
         Date date;
 
@@ -26,7 +26,7 @@ public class DateConverter {
 
     public String DateToString(Date date){
 
-        Format formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String s = formatter.format(date);
 
         return s;

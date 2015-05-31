@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -41,12 +42,12 @@ public class locationServiceEndpoint {
 
         Query.Filter mailFilter = new Query.FilterPredicate(DatastorePropertyNames.locService_mail.getProperty(), Query.FilterOperator.EQUAL, mail);
 
-        Query GroupnameQuery = new Query(DatastoreKindNames.locService.getKind()).setFilter(mailFilter);
+        Query GroupnameQuery = new Query(DatastoreKindNames.locService.getKind()).setFilter(mailFilter).addSort(DatastorePropertyNames.locService_date.getProperty(), Query.SortDirection.DESCENDING);;
         PreparedQuery queryResult = datastore.prepare(GroupnameQuery);
 
         locationService locInfo = new locationService();
 
-        for (Entity result : queryResult.asIterable()) {
+        for (Entity result : queryResult.asList((FetchOptions.Builder.withLimit(1)))) {
             locInfo.setKey(KeyFactory.keyToString(result.getKey()));
 
             locInfo.setMail(mail);

@@ -74,6 +74,9 @@ public class ChatFragment extends Fragment {
                 startNotificationSound();
             }
 
+            //here if sender mail not equals caller mail then start a notification
+            // or i can have a variable in the slidingdraweractivity and check for chatfragment on
+
 
         }
     };
@@ -85,7 +88,11 @@ public class ChatFragment extends Fragment {
             Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
             r.play();
         } catch (Exception e) {
-            Toast.makeText(getActivity(),"Something with Internet.Leaving..",Toast.LENGTH_SHORT).show();
+            try {
+                Toast.makeText(getActivity(), "Something with Internet.Leaving..", Toast.LENGTH_SHORT).show();
+            }catch (Exception el){
+
+            }
         }
 
     }
