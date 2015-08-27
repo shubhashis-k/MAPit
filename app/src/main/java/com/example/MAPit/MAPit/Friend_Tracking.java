@@ -77,6 +77,7 @@ public class Friend_Tracking extends Fragment {
            new Thread(new Runnable() {
                @Override
                public void run() {
+
                    checkForPosition(mail);
                    Log.i("tracking","i am in thread");
 
@@ -95,70 +96,70 @@ public class Friend_Tracking extends Fragment {
 
     private void checkForPosition(final String mail) {
 
-            Log.i("tracking", "i am in while loop");
-            String usermail = mail;
-            LocationService ls = new LocationService();
 
-            Data d = new Data();
-            d.setUsermail(usermail);
-            d.setCommand(Commands.locService_getInfo.getCommand());
+                Log.i("tracking", "i am in while loop");
+                String usermail = mail;
+                LocationService ls = new LocationService();
 
-            try {
-                new locServiceEndpointCommunicator() {
-                    @Override
-                    protected void onPostExecute(LocationService fetchedData) {
-                        String state = "0";
-                        String last_time = "Unknown";
-                        try {
-                            state = fetchedData.getStatus();
+                Data d = new Data();
+                d.setUsermail(usermail);
+                d.setCommand(Commands.locService_getInfo.getCommand());
 
-                            DateConverter dc = new DateConverter();
-                            ArrayList<String> formatted = dc.MobileFriendly(fetchedData.getDate());
+                try {
+                    new locServiceEndpointCommunicator() {
+                        @Override
+                        protected void onPostExecute(LocationService fetchedData) {
+                            String state = "0";
+                            String last_time = "Unknown";
+                            try {
+                                state = fetchedData.getStatus();
 
-                            last_time = formatted.get(0) + " " + formatted.get(1);
+                                DateConverter dc = new DateConverter();
+                                ArrayList<String> formatted = dc.MobileFriendly(fetchedData.getDate());
 
-                            lat = Double.parseDouble(fetchedData.getLatitude());
-                            lng = Double.parseDouble(fetchedData.getLongitude());
-                            if (state.equals("1")) {
-                                tv_last_seen.setVisibility(View.GONE);
-                                lastseen.setVisibility(View.GONE);
-                                MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
-                                marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
-                                map.addMarker(marker);
-                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
-                            } else {
+                                last_time = formatted.get(0) + " " + formatted.get(1);
+
+                                lat = Double.parseDouble(fetchedData.getLatitude());
+                                lng = Double.parseDouble(fetchedData.getLongitude());
+                                if (state.equals("1")) {
+                                    tv_last_seen.setVisibility(View.GONE);
+                                    lastseen.setVisibility(View.GONE);
+                                    MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
+                                    marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
+                                    map.addMarker(marker);
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+                                } else {
+                                    online.setText("Offline");
+                                    online.setTextColor(Color.WHITE);
+                                    lastseen.setTextColor(Color.WHITE);
+                                    lastseen.setText(last_time);
+                                    MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
+                                    marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
+                                    map.addMarker(marker);
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+
+                                }
+                            } catch (Exception e) {
                                 online.setText("Offline");
                                 online.setTextColor(Color.WHITE);
-                                lastseen.setTextColor(Color.WHITE);
-                                lastseen.setText(last_time);
-                                MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
-                                marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
-                                map.addMarker(marker);
-                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+                                tv_last_seen.setVisibility(View.GONE);
+                                lastseen.setVisibility(View.GONE);
 
                             }
-                        } catch (Exception e) {
-                            online.setText("Offline");
-                            online.setTextColor(Color.WHITE);
-                            tv_last_seen.setVisibility(View.GONE);
-                            lastseen.setVisibility(View.GONE);
+
 
                         }
 
 
-
-
                     }
-
+                            .execute(new Pair<Data, LocationService>(d, ls));
+                } catch (Exception e) {
+                    online.setText("Offline");
+                    tv_last_seen.setVisibility(View.GONE);
+                    lastseen.setVisibility(View.GONE);
 
                 }
-                        .execute(new Pair<Data, LocationService>(d, ls));
-            } catch (Exception e) {
-                online.setText("Offline");
-                tv_last_seen.setVisibility(View.GONE);
-                lastseen.setVisibility(View.GONE);
 
-            }
 
 
     }

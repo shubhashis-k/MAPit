@@ -66,7 +66,7 @@ public class Friend_RequestList_Adapter extends BaseAdapter {
 
         if (inflater == null)
             inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
             convertView = inflater.inflate(R.layout.frnd_request_list_item, null);
 

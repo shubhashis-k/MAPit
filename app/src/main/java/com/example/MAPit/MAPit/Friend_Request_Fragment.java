@@ -75,8 +75,9 @@ public class Friend_Request_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList <com.mapit.backend.groupApi.model.Search> res = result.getDataList();
+
                 try {
+                    ArrayList <com.mapit.backend.groupApi.model.Search> res = result.getDataList();
                     PopulatePendingGroupList(res, Commands.Group_Join_Group.getCommand());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -100,8 +101,9 @@ public class Friend_Request_Fragment extends Fragment {
 
                 super.onPostExecute(result);
 
-                ArrayList <Search> res = result.getDataList();
+
                 try {
+                    ArrayList <Search> res = result.getDataList();
                     PopulatePendingFriendList(res, Commands.Friends_Request.getCommand());
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Internet Problem",Toast.LENGTH_SHORT).show();
